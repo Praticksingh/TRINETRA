@@ -1,0 +1,36 @@
+# TRINETRA Model Configuration: Baseline v0.1.0
+model_name: "trinetra-baseline-spatiotemporal"
+version: "0.1.0-baseline"
+pilot_geography:
+  region_code: "IN-UT"
+  bounding_box: [77.5, 28.5, 81.0, 31.5]
+  spatial_resolution_deg: 0.04
+
+horizons_minutes: [60, 120, 180, 240, 300, 360]
+
+features:
+  atmospheric:
+    - "cape"
+    - "cin"
+    - "tpw"
+    - "bt_tir1"
+    - "btd_split"
+    - "omega_500"
+  terrain:
+    - "elevation"
+    - "slope_deg"
+    - "flow_accum"
+    - "twi"
+
+targets:
+  - "thunderstorm_prob"
+  - "cloudburst_prob"
+  - "flash_flood_risk"
+
+training:
+  time_split:
+    train_end: "2024-12-31T23:59:59Z"
+    val_end: "2025-06-30T23:59:59Z"
+    test_start: "2025-07-01T00:00:00Z"
+  batch_size: 16
+  learning_rate: 0.001

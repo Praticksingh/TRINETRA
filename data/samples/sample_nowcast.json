@@ -1,0 +1,59 @@
+{
+  "_comment": "SAMPLE DEVELOPMENT REPLAY DATA - EXPLICITLY LABELED AS SYNTHETIC/REPLAY",
+  "is_synthetic_replay": true,
+  "replay_dataset_id": "SYNTHETIC_PILOT_UTTARAKHAND_CONVECTIVE_EVENT_001",
+  "forecast_id": "fct_demo_syn_20260911_0830",
+  "model_version": "v0.1.0-baseline-synthetic",
+  "generated_at": "2026-09-11T08:32:15Z",
+  "data_timestamp": "2026-09-11T08:30:00Z",
+  "region_code": "IN-UT",
+  "region_name": "Uttarakhand Convective Pilot Zone",
+  "grid_resolution_deg": 0.04,
+  "predictions": [
+    {
+      "grid_cell_id": "cell_3012_7824",
+      "centroid": [78.24, 30.12],
+      "horizon_minutes": 120,
+      "valid_time": "2026-09-11T10:30:00Z",
+      "probabilities": {
+        "thunderstorm": 0.76,
+        "cloudburst": 0.54,
+        "flash_flood": 0.81
+      },
+      "severity": "warning",
+      "terrain_factors": {
+        "slope_deg": 38.4,
+        "twi": 12.1,
+        "catchment_vuln": 0.85
+      },
+      "xai_attribution": [
+        { "feature": "cape", "contribution": 0.38, "observed_value": 3100.0, "unit": "J/kg" },
+        { "feature": "bt_tir1_cooling_rate", "contribution": 0.29, "observed_value": -16.5, "unit": "K/hr" },
+        { "feature": "slope_deg", "contribution": 0.21, "observed_value": 38.4, "unit": "deg" },
+        { "feature": "tpw", "contribution": 0.12, "observed_value": 58.2, "unit": "mm" }
+      ]
+    },
+    {
+      "grid_cell_id": "cell_3016_7828",
+      "centroid": [78.28, 30.16],
+      "horizon_minutes": 180,
+      "valid_time": "2026-09-11T11:30:00Z",
+      "probabilities": {
+        "thunderstorm": 0.62,
+        "cloudburst": 0.31,
+        "flash_flood": 0.48
+      },
+      "severity": "watch",
+      "terrain_factors": {
+        "slope_deg": 24.1,
+        "twi": 9.3,
+        "catchment_vuln": 0.52
+      },
+      "xai_attribution": [
+        { "feature": "cape", "contribution": 0.44, "observed_value": 2600.0, "unit": "J/kg" },
+        { "feature": "cin", "contribution": -0.15, "observed_value": -22.0, "unit": "J/kg" },
+        { "feature": "bt_tir1_cooling_rate", "contribution": 0.25, "observed_value": -9.8, "unit": "K/hr" }
+      ]
+    }
+  ]
+}

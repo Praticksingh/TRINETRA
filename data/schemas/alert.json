@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TRINETRA Alert Contract",
+  "description": "Schema for categorized severe weather alerts dispatched to disaster authorities",
+  "type": "object",
+  "required": [
+    "alert_id",
+    "hazard_type",
+    "severity",
+    "region_code",
+    "headline",
+    "description",
+    "status",
+    "issued_at",
+    "valid_from",
+    "valid_to",
+    "is_official_warning"
+  ],
+  "properties": {
+    "alert_id": {
+      "type": "string"
+    },
+    "hazard_type": {
+      "type": "string",
+      "enum": ["thunderstorm", "cloudburst", "flash_flood", "multi_hazard"]
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["advisory", "watch", "warning", "critical"]
+    },
+    "region_code": {
+      "type": "string"
+    },
+    "region_name": {
+      "type": "string"
+    },
+    "headline": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["generated", "reviewed", "issued", "acknowledged", "resolved", "expired"]
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_to": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_official_warning": {
+      "type": "boolean",
+      "description": "Must be false unless authorized human workflow elevates model alert to official warning"
+    },
+    "affected_cells": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "audit_trail": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "action", "actor_id"],
+        "properties": {
+          "timestamp": { "type": "string", "format": "date-time" },
+          "action": { "type": "string" },
+          "actor_id": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

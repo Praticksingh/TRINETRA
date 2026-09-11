@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TRINETRA Observation Grid Contract",
+  "description": "Schema for spatiotemporal observation inputs ingested into the pipeline",
+  "type": "object",
+  "required": [
+    "grid_id",
+    "observation_timestamp",
+    "source_name",
+    "crs",
+    "bounds",
+    "resolution_deg",
+    "variables",
+    "quality_flag"
+  ],
+  "properties": {
+    "grid_id": { "type": "string" },
+    "observation_timestamp": { "type": "string", "format": "date-time" },
+    "source_name": { "type": "string", "enum": ["INSAT_3DR", "IMDAA_REANALYSIS", "DWR_RADAR", "SRTM_DEM", "SYNTHETIC_REPLAY"] },
+    "crs": { "type": "string", "default": "EPSG:4326" },
+    "bounds": {
+      "type": "object",
+      "required": ["min_lon", "min_lat", "max_lon", "max_lat"],
+      "properties": {
+        "min_lon": { "type": "number" },
+        "min_lat": { "type": "number" },
+        "max_lon": { "type": "number" },
+        "max_lat": { "type": "number" }
+      }
+    },
+    "resolution_deg": { "type": "number" },
+    "variables": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "quality_flag": {
+      "type": "string",
+      "enum": ["nominal", "degraded", "interpolated", "missing_channels"]
+    }
+  }
+}
