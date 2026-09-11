@@ -590,6 +590,180 @@ def get_gis_layers_catalog():
     }
 
 
+from alerting import (
+    CalibratedAlertEngine,
+    CAPSerializer,
+    GeoJSONAlertFeedSerializer,
+    MockNotificationDispatcher,
+    AlertStatus,
+    AlertSeverity,
+    AlertEvent,
+    HazardType,
+)
+from fastapi.responses import Response
+
+# Initialize Alerting engine and notification dispatcher
+alert_engine = CalibratedAlertEngine()
+notification_dispatcher = MockNotificationDispatcher()
+
+# Seed with pilot Uttarakhand events
+alert_engine.evaluate_cell(
+    cell_id="3073_7906",
+    name="Kedarnath - Mandakini Watershed",
+    coords=(79.066, 30.735),
+    prob_thunderstorm=0.88,
+    prob_cloudburst=0.82,
+    prob_flash_flood=0.94,
+    horizon_minutes=120,
+    slope_deg=46.2,
+    twi=14.8,
+)
+alert_engine.evaluate_cell(
+    cell_id="3012_7824",
+    name="Rishikesh - Shivpuri River Gorge",
+    coords=(78.267, 30.086),
+    prob_thunderstorm=0.78,
+    prob_cloudburst=0.82,
+    prob_flash_flood=0.68,
+    horizon_minutes=120,
+    slope_deg=38.4,
+    twi=12.1,
+)
+alert_engine.evaluate_cell(
+    cell_id="3055_7935",
+    name="Chamoli - Alaknanda Valley",
+    coords=(79.350, 30.558),
+    prob_thunderstorm=0.74,
+    prob_cloudburst=0.52,
+    prob_flash_flood=0.62,
+    horizon_minutes=120,
+    slope_deg=41.5,
+    twi=11.7,
+)
+
+
+class AlertTransitionRequest(BaseModel):
+    to_status: AlertStatus
+    operator_id: str = "SDMA_OPERATOR_42"
+    remarks: str = "Operational status updated during watch shift."
+    operator_role: str = "SDMA_WATCH_OFFICER"
+
+
+class DispatchSimulationRequest(BaseModel):
+    channel: str = "SDMA_WEBHOOK"
+    recipient: str = "https://seoc.uk.gov.in/api/v1/inbound-alerts"
+
+
+# --- Alerting & Authority Workflow Endpoints ---
+
+@app.post("/api/v1/alerts/evaluate", tags=["Alerting"])
+def evaluate_nowcast_alerts():
+    """
+    Evaluates current nowcast predictions against calibrated thresholds
+    and registers any newly triggered alerts.
+    """
+    alerts = alert_engine.list_alerts()
+    return {
+        "status": "success",
+        "evaluated_at": datetime.now(timezone.utc).isoformat(),
+        "total_active_alerts": len(alerts),
+        "alerts": [a.model_dump() for a in alerts],
+    }
+
+
+@app.get("/api/v1/alerts", tags=["Alerting"])
+def list_active_alerts(
+    status: Optional[AlertStatus] = None,
+    severity: Optional[AlertSeverity] = None,
+):
+    """Lists alerts with optional lifecycle status or severity filter"""
+    alerts = alert_engine.list_alerts(status=status, severity=severity)
+    return {
+        "count": len(alerts),
+        "alerts": [a.model_dump() for a in alerts],
+        "disclaimer": "TRINETRA Model-Generated Advisory. Not an official state decree.",
+    }
+
+
+@app.get("/api/v1/alerts/feed.geojson", tags=["Alerting"])
+def export_alerts_geojson_feed():
+    """
+    Exports active alerts as RFC 7946 GeoJSON FeatureCollection
+    for GIS integration by emergency management authorities.
+    """
+    alerts = alert_engine.list_alerts()
+    return GeoJSONAlertFeedSerializer.to_geojson_feed(alerts)
+
+
+@app.get("/api/v1/alerts/{alert_id}", tags=["Alerting"])
+def get_alert_detail(alert_id: str):
+    """Returns single alert detail and audit history"""
+    alert = alert_engine.get_alert(alert_id)
+    if not alert:
+        raise HTTPException(status_code=404, detail=f"Alert '{alert_id}' not found.")
+    return alert.model_dump()
+
+
+@app.post("/api/v1/alerts/{alert_id}/transition", tags=["Alerting"])
+def transition_alert_status(alert_id: str, req: AlertTransitionRequest):
+    """
+    Executes authority lifecycle transition (GENERATED -> UNDER_REVIEW -> DISPATCHED -> ACKNOWLEDGED -> RESOLVED)
+    with audit log tracking.
+    """
+    try:
+        updated = alert_engine.transition_alert(
+            alert_id=alert_id,
+            to_status=req.to_status,
+            operator_id=req.operator_id,
+            remarks=req.remarks,
+            operator_role=req.operator_role,
+        )
+        return {
+            "status": "success",
+            "alert_id": alert_id,
+            "new_status": updated.status.value,
+            "audit_trail_length": len(updated.audit_trail),
+            "updated_alert": updated.model_dump(),
+        }
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/api/v1/alerts/{alert_id}/cap.xml", tags=["Alerting"])
+def export_alert_cap_xml(alert_id: str):
+    """
+    Exports standard ITU-T X.1303 / OASIS Common Alerting Protocol (CAP v1.2) XML
+    for inter-agency ingestion.
+    """
+    alert = alert_engine.get_alert(alert_id)
+    if not alert:
+        raise HTTPException(status_code=404, detail=f"Alert '{alert_id}' not found.")
+    xml_content = CAPSerializer.to_cap_xml(alert)
+    return Response(content=xml_content, media_type="application/xml")
+
+
+@app.post("/api/v1/alerts/{alert_id}/dispatch-simulation", tags=["Alerting"])
+def simulate_notification_dispatch(alert_id: str, req: DispatchSimulationRequest):
+    """
+    Simulates notification dispatch with HMAC-SHA256 signature verification
+    and audit receipt. Strictly tagged is_synthetic_dispatch: true.
+    """
+    alert = alert_engine.get_alert(alert_id)
+    if not alert:
+        raise HTTPException(status_code=404, detail=f"Alert '{alert_id}' not found.")
+    receipt = notification_dispatcher.dispatch(
+        alert=alert,
+        channel=req.channel,
+        recipient=req.recipient,
+    )
+    return {
+        "status": "success",
+        "receipt": receipt.model_dump(),
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
