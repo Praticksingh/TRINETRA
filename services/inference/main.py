@@ -24,6 +24,51 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi import Request
+from fastapi.responses import JSONResponse
+from core.resilience import SlidingWindowRateLimiter
+
+rate_limiter = SlidingWindowRateLimiter(max_requests=120, window_seconds=60)
+
+
+@app.middleware("http")
+async def security_and_rate_limit_middleware(request: Request, call_next):
+    # 1. Rate Limiting Check (bypass for health probe)
+    client_ip = request.headers.get("x-forwarded-for", request.client.host if request.client else "unknown")
+    if client_ip and "," in client_ip:
+        client_ip = client_ip.split(",")[0].strip()
+
+    allowed, remaining, reset_secs = rate_limiter.is_allowed(client_ip)
+
+    if not allowed and not request.url.path.startswith("/health"):
+        return JSONResponse(
+            status_code=429,
+            content={
+                "detail": "Rate limit exceeded. Maximum 120 requests per minute.",
+                "retry_after_seconds": reset_secs,
+            },
+            headers={
+                "Retry-After": str(reset_secs),
+                "X-RateLimit-Limit": "120",
+                "X-RateLimit-Remaining": "0",
+                "X-RateLimit-Reset": str(reset_secs),
+            },
+        )
+
+    response = await call_next(request)
+
+    # 2. OWASP Recommended Security Headers
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["X-RateLimit-Limit"] = "120"
+    response.headers["X-RateLimit-Remaining"] = str(remaining)
+    response.headers["X-RateLimit-Reset"] = str(reset_secs)
+
+    return response
+
 
 # --- Data Models (Pydantic schemas mirroring data/schemas/forecast_event.json) ---
 

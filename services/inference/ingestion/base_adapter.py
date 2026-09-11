@@ -48,6 +48,9 @@ class NormalizedObservationGrid(BaseModel):
     channels: Dict[str, NormalizedFeatureChannel]
 
 
+from core.resilience import CircuitBreaker, with_retry
+
+
 class BaseAdapter(ABC):
     """
     Abstract Base Class for Data Ingestion Adapters.
@@ -58,6 +61,7 @@ class BaseAdapter(ABC):
     def __init__(self, source_name: str, sensor_or_model: str):
         self.source_name = source_name
         self.sensor_or_model = sensor_or_model
+        self.circuit_breaker = CircuitBreaker(name=f"{source_name}_circuit", failure_threshold=4, recovery_timeout_seconds=20.0)
 
     @abstractmethod
     def ingest(self, raw_payload: Any, **kwargs) -> NormalizedObservationGrid:
