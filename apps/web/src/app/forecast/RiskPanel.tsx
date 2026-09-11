@@ -1,5 +1,17 @@
-import React from "react";
-import { X, AlertTriangle, Mountain, Wind, Droplets, Info, Compass, ShieldCheck } from "lucide-react";
+import React, { useState } from "react";
+import {
+  X,
+  AlertTriangle,
+  Mountain,
+  Wind,
+  Droplets,
+  Info,
+  Compass,
+  ShieldCheck,
+  HelpCircle,
+  Activity,
+  Layers,
+} from "lucide-react";
 import RiskBadge, { SeverityLevel } from "../components/RiskBadge";
 
 export interface SelectedCellData {
@@ -40,7 +52,27 @@ export default function RiskPanel({
   onClose,
   className = "",
 }: RiskPanelProps) {
+  const [showLimitations, setShowLimitations] = useState<boolean>(false);
+
   if (!cellData) return null;
+
+  // Calculate dual-factor decomposition
+  const pMeteo = Math.min(
+    1.0,
+    cellData.probabilities.cloudburst * 0.75 + cellData.probabilities.thunderstorm * 0.25
+  );
+  const sTerrain = Math.min(
+    1.0,
+    (cellData.terrain.slopeDeg / 40.0) * 0.55 + ((cellData.terrain.twi - 2.0) / 12.0) * 0.45
+  );
+  const surgeAmp = Math.pow(pMeteo * sTerrain, 0.8);
+
+  const dominantDriver =
+    pMeteo > sTerrain + 0.2
+      ? "METEOROLOGY_DRIVEN"
+      : sTerrain > pMeteo + 0.2
+      ? "TERRAIN_AMPLIFIED"
+      : "COMPOUND_SURGE";
 
   return (
     <div
@@ -70,59 +102,112 @@ export default function RiskPanel({
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
-        {/* Probability Breakdown */}
-        <div>
-          <div className="flex items-center justify-between mb-2 font-mono text-[11px] text-slate-400 font-semibold uppercase tracking-wider">
-            <span>Nowcast Hazard Probabilities</span>
-            <span className="text-cyan-400">T+{cellData.horizonMinutes / 60}h Horizon</span>
+        {/* Mandatory Scientific Integrity Disclaimer */}
+        <div className="rounded border border-amber-800/60 bg-amber-950/40 p-2.5 font-mono text-[10px] text-amber-200">
+          <div className="flex items-center justify-between font-bold mb-1">
+            <span className="flex items-center gap-1 text-amber-300">
+              <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
+              STATISTICAL RISK ESTIMATE (PILOT)
+            </span>
+            <button
+              onClick={() => setShowLimitations(!showLimitations)}
+              className="text-cyan-300 underline hover:text-cyan-100 text-[9px]"
+            >
+              {showLimitations ? "Hide Details" : "Model Limitations"}
+            </button>
+          </div>
+          <p className="text-[9px] text-amber-200/80 leading-relaxed">
+            Flash-flood index reflects hydrometeorological surge susceptibility. Not deterministic 2D hydraulic inundation truth.
+          </p>
+
+          {showLimitations && (
+            <div className="mt-2 pt-2 border-t border-amber-800/50 space-y-1 text-[9px] text-amber-100/90">
+              <div>• <strong>Hydrodynamics:</strong> Shallow-water hydraulic wave propagation and backwater effects are unmodeled.</div>
+              <div>• <strong>Infiltration:</strong> Soil saturation parameterized by Topographic Wetness Index (TWI), not live TDR probes.</div>
+              <div>• <strong>Debris Dams:</strong> Local landslide dam breach surges can exceed modeled catchment bounds.</div>
+            </div>
+          )}
+        </div>
+
+        {/* Dual-Factor Decomposition: Weather vs. Terrain */}
+        <div className="rounded border border-slate-800 bg-[#0a1122] p-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-mono font-semibold text-[11px] text-cyan-300 uppercase flex items-center gap-1.5">
+              <Layers className="h-3.5 w-3.5 text-cyan-400" />
+              Dual-Factor Flash-Flood Attribution
+            </span>
+            <span className="rounded bg-slate-800 px-1.5 py-0.5 text-[9px] font-mono text-cyan-400 border border-slate-700">
+              {dominantDriver}
+            </span>
           </div>
 
-          <div className="space-y-2">
-            {/* Thunderstorm */}
-            <div className="rounded border border-slate-800/80 bg-slate-900/60 p-2.5">
-              <div className="flex items-center justify-between mb-1.5 font-mono">
-                <span className="text-slate-300">Severe Thunderstorm</span>
-                <span className="font-bold text-amber-400">
-                  {Math.round(cellData.probabilities.thunderstorm * 100)}%
+          <div className="space-y-2.5 font-mono">
+            {/* Factor 1: Dynamic Weather Forcing */}
+            <div>
+              <div className="flex items-center justify-between text-[11px] mb-1">
+                <span className="text-slate-300 flex items-center gap-1">
+                  <Droplets className="h-3 w-3 text-cyan-400" />
+                  Meteorological Forcing (P_meteo)
                 </span>
+                <span className="font-bold text-cyan-300">{Math.round(pMeteo * 100)}%</span>
               </div>
               <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-amber-500 rounded-full transition-all duration-500"
-                  style={{ width: `${cellData.probabilities.thunderstorm * 100}%` }}
+                  className="h-full bg-gradient-to-r from-cyan-600 to-cyan-400 rounded-full transition-all duration-500"
+                  style={{ width: `${Math.round(pMeteo * 100)}%` }}
                 />
+              </div>
+              <div className="flex justify-between text-[9px] text-slate-400 mt-0.5">
+                <span>Cloudburst: {Math.round(cellData.probabilities.cloudburst * 100)}%</span>
+                <span>Thunderstorm: {Math.round(cellData.probabilities.thunderstorm * 100)}%</span>
               </div>
             </div>
 
-            {/* Cloudburst */}
-            <div className="rounded border border-slate-800/80 bg-slate-900/60 p-2.5">
-              <div className="flex items-center justify-between mb-1.5 font-mono">
-                <span className="text-slate-300">Cloudburst Potential</span>
-                <span className="font-bold text-orange-400">
-                  {Math.round(cellData.probabilities.cloudburst * 100)}%
+            {/* Factor 2: Static Terrain Susceptibility */}
+            <div>
+              <div className="flex items-center justify-between text-[11px] mb-1">
+                <span className="text-slate-300 flex items-center gap-1">
+                  <Mountain className="h-3 w-3 text-amber-400" />
+                  Terrain Susceptibility (S_terrain)
                 </span>
+                <span className="font-bold text-amber-400">{Math.round(sTerrain * 100)}%</span>
               </div>
               <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-orange-500 rounded-full transition-all duration-500"
-                  style={{ width: `${cellData.probabilities.cloudburst * 100}%` }}
+                  className="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full transition-all duration-500"
+                  style={{ width: `${Math.round(sTerrain * 100)}%` }}
                 />
+              </div>
+              <div className="flex justify-between text-[9px] text-slate-400 mt-0.5">
+                <span>Slope: {cellData.terrain.slopeDeg.toFixed(1)}°</span>
+                <span>TWI: {cellData.terrain.twi.toFixed(1)}</span>
+                <span>Relief: {cellData.terrain.elevationM}m</span>
               </div>
             </div>
 
-            {/* Flash Flood */}
-            <div className="rounded border border-slate-800/80 bg-slate-900/60 p-2.5">
-              <div className="flex items-center justify-between mb-1.5 font-mono">
-                <span className="text-slate-300">Flash Flood Runoff Risk</span>
-                <span className="font-bold text-rose-400">
+            {/* Factor 3: Surge Amplification Interaction */}
+            <div className="pt-2 border-t border-slate-800/80">
+              <div className="flex items-center justify-between text-[11px] mb-1">
+                <span className="text-slate-300 flex items-center gap-1">
+                  <Activity className="h-3 w-3 text-rose-400" />
+                  Fused Flash-Flood Risk (R_surge)
+                </span>
+                <span className="font-extrabold text-rose-400">
                   {Math.round(cellData.probabilities.flashFlood * 100)}%
                 </span>
               </div>
-              <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-rose-500 rounded-full transition-all duration-500"
-                  style={{ width: `${cellData.probabilities.flashFlood * 100}%` }}
+                  className="h-full bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 rounded-full transition-all duration-500"
+                  style={{ width: `${Math.round(cellData.probabilities.flashFlood * 100)}%` }}
                 />
+              </div>
+              <div className="text-[9px] text-slate-400 mt-1 leading-tight">
+                {dominantDriver === "TERRAIN_AMPLIFIED"
+                  ? "Hydraulic confinement in steep ravine amplifies moderate rain into surge potential."
+                  : dominantDriver === "METEOROLOGY_DRIVEN"
+                  ? "Extreme localized convective rainfall core exceeds catchment infiltration rate."
+                  : "Compound threat: high rainfall intensity coinciding with steep, convergent mountain terrain."}
               </div>
             </div>
           </div>
@@ -136,36 +221,38 @@ export default function RiskPanel({
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-slate-300 font-mono text-[11px]">
-            <div className="rounded bg-slate-800/50 p-2">
+            <div className="rounded bg-slate-800/50 p-2 border border-slate-800">
               <div className="text-slate-400 text-[10px]">SLOPE GRADIENT</div>
               <div className="text-sm font-bold text-slate-100">
                 {cellData.terrain.slopeDeg.toFixed(1)}°
               </div>
-              <div className="text-[9px] text-slate-400 mt-0.5">Steep Incline</div>
+              <div className="text-[9px] text-slate-400 mt-0.5">
+                {cellData.terrain.slopeDeg > 35 ? "Extreme Incline" : "Moderate Incline"}
+              </div>
             </div>
 
-            <div className="rounded bg-slate-800/50 p-2">
+            <div className="rounded bg-slate-800/50 p-2 border border-slate-800">
               <div className="text-slate-400 text-[10px]">TOPOGRAPHIC WETNESS</div>
               <div className="text-sm font-bold text-slate-100">
                 {cellData.terrain.twi.toFixed(1)}
               </div>
-              <div className="text-[9px] text-slate-400 mt-0.5">High Inundation Propensity</div>
+              <div className="text-[9px] text-slate-400 mt-0.5">Convergent Drainage Channel</div>
             </div>
 
-            <div className="rounded bg-slate-800/50 p-2">
+            <div className="rounded bg-slate-800/50 p-2 border border-slate-800">
               <div className="text-slate-400 text-[10px]">ELEVATION (MSL)</div>
               <div className="text-sm font-bold text-slate-100">
                 {cellData.terrain.elevationM} m
               </div>
-              <div className="text-[9px] text-slate-400 mt-0.5">Himalayan Valley Floor</div>
+              <div className="text-[9px] text-slate-400 mt-0.5">Himalayan Catchment</div>
             </div>
 
-            <div className="rounded bg-slate-800/50 p-2">
+            <div className="rounded bg-slate-800/50 p-2 border border-slate-800">
               <div className="text-slate-400 text-[10px]">CATCHMENT VULNERABILITY</div>
               <div className="text-sm font-bold text-rose-300">
                 {(cellData.terrain.catchmentVuln * 10).toFixed(1)} / 10
               </div>
-              <div className="text-[9px] text-rose-400 mt-0.5">Severe Hydrological Risk</div>
+              <div className="text-[9px] text-rose-400 mt-0.5">Hydrological Vulnerability</div>
             </div>
           </div>
         </div>
@@ -205,7 +292,7 @@ export default function RiskPanel({
           </div>
 
           <div className="mt-3 rounded border border-slate-800 bg-slate-900/60 p-2 text-[10px] text-slate-400 leading-relaxed font-mono">
-            <strong>Disaster Support Transparency:</strong> Attributions represent relative input feature importance within the spatiotemporal model. They provide operational guidance without claiming deterministic causal certainty.
+            <strong>Operational Transparency:</strong> Attributions represent relative input feature importance within the spatiotemporal model. They provide operational guidance without claiming deterministic causal certainty.
           </div>
         </div>
       </div>

@@ -301,6 +301,21 @@ export default function ForecastMap({
                 {/* Center marker / severity icon */}
                 <circle cx={svgX} cy={svgY} r={5} fill={fillColor} />
 
+                {/* Terrain susceptibility tag when layer enabled */}
+                {layers.terrainSusceptibility && (
+                  <text
+                    x={svgX}
+                    y={svgY - 26}
+                    textAnchor="middle"
+                    fill="#38bdf8"
+                    fontSize="8"
+                    fontFamily="ui-monospace, monospace"
+                    fontWeight="600"
+                  >
+                    {cell.terrain.slopeDeg.toFixed(0)}° / TWI {cell.terrain.twi.toFixed(0)}
+                  </text>
+                )}
+
                 {/* Cell label */}
                 <text
                   x={svgX}
@@ -329,7 +344,7 @@ export default function ForecastMap({
           })}
         </svg>
 
-        {/* Hover Inspector Tooltip */}
+        {/* Hover Inspector Tooltip with Dual-Factor Attribution */}
         {hoveredCell && (
           <div
             className="pointer-events-none absolute bottom-4 left-4 z-30 rounded-lg border border-slate-700 bg-[#0c1322]/95 p-3 shadow-2xl backdrop-blur font-mono text-xs max-w-xs"
@@ -338,49 +353,55 @@ export default function ForecastMap({
               <span className="font-semibold text-slate-100">{hoveredCell.name}</span>
               <RiskBadge severity={hoveredCell.severity} size="sm" />
             </div>
-            <div className="space-y-1 text-[11px] text-slate-300">
+            <div className="space-y-1.5 text-[11px] text-slate-300">
               <div className="flex justify-between">
-                <span className="text-slate-400">Flash Flood Probability:</span>
+                <span className="text-slate-400">Fused Flash-Flood Risk (R_surge):</span>
                 <span className="font-bold text-rose-400">
                   {Math.round(hoveredCell.probabilities.flashFlood * 100)}%
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Thunderstorm Convection:</span>
-                <span className="font-bold text-amber-400">
-                  {Math.round(hoveredCell.probabilities.thunderstorm * 100)}%
+              <div className="flex justify-between text-[10px]">
+                <span className="text-cyan-400">Meteorological (P_meteo):</span>
+                <span className="font-semibold text-cyan-300">
+                  {Math.round((hoveredCell.probabilities.cloudburst * 0.75 + hoveredCell.probabilities.thunderstorm * 0.25) * 100)}%
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Catchment Slope:</span>
-                <span>{hoveredCell.terrain.slopeDeg}°</span>
+              <div className="flex justify-between text-[10px]">
+                <span className="text-amber-400">Terrain Vulnerability (S_terrain):</span>
+                <span className="font-semibold text-amber-300">
+                  {Math.round(((hoveredCell.terrain.slopeDeg / 40.0) * 0.55 + ((hoveredCell.terrain.twi - 2.0) / 12.0) * 0.45) * 100)}%
+                </span>
+              </div>
+              <div className="flex justify-between text-[10px] text-slate-400 border-t border-slate-800/60 pt-1">
+                <span>Slope / Elev:</span>
+                <span>{hoveredCell.terrain.slopeDeg}° • {hoveredCell.terrain.elevationM}m MSL</span>
               </div>
             </div>
-            <div className="mt-2 text-[9px] text-cyan-400">
-              Click cell to open detailed Explainable AI factors
+            <div className="mt-2 text-[9px] text-cyan-400/90">
+              Click cell to open Dual-Factor Risk & XAI Inspector
             </div>
           </div>
         )}
       </div>
 
-      {/* Map Legend Overlay */}
+      {/* Map Legend Overlay with Accessible Color + Shape Cues */}
       <div className="absolute bottom-3 right-3 z-20 flex items-center gap-3 rounded-md border border-slate-800/90 bg-[#090e1a]/95 px-3 py-1.5 font-mono text-[10px] text-slate-300 backdrop-blur shadow-lg">
         <span className="text-slate-400 font-semibold uppercase">Severity:</span>
         <div className="flex items-center gap-1">
-          <span className="h-2 w-2 rounded-full bg-emerald-500" />
-          <span>Low</span>
+          <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+          <span>Low (●)</span>
         </div>
         <div className="flex items-center gap-1">
-          <span className="h-2 w-2 rounded-full bg-amber-500" />
-          <span>Advisory</span>
+          <span className="inline-block h-2 w-2 bg-amber-500 transform rotate-45" />
+          <span>Watch (◆)</span>
         </div>
         <div className="flex items-center gap-1">
-          <span className="h-2 w-2 rounded-full bg-orange-500" />
-          <span>Watch</span>
+          <span className="inline-block w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[8px] border-b-orange-500" />
+          <span>Warning (▲)</span>
         </div>
         <div className="flex items-center gap-1">
-          <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
-          <span>Warning / Crit</span>
+          <span className="inline-block w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[8px] border-b-rose-500 animate-pulse" />
+          <span>Critical (▲)</span>
         </div>
       </div>
     </div>

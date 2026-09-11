@@ -354,7 +354,66 @@ def get_hurdle_comparison():
     return {"error": "Comparison metrics not yet generated"}
 
 
+# --- Phase 6 Terrain-Aware Flash-Flood Risk Endpoints ---
+
+from terrain.risk_fusion import FlashFloodRiskFusion
+from terrain.basin_catalog import list_all_basins, get_basin_by_id
+from terrain.dem_processor import DEMProcessor
+
+risk_fusion_engine = FlashFloodRiskFusion()
+dem_processor = DEMProcessor()
+
+
+class TerrainRiskRequest(BaseModel):
+    cell_id: str = Field(default="3073_7906", description="Target grid cell identifier")
+    cloudburst_probability: float = Field(default=0.65, ge=0.0, le=1.0)
+    thunderstorm_probability: float = Field(default=0.82, ge=0.0, le=1.0)
+    slope_deg: Optional[float] = Field(default=46.2, ge=0.0, le=90.0)
+    twi: Optional[float] = Field(default=14.8, ge=0.0, le=25.0)
+    elevation_m: Optional[float] = Field(default=3583.0)
+    antecedent_moisture_index: float = Field(default=0.80, ge=0.0, le=1.5)
+
+
+@app.post("/api/v1/terrain/flood-risk", tags=["Terrain Risk Layer"])
+def calculate_terrain_flood_risk(req: TerrainRiskRequest):
+    """
+    Fuses meteorological cloudburst probabilities with DEM slope and TWI.
+    Returns dual-factor attribution separating dynamic rain forcing from static terrain vulnerability.
+    """
+    result = risk_fusion_engine.calculate_risk(
+        cloudburst_prob=req.cloudburst_probability,
+        thunderstorm_prob=req.thunderstorm_probability,
+        slope_deg=req.slope_deg or 35.0,
+        twi=req.twi or 10.0,
+        elevation_m=req.elevation_m or 1500.0,
+        antecedent_moisture_index=req.antecedent_moisture_index,
+    )
+    result["cell_id"] = req.cell_id
+    result["calculated_at"] = datetime.now(timezone.utc).isoformat()
+    return result
+
+
+@app.get("/api/v1/terrain/basins", tags=["Terrain Risk Layer"])
+def get_pilot_basins():
+    """Returns hydrological river basin profiles for Himalayan pilot catchments."""
+    return {
+        "basins": list_all_basins(),
+        "count": len(list_all_basins()),
+        "disclaimer": FlashFloodRiskFusion.DISCLAIMER,
+    }
+
+
+@app.get("/api/v1/terrain/basin/{basin_id}", tags=["Terrain Risk Layer"])
+def get_single_basin(basin_id: str):
+    """Returns specific river basin hydrologic parameters."""
+    try:
+        return get_basin_by_id(basin_id)
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
 
