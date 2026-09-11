@@ -7,6 +7,10 @@ from .resilience import (
     with_retry,
     SlidingWindowRateLimiter,
 )
+from .telemetry import (
+    PrometheusMetricCollector,
+    telemetry,
+)
 
 __all__ = [
     "CircuitBreaker",
@@ -14,4 +18,6 @@ __all__ = [
     "CircuitBreakerOpenException",
     "with_retry",
     "SlidingWindowRateLimiter",
+    "PrometheusMetricCollector",
+    "telemetry",
 ]

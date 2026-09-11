@@ -25,22 +25,25 @@ app.add_middleware(
 )
 
 from fastapi import Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from core.resilience import SlidingWindowRateLimiter
+from core.telemetry import telemetry
 
 rate_limiter = SlidingWindowRateLimiter(max_requests=120, window_seconds=60)
 
 
 @app.middleware("http")
 async def security_and_rate_limit_middleware(request: Request, call_next):
-    # 1. Rate Limiting Check (bypass for health probe)
+    # 1. Rate Limiting Check (bypass for health & metrics probes)
+    is_exempt = request.url.path.startswith("/health") or request.url.path.startswith("/metrics")
     client_ip = request.headers.get("x-forwarded-for", request.client.host if request.client else "unknown")
     if client_ip and "," in client_ip:
         client_ip = client_ip.split(",")[0].strip()
 
     allowed, remaining, reset_secs = rate_limiter.is_allowed(client_ip)
 
-    if not allowed and not request.url.path.startswith("/health"):
+    if not allowed and not is_exempt:
+        telemetry.record_rate_limit_block()
         return JSONResponse(
             status_code=429,
             content={
@@ -57,6 +60,9 @@ async def security_and_rate_limit_middleware(request: Request, call_next):
 
     response = await call_next(request)
 
+    # Record telemetry metrics
+    telemetry.record_request(request.url.path, response.status_code)
+
     # 2. OWASP Recommended Security Headers
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
@@ -68,6 +74,17 @@ async def security_and_rate_limit_middleware(request: Request, call_next):
     response.headers["X-RateLimit-Reset"] = str(reset_secs)
 
     return response
+
+
+@app.get("/metrics", tags=["Monitoring"])
+def get_prometheus_metrics():
+    """Prometheus exposition metrics endpoint for monitoring and alerting scrapers."""
+    active_alerts = len(alert_engine.list_alerts())
+    telemetry.set_active_alerts(active_alerts)
+    return Response(
+        content=telemetry.export_text(),
+        media_type="text/plain; version=0.0.4; charset=utf-8",
+    )
 
 
 # --- Data Models (Pydantic schemas mirroring data/schemas/forecast_event.json) ---
