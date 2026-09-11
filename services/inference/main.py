@@ -412,8 +412,85 @@ def get_single_basin(basin_id: str):
         raise HTTPException(status_code=404, detail=str(e))
 
 
+# --- Phase 7 Real-Time Inference & Forecast Orchestration Endpoints ---
+
+from orchestration.pipeline import ForecastPipeline
+from orchestration.scheduler import OrchestrationScheduler
+
+forecast_pipeline = ForecastPipeline(
+    deep_inference=deep_inference_engine,
+    risk_fusion=risk_fusion_engine,
+    normalizer=normalizer,
+)
+orchestration_scheduler = OrchestrationScheduler(
+    pipeline=forecast_pipeline,
+    freshness_service=freshness_service,
+)
+
+
+class TriggerCycleRequest(BaseModel):
+    is_synthetic_replay: bool = Field(default=True)
+    source: str = Field(default="manual_operator_trigger")
+    observation_payload: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Optional explicit multi-sensor observation batch; defaults to synthetic replay if omitted",
+    )
+
+
+@app.post("/api/v1/orchestration/trigger", tags=["Orchestration"])
+def trigger_nowcast_cycle(req: TriggerCycleRequest):
+    """
+    Triggers an end-to-end nowcast prediction cycle:
+    Ingestion -> Normalization -> Conv3D Inference -> Terrain Risk Fusion -> GeoJSON Snapshot.
+    Enforces idempotency (identical input timestamps return cached snapshot).
+    """
+    try:
+        snapshot = forecast_pipeline.execute_cycle(
+            raw_observation_batch=req.observation_payload,
+            is_synthetic_replay=req.is_synthetic_replay,
+            trigger_source=req.source,
+        )
+        return snapshot
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Orchestration cycle failed: {str(e)}")
+
+
+@app.get("/api/v1/forecast/latest-geojson", tags=["Orchestration"])
+def get_latest_forecast_geojson():
+    """
+    Returns the latest operational forecast as a standard RFC 7946 GeoJSON FeatureCollection.
+    Ready for zero-copy MapLibre rendering.
+    """
+    return forecast_pipeline.get_latest_geojson()
+
+
+@app.get("/api/v1/orchestration/jobs", tags=["Orchestration"])
+def list_orchestration_jobs(limit: int = 20):
+    """Returns audit history of recent nowcast execution cycles."""
+    return {
+        "jobs": forecast_pipeline.job_manager.list_jobs(limit=limit),
+        "total_tracked": len(forecast_pipeline.job_manager._jobs),
+    }
+
+
+@app.get("/api/v1/orchestration/jobs/{job_id}", tags=["Orchestration"])
+def get_job_details(job_id: str):
+    """Returns detailed execution timeline and logs for a specific job."""
+    job = forecast_pipeline.job_manager.get_job(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail=f"Job '{job_id}' not found.")
+    return job.to_dict()
+
+
+@app.get("/api/v1/orchestration/system-health", tags=["Orchestration"])
+def get_system_health():
+    """Returns full operational telemetry: feed freshness, job metrics, and dead-letter counts."""
+    return orchestration_scheduler.evaluate_system_health()
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
 
 

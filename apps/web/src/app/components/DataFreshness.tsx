@@ -1,12 +1,14 @@
 import React from "react";
-import { Activity, Clock, Wifi, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Activity, Clock, Wifi, AlertTriangle, CheckCircle2, ShieldAlert, Cpu } from "lucide-react";
 
 interface DataFreshnessProps {
   satelliteAgeMinutes: number;
   nwpAgeMinutes: number;
   lastInferenceUtc: string;
+  lastObservationUtc?: string;
   inferenceLatencyMs: number;
   modelVersion?: string;
+  jobId?: string;
   isDegraded?: boolean;
 }
 
@@ -14,8 +16,10 @@ export default function DataFreshness({
   satelliteAgeMinutes,
   nwpAgeMinutes,
   lastInferenceUtc,
+  lastObservationUtc = "2026-09-11 08:30 UTC",
   inferenceLatencyMs,
-  modelVersion = "v0.1.0-baseline-synthetic",
+  modelVersion = "v1.0.0-conv3d-multitask",
+  jobId = "job_nowcast_active",
   isDegraded = false,
 }: DataFreshnessProps) {
   const isSatelliteStale = satelliteAgeMinutes > 45;
@@ -41,6 +45,14 @@ export default function DataFreshness({
             {!hasStaleFeeds ? "TELEMETRY NOMINAL" : "DATA DEGRADED"}
           </span>
         </div>
+
+        {/* Stale Warning Badge if feeds lag */}
+        {hasStaleFeeds && (
+          <div className="flex items-center gap-1 rounded bg-amber-950/80 px-2 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-700/60 animate-pulse">
+            <ShieldAlert className="h-3 w-3 text-amber-400" />
+            <span>DATA STALE / RUNOFF DEGRADED</span>
+          </div>
+        )}
 
         {/* Satellite Freshness */}
         <div className="flex items-center gap-1.5 text-slate-400">
@@ -68,21 +80,30 @@ export default function DataFreshness({
           </span>
         </div>
 
-        {/* Inference Latency */}
+        {/* Pipeline Latency */}
         <div className="flex items-center gap-1.5 text-slate-400">
           <Clock className="h-3.5 w-3.5 text-emerald-400" />
           <span>LATENCY:</span>
-          <span className="text-slate-200">{inferenceLatencyMs}ms</span>
+          <span className="text-emerald-300 font-bold">{inferenceLatencyMs}ms</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 text-slate-400 text-[11px]">
+      <div className="flex flex-wrap items-center gap-3 text-slate-400 text-[11px]">
+        <div className="flex items-center gap-1">
+          <Cpu className="h-3 w-3 text-cyan-400" />
+          <span>JOB: <span className="text-slate-300 font-bold">{jobId.slice(0, 16)}</span></span>
+        </div>
+        <span className="text-slate-600 hidden sm:inline">|</span>
         <span>
           MODEL: <span className="text-cyan-300">{modelVersion}</span>
         </span>
-        <span className="text-slate-600">|</span>
+        <span className="text-slate-600 hidden sm:inline">|</span>
         <span>
-          LAST INFERENCE: <span className="text-slate-200">{lastInferenceUtc}</span>
+          OBS: <span className="text-slate-300">{lastObservationUtc}</span>
+        </span>
+        <span className="text-slate-600 hidden sm:inline">|</span>
+        <span>
+          GEN: <span className="text-slate-200">{lastInferenceUtc}</span>
         </span>
       </div>
     </div>
