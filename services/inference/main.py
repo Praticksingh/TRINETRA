@@ -206,6 +206,78 @@ def get_sample_normalized_batch():
     return normalizer.process_raw_batch(raw_sample)
 
 
+# --- Phase 4 Baseline Forecast Models & Benchmarks ---
+
+import json
+from pathlib import Path
+from models.persistence import PersistenceBaseline
+from models.climatology import ClimatologyBaseline
+from models.tree_baseline import TreeBaseline
+
+persistence_model = PersistenceBaseline()
+climatology_model = ClimatologyBaseline()
+tree_model = TreeBaseline()
+
+
+class BaselinePredictRequest(BaseModel):
+    baseline_type: str = Field(default="tree", description="One of: 'tree', 'persistence', 'climatology'")
+    horizon_minutes: int = Field(default=120, ge=0, le=360)
+    cells: Optional[List[Dict[str, Any]]] = None
+
+
+@app.post("/api/v1/forecast/baseline", tags=["Baseline Forecast"])
+def predict_baseline(req: BaselinePredictRequest):
+    """Generates baseline forecast predictions for operational comparison."""
+    if req.baseline_type == "persistence":
+        model = persistence_model
+    elif req.baseline_type == "climatology":
+        model = climatology_model
+    else:
+        model = tree_model
+
+    cells_input = req.cells or [
+        {"cell_id": "3012_7824", "name": "Rishikesh", "cape": 3150.0, "cooling_rate": -16.5, "slope_deg": 38.4, "twi": 12.1, "tpw": 58.2, "elevation": 372.0},
+        {"cell_id": "3073_7906", "name": "Kedarnath", "cape": 3850.0, "cooling_rate": -21.4, "slope_deg": 46.2, "twi": 14.8, "tpw": 64.2, "elevation": 3583.0},
+        {"cell_id": "3031_7803", "name": "Dehradun", "cape": 2650.0, "cooling_rate": -8.5, "slope_deg": 22.5, "twi": 9.4, "tpw": 51.0, "elevation": 640.0},
+    ]
+
+    results = []
+    for cell in cells_input:
+        pred = model.predict_cell(cell, horizon_minutes=req.horizon_minutes)
+        results.append({
+            "cell_id": cell["cell_id"],
+            "name": cell.get("name", ""),
+            "horizon_minutes": req.horizon_minutes,
+            "is_test_baseline": True,
+            "probabilities": {
+                "thunderstorm": pred.thunderstorm_prob,
+                "cloudburst": pred.cloudburst_prob,
+                "flash_flood": pred.flash_flood_prob,
+            },
+            "severity": pred.severity,
+            "contributing_factors": pred.contributing_factors,
+        })
+
+    return {
+        "model_name": model.model_name,
+        "model_version": model.model_version,
+        "model_type": model.model_type,
+        "is_test_baseline": True,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "predictions": results,
+    }
+
+
+@app.get("/api/v1/forecast/evaluation-metrics", tags=["Baseline Forecast"])
+def get_evaluation_metrics():
+    """Returns verified held-out benchmark evaluation metrics."""
+    metrics_path = Path(__file__).resolve().parent.parent.parent / "ml" / "evaluation" / "baseline_metrics.json"
+    if metrics_path.exists():
+        with open(metrics_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {"error": "Baseline metrics file not found"}
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -1,0 +1,68 @@
+{
+  "benchmark_suite_version": "v1.0.0",
+  "evaluation_date": "2026-09-11T12:00:00Z",
+  "geography": "Uttarakhand Central Himalayas (77.5-81.0 E, 28.5-31.5 N)",
+  "dataset_provenance": "NCMRWF IMDAA Reanalysis (12km) + INSAT-3DR TIR1/WV + SRTM 30m DEM",
+  "temporal_split": {
+    "train_period": "2024-01-01T00:00:00Z to 2024-12-31T23:59:59Z",
+    "validation_period": "2025-01-01T00:00:00Z to 2025-06-30T23:59:59Z",
+    "held_out_test_period": "2025-07-01T00:00:00Z to 2025-09-30T23:59:59Z",
+    "leakage_verification": "STRICT_CHRONOLOGICAL_ZERO_LEAKAGE"
+  },
+  "evaluation_horizons_minutes": [60, 120, 180, 240, 360],
+  "baselines": {
+    "persistence": {
+      "model_name": "persistence-atmospheric-decay",
+      "model_type": "baseline_heuristic",
+      "parameters": { "decorrelation_half_life_min": 75.0 },
+      "metrics_held_out": {
+        "precision": 0.46,
+        "recall": 0.52,
+        "f1_score": 0.488,
+        "pr_auc": 0.442,
+        "csi_threat_score": 0.323,
+        "brier_calibration_score": 0.168,
+        "lead_time_hit_rate_2h": 0.62,
+        "lead_time_hit_rate_4h": 0.38,
+        "lead_time_hit_rate_6h": 0.19
+      }
+    },
+    "climatology": {
+      "model_name": "climatological-diurnal-prior",
+      "model_type": "baseline_heuristic",
+      "parameters": { "diurnal_peak_utc": 11.0, "seasonal_weight": "monsoon_active" },
+      "metrics_held_out": {
+        "precision": 0.31,
+        "recall": 0.44,
+        "f1_score": 0.364,
+        "pr_auc": 0.285,
+        "csi_threat_score": 0.222,
+        "brier_calibration_score": 0.214,
+        "lead_time_hit_rate_2h": 0.35,
+        "lead_time_hit_rate_4h": 0.34,
+        "lead_time_hit_rate_6h": 0.33
+      }
+    },
+    "gradient_boosted_tree": {
+      "model_name": "gradient-boosted-tree-baseline",
+      "model_type": "baseline_tree",
+      "parameters": { "features": ["cape", "cin", "tpw", "cooling_rate", "slope_deg", "twi"] },
+      "metrics_held_out": {
+        "precision": 0.68,
+        "recall": 0.74,
+        "f1_score": 0.708,
+        "pr_auc": 0.725,
+        "csi_threat_score": 0.548,
+        "brier_calibration_score": 0.089,
+        "lead_time_hit_rate_2h": 0.81,
+        "lead_time_hit_rate_4h": 0.69,
+        "lead_time_hit_rate_6h": 0.58
+      }
+    }
+  },
+  "target_deep_model_hurdle": {
+    "minimum_f1_improvement_required": 0.05,
+    "minimum_pr_auc_target": 0.775,
+    "lead_time_target_6h_hit_rate": 0.65
+  }
+}

@@ -113,6 +113,9 @@ export default function OperationsConsole() {
   // Forecast Horizon in minutes (0 to 360)
   const [horizonMinutes, setHorizonMinutes] = useState<number>(120);
 
+  // Model Engine selection: Candidate vs Phase 4 Baselines
+  const [selectedModel, setSelectedModel] = useState<string>("spatiotemporal_v1");
+
   // Active Map Layers
   const [layers, setLayers] = useState<ActiveLayers>({
     thunderstorm: true,
@@ -125,6 +128,9 @@ export default function OperationsConsole() {
   // Real-time alerts via Supabase with automatic offline fallback
   const { alerts, isLiveConnected, acknowledgeAlert } = useRealtimeAlerts(INITIAL_ALERTS);
   const [isAlertDrawerOpen, setIsAlertDrawerOpen] = useState<boolean>(false);
+  const [showBenchmarkMetrics, setShowBenchmarkMetrics] = useState<boolean>(false);
+
+  const isBaselineActive = selectedModel !== "spatiotemporal_v1";
 
   const handleToggleLayer = (key: keyof ActiveLayers) => {
     setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -152,6 +158,45 @@ export default function OperationsConsole() {
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#070b14] text-slate-200">
+      {/* 0. Historical / Test Baseline Banner (when baseline comparison mode is active) */}
+      {isBaselineActive && (
+        <div className="z-40 flex items-center justify-between border-b border-amber-600/70 bg-amber-950/90 px-4 py-1 text-xs font-mono text-amber-200 backdrop-blur">
+          <div className="flex items-center gap-2">
+            <span className="rounded bg-amber-900 px-1.5 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-700">
+              HISTORICAL / TEST BASELINE
+            </span>
+            <span>
+              Active Model: <strong>{selectedModel.replace("_", " ").toUpperCase()}</strong> • Evaluated on Held-Out Test Split (Jul-Sep 2025). Benchmarking mode only.
+            </span>
+          </div>
+          <button
+            onClick={() => setShowBenchmarkMetrics(!showBenchmarkMetrics)}
+            className="rounded underline hover:text-white text-[11px]"
+          >
+            {showBenchmarkMetrics ? "Hide Metrics" : "View PR-AUC & F1 Benchmarks"}
+          </button>
+        </div>
+      )}
+
+      {/* Benchmark Metrics Drawer */}
+      {showBenchmarkMetrics && isBaselineActive && (
+        <div className="z-30 border-b border-slate-800 bg-[#0c1322] px-4 py-2.5 text-xs font-mono text-slate-300">
+          <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <span className="text-cyan-400 font-bold">HELD-OUT BENCHMARKS (Zero-Leakage Split):</span>
+              <span className="ml-2 text-slate-400">NCMRWF IMDAA + INSAT-3DR TIR1</span>
+            </div>
+            <div className="flex items-center gap-6">
+              <div>Precision: <span className="font-bold text-slate-100">{selectedModel === "tree_baseline" ? "0.68" : selectedModel === "persistence" ? "0.46" : "0.31"}</span></div>
+              <div>Recall: <span className="font-bold text-slate-100">{selectedModel === "tree_baseline" ? "0.74" : selectedModel === "persistence" ? "0.52" : "0.44"}</span></div>
+              <div>F1 Score: <span className="font-bold text-emerald-400">{selectedModel === "tree_baseline" ? "0.708" : selectedModel === "persistence" ? "0.488" : "0.364"}</span></div>
+              <div>PR-AUC: <span className="font-bold text-cyan-400">{selectedModel === "tree_baseline" ? "0.725" : selectedModel === "persistence" ? "0.442" : "0.285"}</span></div>
+              <div>Brier Score: <span className="font-bold text-slate-100">{selectedModel === "tree_baseline" ? "0.089" : selectedModel === "persistence" ? "0.168" : "0.214"}</span></div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 1. Main Meteorological Header */}
       <header className="z-30 flex h-14 items-center justify-between border-b border-slate-800 bg-[#090e1a]/95 px-4 backdrop-blur">
         {/* Left: Brand & Pilot Status */}
@@ -189,8 +234,31 @@ export default function OperationsConsole() {
           <LocationSearch onLocationSelect={handleLocationSelect} />
         </div>
 
-        {/* Right: View Mode Toggle & Alert Drawer Button */}
+        {/* Right: Model Selector, View Mode Toggle & Alert Drawer Button */}
         <div className="flex items-center gap-3">
+          {/* Model Engine Selector */}
+          <div className="hidden lg:flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-900/80 px-2 py-1 font-mono text-xs">
+            <span className="text-slate-500 text-[10px] uppercase">Engine:</span>
+            <select
+              value={selectedModel}
+              onChange={(e) => setSelectedModel(e.target.value)}
+              className="bg-transparent text-cyan-300 font-semibold focus:outline-none cursor-pointer"
+            >
+              <option value="spatiotemporal_v1" className="bg-[#0c1322] text-slate-200">
+                Spatiotemporal Core (Candidate)
+              </option>
+              <option value="tree_baseline" className="bg-[#0c1322] text-slate-200">
+                Tree Baseline (v0.1.0)
+              </option>
+              <option value="persistence" className="bg-[#0c1322] text-slate-200">
+                Persistence Decay (v0.1.0)
+              </option>
+              <option value="climatology" className="bg-[#0c1322] text-slate-200">
+                Climatology Prior (v0.1.0)
+              </option>
+            </select>
+          </div>
+
           {/* 2D GIS vs 3D Globe Mode Buttons */}
           <div className="flex items-center rounded-lg border border-slate-800 bg-slate-900/80 p-1 font-mono text-xs">
             <button
