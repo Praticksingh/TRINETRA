@@ -79,7 +79,39 @@ export default function Timeline({
           </div>
 
           {/* Controls */}
-          <div className="flex items-center gap-1.5 font-mono">
+          <div className="flex items-center gap-2 font-mono">
+            {isPlaying && (
+              <div className="flex items-center gap-1.5 rounded bg-amber-950/80 px-2 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-600/60 animate-pulse">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
+                <span>TIMELAPSE ACTIVE</span>
+              </div>
+            )}
+
+            {/* Playback speed selector */}
+            <div className="flex items-center rounded border border-slate-700 bg-slate-800/80 p-0.5 text-[10px]">
+              <button
+                onClick={() => setPlaybackSpeed(1500)}
+                className={`px-1.5 py-0.5 rounded transition ${playbackSpeed === 1500 ? "bg-cyan-900 text-cyan-200 font-bold" : "text-slate-400 hover:text-slate-200"}`}
+                title="1x speed (1.5s per step)"
+              >
+                1x
+              </button>
+              <button
+                onClick={() => setPlaybackSpeed(750)}
+                className={`px-1.5 py-0.5 rounded transition ${playbackSpeed === 750 ? "bg-cyan-900 text-cyan-200 font-bold" : "text-slate-400 hover:text-slate-200"}`}
+                title="2x speed (0.75s per step)"
+              >
+                2x
+              </button>
+              <button
+                onClick={() => setPlaybackSpeed(350)}
+                className={`px-1.5 py-0.5 rounded transition ${playbackSpeed === 350 ? "bg-cyan-900 text-cyan-200 font-bold" : "text-slate-400 hover:text-slate-200"}`}
+                title="4x speed (0.35s per step)"
+              >
+                4x
+              </button>
+            </div>
+
             <button
               onClick={handleStepPrev}
               disabled={currentHorizonMinutes === HORIZONS[0]}
@@ -93,7 +125,7 @@ export default function Timeline({
               onClick={() => setIsPlaying(!isPlaying)}
               className={`flex items-center gap-1 rounded border px-3 py-1 text-xs font-semibold transition ${
                 isPlaying
-                  ? "border-amber-600 bg-amber-950 text-amber-300"
+                  ? "border-amber-600 bg-amber-950 text-amber-300 shadow-md shadow-amber-900/30"
                   : "border-cyan-600 bg-cyan-950 text-cyan-300 hover:bg-cyan-900"
               }`}
               aria-label={isPlaying ? "Pause automated playback" : "Play nowcast animation sequence"}

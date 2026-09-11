@@ -29,7 +29,7 @@ const GlobeScene = dynamic(() => import("./globe/GlobeScene"), {
   ),
 });
 
-import ForecastMap, { GRID_CELLS } from "./forecast/ForecastMap";
+import ForecastMap, { GRID_CELLS, FilterMode } from "./forecast/ForecastMap";
 import RiskLayers, { ActiveLayers } from "./forecast/RiskLayers";
 import Timeline from "./forecast/Timeline";
 import RiskPanel, { SelectedCellData } from "./forecast/RiskPanel";
@@ -125,6 +125,9 @@ export default function OperationsConsole() {
     terrainSusceptibility: true,
     radarReflectivity: false,
   });
+
+  // Filter Mode for Emergency Managers (All, Critical, Flash-Flood, Gorges, Foothills)
+  const [filterMode, setFilterMode] = useState<FilterMode>("all");
 
   // Real-time alerts via Supabase with automatic offline fallback
   const { alerts, isLiveConnected, acknowledgeAlert } = useRealtimeAlerts(INITIAL_ALERTS);
@@ -431,12 +434,51 @@ export default function OperationsConsole() {
 
         {/* Center Hero: GIS Map or 3D Globe */}
         <main className="relative flex-1 h-full w-full">
+          {/* Top Floating Quick Risk/Region Filter Pills (GIS mode) */}
+          {viewMode === "gis" && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 hidden sm:flex items-center gap-1.5 rounded-full border border-slate-800 bg-[#0a1122]/90 px-3 py-1 text-[11px] font-mono shadow-2xl backdrop-blur-md">
+              <span className="text-slate-500 font-semibold pr-1 uppercase text-[10px]">Filter:</span>
+              <button
+                onClick={() => setFilterMode("all")}
+                className={`rounded-full px-2.5 py-0.5 transition ${filterMode === "all" ? "bg-cyan-900 text-cyan-200 font-bold border border-cyan-600" : "text-slate-400 hover:text-slate-200"}`}
+              >
+                All Regions
+              </button>
+              <button
+                onClick={() => setFilterMode("critical")}
+                className={`rounded-full px-2.5 py-0.5 transition flex items-center gap-1 ${filterMode === "critical" ? "bg-rose-950 text-rose-300 font-bold border border-rose-600" : "text-slate-400 hover:text-slate-200"}`}
+              >
+                <span>Critical / Severe</span>
+                <span className="text-rose-400 font-bold">▲</span>
+              </button>
+              <button
+                onClick={() => setFilterMode("flash_flood")}
+                className={`rounded-full px-2.5 py-0.5 transition flex items-center gap-1 ${filterMode === "flash_flood" ? "bg-blue-950 text-blue-300 font-bold border border-blue-600" : "text-slate-400 hover:text-slate-200"}`}
+              >
+                <span>Flash-Flood Zones</span>
+              </button>
+              <button
+                onClick={() => setFilterMode("steep_gorges")}
+                className={`rounded-full px-2.5 py-0.5 transition ${filterMode === "steep_gorges" ? "bg-amber-950 text-amber-300 font-bold border border-amber-600" : "text-slate-400 hover:text-slate-200"}`}
+              >
+                Valley Gorges
+              </button>
+              <button
+                onClick={() => setFilterMode("foothills")}
+                className={`rounded-full px-2.5 py-0.5 transition ${filterMode === "foothills" ? "bg-emerald-950 text-emerald-300 font-bold border border-emerald-600" : "text-slate-400 hover:text-slate-200"}`}
+              >
+                Foothills / Plains
+              </button>
+            </div>
+          )}
+
           {viewMode === "gis" ? (
             <ForecastMap
               layers={layers}
               selectedCell={selectedCell}
               onSelectCell={setSelectedCell}
               horizonMinutes={horizonMinutes}
+              filterMode={filterMode}
             />
           ) : (
             <GlobeScene

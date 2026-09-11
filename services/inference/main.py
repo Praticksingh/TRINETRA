@@ -488,9 +488,112 @@ def get_system_health():
     return orchestration_scheduler.evaluate_system_health()
 
 
+# --- Phase 8 GIS Dashboard & Explainable AI (XAI) Endpoints ---
+
+from xai.attribution import XAIAttributionEngine
+
+xai_engine = XAIAttributionEngine()
+
+
+class XAIAttributionRequest(BaseModel):
+    cell_id: str = Field(default="3073_7906")
+    hazard_type: str = Field(default="flash_flood")
+    horizon: str = Field(default="2h")
+    features: Optional[Dict[str, float]] = Field(
+        default=None,
+        description="Physical values: cape, cooling_rate, slope_deg, tpw, twi",
+    )
+
+
+@app.post("/api/v1/xai/attribution", tags=["Explainable AI"])
+def get_xai_attribution(req: XAIAttributionRequest):
+    """
+    Computes normalized feature attributions for a given grid cell and hazard.
+    Explicitly includes operational non-causal disclaimer.
+    """
+    sample_features = req.features or {
+        "cape": 3850.0,
+        "cooling_rate": -21.4,
+        "slope_deg": 46.2,
+        "tpw": 64.2,
+        "twi": 14.8,
+    }
+    result = xai_engine.compute_attribution(
+        features=sample_features,
+        hazard_type=req.hazard_type,
+        horizon=req.horizon,
+    )
+    result["cell_id"] = req.cell_id
+    result["generated_at"] = datetime.now(timezone.utc).isoformat()
+    return result
+
+
+@app.get("/api/v1/gis/layers", tags=["GIS Dashboard"])
+def get_gis_layers_catalog():
+    """
+    Returns metadata for active GIS map layers, GeoJSON sources,
+    and accessible non-color shape cues.
+    """
+    return {
+        "crs": "EPSG:4326",
+        "bbox": [77.5, 28.5, 81.0, 31.5],
+        "layers": [
+            {
+                "id": "thunderstorm_prob",
+                "name": "Severe Thunderstorm Probability",
+                "type": "raster_heatmap",
+                "color_ramp": ["#047857", "#f59e0b", "#f97316", "#ef4444"],
+                "icon": "CloudLightning",
+                "shape_cue": "circle",
+            },
+            {
+                "id": "cloudburst_potential",
+                "name": "Cloudburst Intensity (>=100mm/h)",
+                "type": "raster_heatmap",
+                "color_ramp": ["#0284c7", "#6366f1", "#d946ef"],
+                "icon": "CloudRain",
+                "shape_cue": "diamond",
+            },
+            {
+                "id": "flash_flood_risk",
+                "name": "Terrain-Fused Flash Flood Surge Risk",
+                "type": "geojson_polygon",
+                "endpoint": "/api/v1/forecast/latest-geojson",
+                "color_ramp": ["#10b981", "#f59e0b", "#f97316", "#ef4444"],
+                "icon": "Waves",
+                "shape_cue": "triangle",
+            },
+            {
+                "id": "dem_elevation_slope",
+                "name": "SRTM Topography & Elevation Contours",
+                "type": "vector_contour",
+                "icon": "Mountain",
+                "shape_cue": "line",
+            },
+            {
+                "id": "radar_reflectivity",
+                "name": "Doppler Weather Radar Reflectivity (dBZ)",
+                "type": "radar_sweep",
+                "icon": "Radio",
+                "shape_cue": "concentric_rings",
+            },
+        ],
+        "accessibility_standards": {
+            "color_independent": True,
+            "cues": {
+                "low": "Circle (●)",
+                "watch": "Diamond (◆)",
+                "warning": "Triangle (▲)",
+                "critical": "Pulsed Triangle (▲)",
+            },
+        },
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
 
 
 

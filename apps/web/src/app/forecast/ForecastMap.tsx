@@ -97,12 +97,15 @@ export const GRID_CELLS: SelectedCellData[] = [
   },
 ];
 
+export type FilterMode = "all" | "critical" | "flash_flood" | "steep_gorges" | "foothills";
+
 interface ForecastMapProps {
   layers: ActiveLayers;
   selectedCell: SelectedCellData | null;
   onSelectCell: (cell: SelectedCellData) => void;
   horizonMinutes: number;
   className?: string;
+  filterMode?: FilterMode;
 }
 
 export default function ForecastMap({
@@ -111,10 +114,22 @@ export default function ForecastMap({
   onSelectCell,
   horizonMinutes,
   className = "",
+  filterMode = "all",
 }: ForecastMapProps) {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [hoveredCell, setHoveredCell] = useState<SelectedCellData | null>(null);
+
+  const isCellMatch = (cell: SelectedCellData) => {
+    if (!filterMode || filterMode === "all") return true;
+    if (filterMode === "critical") return cell.severity === "critical" || cell.severity === "warning";
+    if (filterMode === "flash_flood") return cell.probabilities.flashFlood >= 0.70;
+    if (filterMode === "steep_gorges") return cell.terrain.slopeDeg >= 35.0;
+    if (filterMode === "foothills") return cell.terrain.elevationM < 800;
+    return true;
+  };
+
+  const matchingCellsCount = useMemo(() => GRID_CELLS.filter(isCellMatch).length, [filterMode]);
 
   const handleZoomIn = () => setZoomLevel((z) => Math.min(z + 0.25, 2.5));
   const handleZoomOut = () => setZoomLevel((z) => Math.max(z - 0.25, 0.75));
@@ -149,6 +164,12 @@ export default function ForecastMap({
         <div className="rounded-md border border-slate-800 bg-[#0b1220]/80 px-2 py-1 text-slate-400 backdrop-blur">
           CRS: EPSG:4326 • GRID: 0.04° (~4km)
         </div>
+        {filterMode !== "all" && (
+          <div className="rounded-md border border-cyan-700/80 bg-cyan-950/90 px-2 py-1 text-cyan-300 font-bold backdrop-blur flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+            <span>FILTER: {filterMode.replace("_", " ").toUpperCase()} ({matchingCellsCount}/{GRID_CELLS.length})</span>
+          </div>
+        )}
       </div>
 
       {/* Map Controls */}
@@ -267,6 +288,8 @@ export default function ForecastMap({
               radius = 30;
             }
 
+            const matchesFilter = isCellMatch(cell);
+
             return (
               <g
                 key={cell.cellId}
@@ -274,7 +297,21 @@ export default function ForecastMap({
                 onClick={() => onSelectCell(cell)}
                 onMouseEnter={() => setHoveredCell(cell)}
                 onMouseLeave={() => setHoveredCell(null)}
+                opacity={matchesFilter ? 1.0 : 0.22}
               >
+                {/* Active filter highlight ring */}
+                {filterMode !== "all" && matchesFilter && (
+                  <circle
+                    cx={svgX}
+                    cy={svgY}
+                    r={28}
+                    fill="none"
+                    stroke="#38bdf8"
+                    strokeWidth="1.5"
+                    strokeDasharray="3 3"
+                  />
+                )}
+
                 {/* Convective risk zone heat aura */}
                 <circle
                   cx={svgX}
