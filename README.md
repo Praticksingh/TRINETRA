@@ -90,8 +90,8 @@ Health probe available at: [http://localhost:8000/health](http://localhost:8000/
 | Phase | Description | Status | Gate Check |
 | :---: | :--- | :---: | :---: |
 | **0** | **Project Constitution & Guardrails** | **COMPLETED** | **PASS** |
-| 1 | UX Foundation & Storytelling Shell | UPCOMING | Pending User Approval |
-| 2 | Supabase Backend Foundation | PENDING | - |
+| **1** | **UX Foundation & Storytelling Shell** | **COMPLETED** | **PASS** |
+| 2 | Supabase Backend Foundation | UPCOMING | Pending User Approval |
 | 3 | Data Ingestion & Normalization Layer | PENDING | - |
 | 4 | Baseline Forecast Engine | PENDING | - |
 | 5 | Spatiotemporal Multi-Task AI Model | PENDING | - |
