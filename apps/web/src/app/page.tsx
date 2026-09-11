@@ -38,6 +38,8 @@ import AlertPanel, { AlertItem } from "./alerts/AlertPanel";
 import WeatherCard, { AtmosphericMetrics } from "./components/WeatherCard";
 import DataFreshness from "./components/DataFreshness";
 import RiskBadge from "./components/RiskBadge";
+import { useRealtimeAlerts } from "../lib/supabase/hooks";
+import { isSupabaseConfigured } from "../lib/supabase/client";
 
 // Initial baseline mock alerts for development (clearly labeled as model advisories)
 const INITIAL_ALERTS: AlertItem[] = [
@@ -120,18 +122,12 @@ export default function OperationsConsole() {
     radarReflectivity: false,
   });
 
-  // Alerts state
-  const [alerts, setAlerts] = useState<AlertItem[]>(INITIAL_ALERTS);
+  // Real-time alerts via Supabase with automatic offline fallback
+  const { alerts, isLiveConnected, acknowledgeAlert } = useRealtimeAlerts(INITIAL_ALERTS);
   const [isAlertDrawerOpen, setIsAlertDrawerOpen] = useState<boolean>(false);
 
   const handleToggleLayer = (key: keyof ActiveLayers) => {
     setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  const handleAcknowledgeAlert = (alertId: string) => {
-    setAlerts((prev) =>
-      prev.map((a) => (a.id === alertId ? { ...a, isAcknowledged: true } : a))
-    );
   };
 
   const handleLocationSelect = (loc: SearchLocation) => {
@@ -171,9 +167,16 @@ export default function OperationsConsole() {
               <span className="rounded bg-cyan-950/80 px-2 py-0.5 text-[10px] font-mono font-semibold text-cyan-300 border border-cyan-800/70">
                 NOWCAST CONSOLE
               </span>
-              <span className="hidden sm:inline-block rounded bg-amber-950/50 px-1.5 py-0.5 text-[9px] font-mono text-amber-300 border border-amber-800/40">
-                SYNTHETIC REPLAY PILOT
-              </span>
+              {isLiveConnected ? (
+                <span className="hidden sm:inline-flex items-center gap-1 rounded bg-emerald-950/80 px-2 py-0.5 text-[9px] font-mono text-emerald-300 border border-emerald-700/60">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  SUPABASE POSTGIS: LIVE
+                </span>
+              ) : (
+                <span className="hidden sm:inline-block rounded bg-amber-950/50 px-1.5 py-0.5 text-[9px] font-mono text-amber-300 border border-amber-800/40">
+                  SYNTHETIC REPLAY (OFFLINE SEED)
+                </span>
+              )}
             </div>
             <p className="text-[11px] text-slate-400 hidden sm:block">
               Hyper-Local Convective Weather Decision-Support System
@@ -302,7 +305,7 @@ export default function OperationsConsole() {
           <div className="absolute top-0 right-0 bottom-0 z-40 w-full sm:w-96 shadow-2xl transition-all">
             <AlertPanel
               alerts={alerts}
-              onAcknowledgeAlert={handleAcknowledgeAlert}
+              onAcknowledgeAlert={acknowledgeAlert}
               onFocusRegion={handleFocusAlert}
               onClose={() => setIsAlertDrawerOpen(false)}
             />
