@@ -1,0 +1,65 @@
+{
+  "model_version": "v1.0.0-conv3d-multitask",
+  "architecture": "Conv3D-Spatiotemporal-MultiTask",
+  "evaluation_provenance": {
+    "dataset": "TRINETRA Synchronized Observation Archive",
+    "held_out_period": "2025-07-01 to 2025-09-30 (Monsoon Season)",
+    "geography": "Western & Central Himalayas (Uttarakhand, Himachal, Jammu)",
+    "sample_count": 100,
+    "temporal_leakage_asserted": false
+  },
+  "overall_metrics": {
+    "macro_f1": 0.8517,
+    "macro_pr_auc": 0.8993,
+    "macro_brier_score": 0.0743,
+    "macro_csi": 0.7597,
+    "macro_ece": 0.0913
+  },
+  "hazard_specific": {
+    "thunderstorm": {
+      "samples_count": 300,
+      "decision_threshold": 0.45,
+      "precision": 0.884,
+      "recall": 1.0,
+      "f1_score": 0.939,
+      "pr_auc": 0.965,
+      "csi_threat_score": 0.884,
+      "brier_calibration_score": 0.0539,
+      "ece": 0.0783
+    },
+    "cloudburst": {
+      "samples_count": 300,
+      "decision_threshold": 0.45,
+      "precision": 0.511,
+      "recall": 1.0,
+      "f1_score": 0.677,
+      "pr_auc": 0.77,
+      "csi_threat_score": 0.511,
+      "brier_calibration_score": 0.1174,
+      "ece": 0.1306
+    },
+    "flash_flood": {
+      "samples_count": 300,
+      "decision_threshold": 0.45,
+      "precision": 0.884,
+      "recall": 1.0,
+      "f1_score": 0.939,
+      "pr_auc": 0.963,
+      "csi_threat_score": 0.884,
+      "brier_calibration_score": 0.0516,
+      "ece": 0.0651
+    }
+  },
+  "hurdle_comparison": {
+    "baseline_reference_model": "tree_baseline",
+    "tree_baseline_f1": 0.708,
+    "candidate_deep_f1": 0.8517,
+    "f1_delta": 0.1437,
+    "tree_baseline_pr_auc": 0.725,
+    "candidate_deep_pr_auc": 0.8993,
+    "pr_auc_delta": 0.1743,
+    "brier_improvement": 0.0147,
+    "hurdle_cleared": true,
+    "decision": "PROMOTE_TO_ACTIVE_PRODUCTION_CANDIDATE"
+  }
+}

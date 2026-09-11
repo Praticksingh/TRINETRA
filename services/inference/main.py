@@ -278,6 +278,83 @@ def get_evaluation_metrics():
     return {"error": "Baseline metrics file not found"}
 
 
+# --- Phase 5 Spatiotemporal Deep Model Endpoints ---
+
+from models.deep_inference import TrinetraDeepInference
+
+deep_inference_engine = TrinetraDeepInference(
+    checkpoint_path=str(Path(__file__).resolve().parent.parent.parent / "ml" / "checkpoints" / "v1.0.0-conv3d-multitask.pt")
+)
+
+
+class DeepNowcastRequest(BaseModel):
+    region_id: str = Field(default="IN-UT", description="Region identifier")
+    horizons: List[str] = Field(default=["2h", "4h", "6h"])
+    is_synthetic_replay: bool = Field(default=True)
+    tensor_input: Optional[List[List[List[List[float]]]]] = Field(
+        default=None,
+        description="Optional 4D spatiotemporal tensor: [Time=4, Channels=10, Height, Width]",
+    )
+
+
+@app.post("/api/v1/forecast/deep-nowcast", tags=["Deep Learning Nowcast"])
+def predict_deep_nowcast(req: DeepNowcastRequest):
+    """
+    Executes Spatiotemporal Conv3D Multi-Task deep nowcast.
+    Returns calibrated multi-head probabilities (Thunderstorm, Cloudburst, Flash Flood)
+    with microsecond latency measurement and explicit data provenance.
+    """
+    if req.tensor_input is not None:
+        import numpy as np
+        tensor_np = np.array(req.tensor_input, dtype=np.float32)
+    else:
+        # Default representative Uttarakhand convective observation grid (10 channels, 15x15)
+        import numpy as np
+        # Produce realistic convective profile with rapid cooling and steep terrain
+        tensor_np = np.zeros((4, 10, 15, 15), dtype=np.float32)
+        for t in range(4):
+            tensor_np[t, 0, :, :] = (210.0 - 4.5 * t - 200.0) / 100.0  # Cold cloud-top (210K -> 196K)
+            tensor_np[t, 1, :, :] = (2.5 + 0.3 * t) / 10.0            # BTD
+            tensor_np[t, 2, :, :] = (-14.0 * (1.0 + 0.1 * t)) / 15.0  # Severe cooling rate
+            tensor_np[t, 3, :, :] = (3200.0 + 150.0 * t) / 4000.0     # High CAPE
+            tensor_np[t, 4, :, :] = 25.0 / 200.0                      # Weak CIN
+            tensor_np[t, 5, :, :] = (62.0 + 2.0 * t) / 80.0           # Very high precipitable water
+            tensor_np[t, 6, :, :] = (-1.4 - 0.2 * t) / 2.0            # Strong ascent
+            tensor_np[t, 7, :, :] = 2800.0 / 4000.0                   # High elevation
+            tensor_np[t, 8, :, :] = 36.0 / 60.0                       # Steep slope
+            tensor_np[t, 9, :, :] = 11.5 / 15.0                       # High TWI / convergent valley
+
+    result = deep_inference_engine.predict(
+        tensor_data=tensor_np,
+        is_synthetic_replay=req.is_synthetic_replay,
+        source_id=f"deep_conv3d_{req.region_id}",
+    )
+    result["region_id"] = req.region_id
+    result["generated_at"] = datetime.now(timezone.utc).isoformat()
+    return result
+
+
+@app.get("/api/v1/forecast/hurdle-comparison", tags=["Deep Learning Nowcast"])
+def get_hurdle_comparison():
+    """
+    Returns head-to-head benchmark comparison between the Deep Spatiotemporal Model
+    and the Phase 4 Tree Baseline on the identical held-out test split.
+    """
+    comparison_path = Path(__file__).resolve().parent.parent.parent / "ml" / "evaluation" / "model_comparison.json"
+    if comparison_path.exists():
+        with open(comparison_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    # Fallback to deep metrics
+    deep_path = Path(__file__).resolve().parent.parent.parent / "ml" / "evaluation" / "deep_model_metrics.json"
+    if deep_path.exists():
+        with open(deep_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    return {"error": "Comparison metrics not yet generated"}
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
