@@ -4,7 +4,7 @@ Authoritative service for scientific data processing, spatiotemporal inference, 
 """
 
 from datetime import datetime, timezone
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -172,6 +172,38 @@ def predict_nowcast(payload: PredictRequest):
         grid_resolution_deg=0.04,
         predictions=sample_cells,
     )
+
+
+# --- Phase 3 Ingestion & Normalization Endpoints ---
+
+from ingestion.normalizer import SpatiotemporalNormalizer
+from ingestion.freshness import FreshnessService, TelemetrySnapshot
+from ingestion.synthetic_replay import generate_synthetic_nowcast_payload
+
+normalizer = SpatiotemporalNormalizer()
+freshness_service = FreshnessService()
+
+
+@app.get("/api/v1/ingestion/status", response_model=TelemetrySnapshot, tags=["Ingestion"])
+def get_ingestion_status():
+    """Returns telemetry lag, quality flags, and operational status for all input feeds."""
+    return freshness_service.evaluate_feeds()
+
+
+@app.post("/api/v1/ingestion/normalize", tags=["Ingestion"])
+def normalize_observation_batch(raw_batch: Dict[str, Any]):
+    """Ingests multi-sensor observation batch, aligns to EPSG:4326 grid, and outputs normalized feature tensor."""
+    try:
+        return normalizer.process_raw_batch(raw_batch)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/api/v1/ingestion/sample-batch", tags=["Ingestion"])
+def get_sample_normalized_batch():
+    """Produces a deterministic, end-to-end normalized Uttarakhand convective event batch."""
+    raw_sample = generate_synthetic_nowcast_payload()
+    return normalizer.process_raw_batch(raw_sample)
 
 
 if __name__ == "__main__":

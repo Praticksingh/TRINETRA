@@ -92,8 +92,8 @@ Health probe available at: [http://localhost:8000/health](http://localhost:8000/
 | **0** | **Project Constitution & Guardrails** | **COMPLETED** | **PASS** |
 | **1** | **UX Foundation & Storytelling Shell** | **COMPLETED** | **PASS** |
 | **2** | **Supabase Backend Foundation** | **COMPLETED** | **PASS** |
-| 3 | Data Ingestion & Normalization Layer | UPCOMING | Pending User Approval |
-| 4 | Baseline Forecast Engine | PENDING | - |
+| **3** | **Data Ingestion & Normalization Layer** | **COMPLETED** | **PASS** |
+| 4 | Baseline Forecast Engine | UPCOMING | Pending User Approval |
 | 5 | Spatiotemporal Multi-Task AI Model | PENDING | - |
 | 6 | Terrain-Aware Flash-Flood Risk Layer | PENDING | - |
 | 7 | Real-Time Inference & Forecast Orchestration | PENDING | - |
