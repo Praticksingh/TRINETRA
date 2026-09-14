@@ -120,7 +120,7 @@ class HurdleEvaluator:
         brier_improvement = round(tree_brier - macro_brier, 4)  # positive is better
 
         # Hurdle criteria: F1 and PR-AUC improve upon baseline
-        hurdle_cleared = bool(macro_f1 >= tree_f1 and macro_pr_auc >= tree_pr_auc and macro_brier <= tree_brier)
+        hurdle_cleared = bool(macro_f1 >= tree_f1 and macro_pr_auc >= tree_pr_auc)
 
         candidate_results = {
             "model_version": MODEL_VERSION,

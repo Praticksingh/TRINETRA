@@ -13,6 +13,12 @@ services:
       - PYTHONUNBUFFERED=1
       - PORT=8000
       - TRINETRA_ENVIRONMENT=production
+    volumes:
+      - ./ml:/ml
+      - ./data:/data
+      - ./services/inference/Dockerfile:/services/inference/Dockerfile:ro
+      - ./apps/web/Dockerfile:/apps/web/Dockerfile:ro
+      - ./docker-compose.yml:/docker-compose.yml:ro
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 20s

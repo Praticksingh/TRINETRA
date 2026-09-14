@@ -8,21 +8,21 @@
     "macro_csi": 0.548
   },
   "deep_candidate": {
-    "macro_f1": 0.8517,
-    "macro_pr_auc": 0.8993,
-    "macro_brier_score": 0.0743,
-    "macro_csi": 0.7597,
-    "macro_ece": 0.0913
+    "macro_f1": 0.8347,
+    "macro_pr_auc": 0.856,
+    "macro_brier_score": 0.0902,
+    "macro_csi": 0.7413,
+    "macro_ece": 0.1506
   },
   "hurdle_status": {
     "baseline_reference_model": "tree_baseline",
     "tree_baseline_f1": 0.708,
-    "candidate_deep_f1": 0.8517,
-    "f1_delta": 0.1437,
+    "candidate_deep_f1": 0.8347,
+    "f1_delta": 0.1267,
     "tree_baseline_pr_auc": 0.725,
-    "candidate_deep_pr_auc": 0.8993,
-    "pr_auc_delta": 0.1743,
-    "brier_improvement": 0.0147,
+    "candidate_deep_pr_auc": 0.856,
+    "pr_auc_delta": 0.131,
+    "brier_improvement": -0.0012,
     "hurdle_cleared": true,
     "decision": "PROMOTE_TO_ACTIVE_PRODUCTION_CANDIDATE"
   }

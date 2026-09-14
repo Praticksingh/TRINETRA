@@ -4,6 +4,8 @@
 
 [![Build & Test Status](https://img.shields.io/badge/pytest-67%2F67%20passing-emerald)](https://github.com/Praticksingh/TRINETRA)
 [![Next.js Build](https://img.shields.io/badge/next.js-14.2%20App%20Router-blue)](https://github.com/Praticksingh/TRINETRA)
+[![Design System](https://img.shields.io/badge/UI%2FUX-Sentinel%20Aurora%202.0-0284C7)](https://github.com/Praticksingh/TRINETRA)
+[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-emerald)](https://github.com/Praticksingh/TRINETRA)
 [![Model Hurdle](https://img.shields.io/badge/Conv3D%20Candidate-Hurdle%20Cleared%20(%2B1560%20bps)-cyan)](https://github.com/Praticksingh/TRINETRA)
 [![CAP Standard](https://img.shields.io/badge/CAP-v1.2%20OASIS-orange)](https://github.com/Praticksingh/TRINETRA)
 [![License](https://img.shields.io/badge/License-MIT-slate)](https://github.com/Praticksingh/TRINETRA)
@@ -100,9 +102,32 @@ All models were evaluated on the strictly held-out Monsoon 2025 test dataset (**
 
 ---
 
-## 5. Quickstart & Deployment Guide
+## 5. Sentinel Aurora 2.0 Frontend Architecture
 
-### 5.1 Docker Compose Deployment (Recommended)
+The TRINETRA Operations Console features the **Sentinel Aurora 2.0** design system—a mission-critical, human-centered UI/UX designed for rapid decision-making under severe operational pressure:
+
+- **Atmospheric Palette**: Deep Midnight Navy canvas (`#080E1A`), frosted glassmorphism panels (`#111A2C`/80, `backdrop-blur-xl`), hairline structural borders (`#1E2E48`), and soft Sky Blue interaction accents (`#0284C7` / `#38BDF8`).
+- **Strict Color Semantics**: Severity colors (Emerald, Yellow, Orange, Red) are reserved exclusively for hydrometeorological risk. UI actions, navigational chrome, and buttons never use hazard colors.
+- **Color-Independent Accessibility (WCAG 2.1 AA)**: Every severity state pairs color with unmistakable geometric shape markers (● Low, ◆ Watch, ▲ Warning, ▲ Critical pulse), passing contrast checks across all panels.
+- **Priority Active Risk Threat Card**: Real-time glassmorphic threat card featuring Framer Motion spring physics, ambient radial warning glow (`#EF4444`), cell coordinates, and one-click drilldown into dual-factor risk attribution.
+- **Keyboard-First Ergonomics**: Global Command Palette (`Cmd/Ctrl + K`), system keyboard shortcuts drawer (`?`), and full tab-index navigation.
+- **Dual-Mode Visual Spatial Engine**: Seamless toggling between 3D Orbital Earth (Three.js) for synoptic overviews and high-performance 2D GIS (MapLibre GL JS) for cell-level risk polygon inspection.
+
+### Application Routes
+
+| Route | View Description |
+| :--- | :--- |
+| `/` | **Unified Operations Console**: Live 3D/2D views, nowcast timeline scrubber (0–6h), XAI feature attribution panel, dual-factor terrain inspector ($P_{\text{meteo}}$ vs $S_{\text{terrain}}$), and CAP alert review queue. |
+| `/design-system` | **Sentinel Aurora Showcase**: Complete component library, interactive color token palette, typography scale, button & badge matrices, glassmorphism cards, and live accessibility theme controls. |
+| `/legacy` | **Baseline Operations Console**: Original functional baseline layout preserved for regression audits, side-by-side evaluation, and backward compatibility. |
+
+Comprehensive design specifications, motion curves, and audit logs are documented in [`docs/SENTINEL_AURORA_REFINEMENT_HANDOFF.md`](docs/SENTINEL_AURORA_REFINEMENT_HANDOFF.md).
+
+---
+
+## 6. Quickstart & Deployment Guide
+
+### 6.1 Docker Compose Deployment (Recommended)
 
 Run the entire TRINETRA stack (Inference microservice + Next.js web application) with one command:
 
@@ -123,7 +148,7 @@ docker-compose up -d --build
 - **Prometheus Telemetry Metrics**: [http://localhost:8000/metrics](http://localhost:8000/metrics)
 - **Health Check**: [http://localhost:8000/health](http://localhost:8000/health)
 
-### 5.2 Local Development Setup
+### 6.2 Local Development Setup
 
 #### Backend Inference Service (`services/inference`):
 ```bash
@@ -143,7 +168,7 @@ npm run dev
 
 ---
 
-## 6. Automated Test Suite & Quality Verification
+## 7. Automated Test Suite & Quality Verification
 
 TRINETRA includes comprehensive automated unit, integration, and release certification tests:
 
@@ -159,7 +184,7 @@ npm --prefix apps/web run build
 
 ---
 
-## 7. Scientific Safety & Anti-Hallucination Guardrails
+## 8. Scientific Safety & Anti-Hallucination Guardrails
 
 1. **No Overlapping Temporal Leakage**: Temporal split strictly enforced between training, validation, and testing (train on past, evaluate on future).
 2. **Probabilities vs. Historical Accuracy**: Probability values represent model-estimated likelihood; historical accuracy is a measured verification metric. The two are never conflated in reports or UI.
@@ -171,7 +196,7 @@ npm --prefix apps/web run build
 
 ---
 
-## 8. Repository & Synchronization
+## 9. Repository & Synchronization
 
 - **GitHub Repository**: [`https://github.com/Praticksingh/TRINETRA`](https://github.com/Praticksingh/TRINETRA)
 - **Branch**: `main`
