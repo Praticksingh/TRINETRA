@@ -76,16 +76,16 @@ export const GlobeWorkspace: React.FC = () => {
         />
       </div>
 
-      {/* 3. Bottom Operational Bar */}
-      <div className="absolute bottom-4 right-4 z-20 hidden md:flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-[#161820]/90 px-4 py-2.5 font-sans text-xs text-slate-300 backdrop-blur-xl shadow-clay-card">
-        <div className="flex items-center gap-2">
-          <Satellite className="h-3.5 w-3.5 text-emerald-400" />
-          <span>Sub-satellite Position: <strong className="font-mono text-slate-200">74.0°E</strong></span>
+      {/* 3. Operational Telemetry Badge */}
+      <div className="absolute top-16 left-4 z-20 hidden sm:flex items-center gap-2.5 rounded-2xl border border-white/[0.08] bg-[#161820]/90 px-3 py-1.5 font-sans text-[11px] text-slate-300 backdrop-blur-xl shadow-clay-card">
+        <div className="flex items-center gap-1.5">
+          <Satellite className="h-3 w-3 text-emerald-400" />
+          <span>INSAT Sub-satellite: <strong className="font-mono text-slate-200">74.0°E</strong></span>
         </div>
         <span className="text-slate-600">|</span>
-        <div className="flex items-center gap-2">
-          <Radio className="h-3.5 w-3.5 text-indigo-400" />
-          <span>Observation Corridor: <strong className="font-mono text-slate-200">28.5°N – 31.5°N</strong></span>
+        <div className="flex items-center gap-1.5">
+          <Radio className="h-3 w-3 text-indigo-400" />
+          <span>Corridor: <strong className="font-mono text-slate-200">28.5°N – 31.5°N</strong></span>
         </div>
       </div>
     </div>

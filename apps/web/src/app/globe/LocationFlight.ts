@@ -13,31 +13,31 @@ export const FLIGHT_PRESETS: Record<string, FlightTarget> = {
     name: "Global Satellite View",
     theta: 1.36,
     phi: 1.25,
-    radius: 3.5,
+    radius: 3.2,
   },
   INDIA_SUBCONTINENT: {
     name: "Indian Subcontinent (INSAT Footprint)",
     theta: 1.36,
     phi: 1.18,
-    radius: 2.35,
+    radius: 1.95,
   },
   UTTARAKHAND_HIMALAYAS: {
     name: "Uttarakhand Pilot Convective Corridor",
     theta: 1.366,
     phi: 1.045,
-    radius: 1.72,
+    radius: 1.32,
   },
   KEDARNATH_VALLEY: {
     name: "Kedarnath Cirque & Catchment",
     theta: 1.378,
     phi: 1.033,
-    radius: 1.62,
+    radius: 1.20,
   },
   RISHIKESH_GORGE: {
     name: "Rishikesh - Ganga Entry Point",
     theta: 1.364,
     phi: 1.052,
-    radius: 1.65,
+    radius: 1.22,
   },
 };
 

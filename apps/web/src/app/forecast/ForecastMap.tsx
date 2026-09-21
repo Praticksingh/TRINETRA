@@ -12,6 +12,12 @@ import {
   Map as MapIcon,
   Satellite,
   Mountain,
+  Crosshair,
+  Loader2,
+  Navigation,
+  AlertTriangle,
+  CheckCircle2,
+  X,
 } from "lucide-react";
 import { ActiveLayers } from "./RiskLayers";
 import { SelectedCellData } from "./RiskPanel";
@@ -137,8 +143,18 @@ export default function ForecastMap({
   const tileLayerRef = useRef<any>(null);
   const markersLayerGroupRef = useRef<any>(null);
   const radarLayerGroupRef = useRef<any>(null);
+  const userMarkerRef = useRef<any>(null);
   const [basemap, setBasemap] = useState<BasemapMode>("dark");
   const [isMapReady, setIsMapReady] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
+  const [gpsToast, setGpsToast] = useState<{
+    type: "inside" | "outside" | "error";
+    title: string;
+    message: string;
+    nearestCell?: SelectedCellData;
+    distanceKm?: number;
+    coords?: [number, number];
+  } | null>(null);
 
   const isCellMatch = (cell: SelectedCellData) => {
     if (!filterMode || filterMode === "all") return true;
@@ -181,9 +197,6 @@ export default function ForecastMap({
       ).addTo(map);
 
       tileLayerRef.current = darkTile;
-
-      // Add zoom controls at top right
-      L.control.zoom({ position: "topright" }).addTo(map);
 
       // Operational boundary outline for Uttarakhand pilot domain
       const boundaryCoords: [number, number][] = [
@@ -413,13 +426,131 @@ export default function ForecastMap({
     mapInstanceRef.current?.setView([30.35, 78.75], 9);
   };
 
+  // Geospatial distance in kilometers (Haversine formula)
+  const getDistanceKm = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+  };
+
+  const handleLocateMe = () => {
+    if (typeof window === "undefined" || !navigator.geolocation) {
+      setGpsToast({
+        type: "error",
+        title: "Geolocation Unavailable",
+        message: "Your browser does not support GPS Geolocation.",
+      });
+      return;
+    }
+
+    setIsLocating(true);
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setIsLocating(false);
+        const { latitude: lat, longitude: lng } = pos.coords;
+
+        // Uttarakhand Pilot Region bounds: Lat 28.5 to 31.8 N, Lng 77.4 to 81.2 E
+        const isInside = lat >= 28.5 && lat <= 31.8 && lng >= 77.4 && lng <= 81.2;
+
+        // Find nearest catchment cell
+        let nearestCell = cells[0];
+        let minDistance = Infinity;
+        cells.forEach((c) => {
+          const dist = getDistanceKm(lat, lng, c.coordinates[1], c.coordinates[0]);
+          if (dist < minDistance) {
+            minDistance = dist;
+            nearestCell = c;
+          }
+        });
+
+        // Add or update pulsing GPS marker on Leaflet map
+        if (mapInstanceRef.current) {
+          import("leaflet").then((L) => {
+            if (userMarkerRef.current) {
+              userMarkerRef.current.remove();
+            }
+
+            const gpsIcon = L.divIcon({
+              className: "user-gps-marker",
+              html: `
+                <div class="relative flex items-center justify-center">
+                  <div class="absolute -inset-2.5 rounded-full bg-indigo-500/50 animate-ping"></div>
+                  <div class="h-5 w-5 rounded-full border-2 border-white bg-indigo-600 shadow-[0_0_14px_rgba(99,102,241,1)] flex items-center justify-center">
+                    <div class="h-2 w-2 rounded-full bg-white"></div>
+                  </div>
+                </div>
+              `,
+              iconSize: [24, 24],
+              iconAnchor: [12, 12],
+            });
+
+            const marker = L.marker([lat, lng], { icon: gpsIcon }).addTo(mapInstanceRef.current);
+            marker.bindPopup(`
+              <div class="p-1 font-sans text-xs">
+                <div class="font-bold text-slate-100 flex items-center gap-1.5">
+                  <span class="inline-block h-2 w-2 rounded-full bg-indigo-400"></span>
+                  Your Detected Location
+                </div>
+                <div class="text-[11px] text-slate-400 font-mono mt-0.5">${lat.toFixed(4)}°N, ${lng.toFixed(4)}°E</div>
+                <div class="text-[11px] text-slate-300 mt-1">
+                  ${isInside ? "Inside Uttarakhand Convective Domain" : `Outside Pilot Domain (~${minDistance}km from ${nearestCell?.name.split("-")[0]})`}
+                </div>
+              </div>
+            `);
+            userMarkerRef.current = marker;
+
+            if (isInside) {
+              mapInstanceRef.current.flyTo([lat, lng], 11, { duration: 1.5 });
+              onSelectCell(nearestCell);
+              setGpsToast({
+                type: "inside",
+                title: "GPS Position Locked",
+                message: `You are inside the Uttarakhand Pilot Domain. Synced with ${nearestCell.name} (~${minDistance} km).`,
+                nearestCell,
+                distanceKm: minDistance,
+                coords: [lat, lng],
+              });
+            } else {
+              mapInstanceRef.current.flyTo([lat, lng], 8, { duration: 1.5 });
+              setGpsToast({
+                type: "outside",
+                title: "Location Outside Pilot Domain",
+                message: `Detected coordinates ${lat.toFixed(2)}°N, ${lng.toFixed(2)}°E are outside active Himalayan radar coverage (~${minDistance} km from closest monitored basin).`,
+                nearestCell,
+                distanceKm: minDistance,
+                coords: [lat, lng],
+              });
+            }
+          });
+        }
+      },
+      (err) => {
+        setIsLocating(false);
+        setGpsToast({
+          type: "error",
+          title: "GPS Location Notice",
+          message: err.code === 1 ? "Location permission denied. Showing baseline pilot catchment." : err.message,
+        });
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+    );
+  };
+
   return (
     <div className={`relative h-full w-full overflow-hidden bg-[#080E1A] ${className}`}>
       {/* Real Interactive Leaflet Container */}
       <div ref={mapContainerRef} className="h-full w-full z-0" />
 
       {/* Top Left: Pilot Domain Status */}
-      <div className="absolute top-3 left-3 z-10 hidden sm:flex items-center gap-2 font-sans text-xs">
+      <div className="absolute top-3 left-3 z-10 hidden lg:flex items-center gap-2 font-sans text-xs">
         <div className="flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-[#161820]/95 px-3 py-1.5 text-slate-200 backdrop-blur shadow-clay-card">
           <Compass className="h-4 w-4 text-indigo-400" />
           <span className="font-semibold tracking-wide">UTTARAKHAND CONVECTIVE CORRIDOR</span>
@@ -471,8 +602,26 @@ export default function ForecastMap({
           </button>
         </div>
 
-        {/* Zoom Controls */}
-        <div className="flex items-center rounded-2xl border border-white/[0.08] bg-[#161820]/95 p-1 backdrop-blur shadow-clay-card">
+        {/* Tactical Controls: Locate Me, Zoom In/Out, Reset */}
+        <div className="flex items-center gap-1 rounded-2xl border border-white/[0.08] bg-[#161820]/95 p-1 backdrop-blur shadow-clay-card">
+          <button
+            onClick={handleLocateMe}
+            disabled={isLocating}
+            className={`flex h-7 w-7 items-center justify-center rounded-xl transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed ${
+              isLocating
+                ? "bg-indigo-600/50 text-indigo-200 animate-pulse"
+                : "text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300"
+            }`}
+            title="Locate My Current GPS Position"
+            aria-label="Locate My Current GPS Position"
+          >
+            {isLocating ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Crosshair className="h-3.5 w-3.5" />
+            )}
+          </button>
+          <div className="h-3.5 w-px bg-white/[0.08]" />
           <button
             onClick={handleZoomIn}
             className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed"
@@ -497,26 +646,52 @@ export default function ForecastMap({
         </div>
       </div>
 
-      {/* Bottom Right: Accessible Geometric Shape Cue Legend */}
-      <div className="absolute bottom-3 right-3 z-10 flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-[#161820]/95 px-3 py-1.5 font-sans text-xs text-slate-300 backdrop-blur shadow-clay-card">
-        <span className="text-slate-400 font-semibold uppercase text-[10px] tracking-wider">Severity:</span>
-        <div className="flex items-center gap-1.5">
-          <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
-          <span>Low (●)</span>
+      {/* GPS Status Toast / Smart Domain Notification */}
+      {gpsToast && (
+        <div className="absolute top-14 sm:top-16 right-3 z-30 max-w-sm rounded-2xl border border-white/[0.12] bg-[#161820]/98 p-3.5 shadow-clay-card-elevated backdrop-blur-xl animate-in fade-in slide-in-from-top-2 font-sans text-xs">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-2 font-semibold">
+              {gpsToast.type === "inside" && <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />}
+              {gpsToast.type === "outside" && <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />}
+              {gpsToast.type === "error" && <AlertTriangle className="h-4 w-4 text-rose-400 shrink-0" />}
+              <span className="text-slate-100">{gpsToast.title}</span>
+            </div>
+            <button
+              onClick={() => setGpsToast(null)}
+              className="text-slate-400 hover:text-slate-200 transition p-0.5 rounded-lg hover:bg-white/[0.05]"
+              aria-label="Close"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+
+          <p className="mt-1.5 text-slate-300 leading-relaxed text-[11px]">
+            {gpsToast.message}
+          </p>
+
+          {gpsToast.nearestCell && (
+            <div className="mt-2.5 pt-2 border-t border-white/[0.06] flex items-center justify-between gap-2">
+              <span className="text-[10px] text-slate-400">
+                Nearest: <strong className="text-indigo-300">{gpsToast.nearestCell.name.split("-")[0]}</strong>
+              </span>
+              <button
+                onClick={() => {
+                  onSelectCell(gpsToast.nearestCell!);
+                  mapInstanceRef.current?.flyTo(
+                    [gpsToast.nearestCell!.coordinates[1], gpsToast.nearestCell!.coordinates[0]],
+                    10,
+                    { duration: 1.2 }
+                  );
+                  setGpsToast(null);
+                }}
+                className="rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] px-2.5 py-1 text-[11px] font-semibold text-white shadow-clay-btn active:translate-y-0.5"
+              >
+                Focus Basin →
+              </button>
+            </div>
+          )}
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="inline-block h-2 w-2 bg-amber-400 transform rotate-45" />
-          <span>Watch (◆)</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="inline-block text-orange-400 font-bold leading-none">▲</span>
-          <span>Warning (▲)</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="inline-block text-rose-400 font-bold leading-none animate-pulse">▲</span>
-          <span>Critical (▲)</span>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

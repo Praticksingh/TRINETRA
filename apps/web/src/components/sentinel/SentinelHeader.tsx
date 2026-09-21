@@ -67,13 +67,28 @@ export const SentinelHeader: React.FC = () => {
   }, []);
 
   const handleLocationSelect = (loc: SearchLocation) => {
-    const matching =
+    let matching =
       cells.find((c) =>
         c.name.toLowerCase().includes(loc.name.toLowerCase().split(" ")[0])
       ) ||
       GRID_CELLS.find((c) =>
         c.name.toLowerCase().includes(loc.name.toLowerCase().split(" ")[0])
       );
+
+    if (!matching && loc.coordinates) {
+      let minDist = Infinity;
+      const pool = cells.length > 0 ? cells : GRID_CELLS;
+      pool.forEach((c) => {
+        const dx = c.coordinates[0] - loc.coordinates[0];
+        const dy = c.coordinates[1] - loc.coordinates[1];
+        const dist = Math.hypot(dx, dy);
+        if (dist < minDist) {
+          minDist = dist;
+          matching = c;
+        }
+      });
+    }
+
     if (matching) {
       setSelectedCell(matching);
       setCurrentView("map");

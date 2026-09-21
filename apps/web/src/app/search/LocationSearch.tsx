@@ -102,10 +102,65 @@ export default function LocationSearch({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const [isLocating, setIsLocating] = useState(false);
+
   const handleSelect = (loc: SearchLocation) => {
     setQuery(loc.name);
     setIsOpen(false);
     onLocationSelect(loc);
+  };
+
+  const handleUseGps = () => {
+    if (typeof window === "undefined" || !navigator.geolocation) {
+      alert("GPS Geolocation is not supported by your browser.");
+      return;
+    }
+
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setIsLocating(false);
+        const { latitude: lat, longitude: lng } = pos.coords;
+
+        // Find nearest pilot location
+        let closest = PILOT_LOCATIONS[0];
+        let minDistance = Infinity;
+
+        PILOT_LOCATIONS.forEach((loc) => {
+          const dLat = loc.coordinates[1] - lat;
+          const dLng = loc.coordinates[0] - lng;
+          const dist = Math.hypot(dLat, dLng);
+          if (dist < minDistance) {
+            minDistance = dist;
+            closest = loc;
+          }
+        });
+
+        const isInside = lat >= 28.5 && lat <= 31.8 && lng >= 77.4 && lng <= 81.2;
+
+        const gpsLoc: SearchLocation = {
+          id: "loc_user_gps",
+          name: isInside
+            ? `My Location (${closest.district})`
+            : `Detected GPS (${lat.toFixed(2)}°N, ${lng.toFixed(2)}°E)`,
+          basin: isInside ? closest.basin : `Nearest: ${closest.basin}`,
+          district: isInside ? closest.district : "Outside Pilot Domain",
+          coordinates: [lng, lat],
+          currentRisk: closest.currentRisk,
+          elevationM: closest.elevationM,
+          catchmentVuln: closest.catchmentVuln,
+        };
+
+        setQuery(gpsLoc.name);
+        setIsOpen(false);
+        onLocationSelect(gpsLoc);
+      },
+      (err) => {
+        setIsLocating(false);
+        alert(err.code === 1 ? "Location permission denied." : err.message);
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+    );
   };
 
   return (
@@ -145,6 +200,8 @@ export default function LocationSearch({
         <LocationResults
           results={filtered}
           onSelectLocation={handleSelect}
+          onUseCurrentLocation={handleUseGps}
+          isLocating={isLocating}
         />
       )}
     </div>

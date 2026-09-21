@@ -76,40 +76,69 @@ export class CameraController {
     this.isDragging = false;
   };
 
+  private initialPinchDistance: number = 0;
+  private initialPinchRadius: number = 3.2;
+
   private onWheel = (e: WheelEvent) => {
     e.preventDefault();
-    const zoomSpeed = 0.002;
-    this.targetRadius = Math.max(1.6, Math.min(6.0, this.targetRadius + e.deltaY * zoomSpeed));
+    const zoomSpeed = 0.0025;
+    this.targetRadius = Math.max(1.15, Math.min(6.0, this.targetRadius + e.deltaY * zoomSpeed));
   };
 
   private onTouchStart = (e: TouchEvent) => {
     if (e.touches.length === 1) {
       this.isDragging = true;
       this.previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    } else if (e.touches.length === 2) {
+      this.isDragging = false;
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      this.initialPinchDistance = Math.hypot(dx, dy);
+      this.initialPinchRadius = this.targetRadius;
     }
   };
 
   private onTouchMove = (e: TouchEvent) => {
-    if (!this.isDragging || e.touches.length !== 1) return;
-    e.preventDefault();
+    if (e.touches.length === 1 && this.isDragging) {
+      e.preventDefault();
+      const deltaX = e.touches[0].clientX - this.previousMousePosition.x;
+      const deltaY = e.touches[0].clientY - this.previousMousePosition.y;
 
-    const deltaX = e.touches[0].clientX - this.previousMousePosition.x;
-    const deltaY = e.touches[0].clientY - this.previousMousePosition.y;
+      this.targetTheta -= deltaX * 0.006;
+      this.targetPhi = Math.max(0.1, Math.min(Math.PI - 0.1, this.targetPhi - deltaY * 0.006));
 
-    this.targetTheta -= deltaX * 0.006;
-    this.targetPhi = Math.max(0.1, Math.min(Math.PI - 0.1, this.targetPhi - deltaY * 0.006));
-
-    this.previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      this.previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    } else if (e.touches.length === 2 && this.initialPinchDistance > 0) {
+      e.preventDefault();
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const currentDist = Math.hypot(dx, dy);
+      const ratio = this.initialPinchDistance / Math.max(currentDist, 1);
+      this.targetRadius = Math.max(1.15, Math.min(6.0, this.initialPinchRadius * ratio));
+    }
   };
 
   private onTouchEnd = () => {
     this.isDragging = false;
+    this.initialPinchDistance = 0;
   };
+
+  public zoomIn(delta: number = 0.3) {
+    this.targetRadius = Math.max(1.15, Math.min(6.0, this.targetRadius - delta));
+  }
+
+  public zoomOut(delta: number = 0.3) {
+    this.targetRadius = Math.max(1.15, Math.min(6.0, this.targetRadius + delta));
+  }
+
+  public resetView() {
+    this.setView(1.36, 1.18, 2.35);
+  }
 
   public setView(theta: number, phi: number, radius: number) {
     this.targetTheta = theta;
     this.targetPhi = Math.max(0.1, Math.min(Math.PI - 0.1, phi));
-    this.targetRadius = Math.max(1.6, Math.min(6.0, radius));
+    this.targetRadius = Math.max(1.15, Math.min(6.0, radius));
   }
 
   public update(): void {
