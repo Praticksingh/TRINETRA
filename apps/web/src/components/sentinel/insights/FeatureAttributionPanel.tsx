@@ -117,7 +117,7 @@ export const FeatureAttributionPanel: React.FC = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Sliders className="h-4 w-4 text-[#38BDF8]" />
+                  <Sliders className="h-4 w-4 text-indigo-400" />
                   <CardTitle className="font-sans text-sm font-semibold">Global Feature Sensitivity Rankings</CardTitle>
                 </div>
                 <span className="font-sans text-xs text-slate-400">
@@ -137,8 +137,8 @@ export const FeatureAttributionPanel: React.FC = () => {
                     onClick={() => setSelectedFeature(feat)}
                     className={`cursor-pointer rounded-lg border p-3 transition-all ${
                       isSelected
-                        ? "border-[#38BDF8] bg-[#16233B] shadow-sm"
-                        : "border-[#1E2D4A] bg-[#080E1A]/70 hover:border-slate-600 hover:bg-[#16233B]/60"
+                        ? "border-indigo-500/50 bg-[#1C1F30] shadow-sm"
+                        : "border-white/[0.08] bg-[#111217]/70 hover:border-slate-600 hover:bg-[#1D202B]/60"
                     }`}
                   >
                     <div className="flex items-center justify-between text-xs font-sans">
@@ -176,7 +176,7 @@ export const FeatureAttributionPanel: React.FC = () => {
                           feat.impact === "Inhibiting"
                             ? "bg-amber-400"
                             : feat.category === "Satellite"
-                            ? "bg-[#38BDF8]"
+                            ? "bg-indigo-500"
                             : feat.category === "Topographic"
                             ? "bg-purple-400"
                             : "bg-emerald-400"
@@ -196,7 +196,7 @@ export const FeatureAttributionPanel: React.FC = () => {
           <Card variant="base" borderAccent="cyan">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-[#38BDF8]" />
+                <Sparkles className="h-4 w-4 text-indigo-400" />
                 <CardTitle className="font-sans text-sm font-semibold">Feature Deep Dive</CardTitle>
               </div>
             </CardHeader>
@@ -217,22 +217,22 @@ export const FeatureAttributionPanel: React.FC = () => {
                 </div>
               </div>
 
-              <div className="border-t border-[#1E2D4A] pt-3">
+              <div className="border-t border-white/[0.08] pt-3">
                 <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Thermodynamic & Physical Role</span>
                 <p className="font-sans text-xs text-slate-300 leading-relaxed mt-1">
                   {selectedFeature.physicalMeaning}
                 </p>
               </div>
 
-              <div className="border-t border-[#1E2D4A] pt-3">
+              <div className="border-t border-white/[0.08] pt-3">
                 <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Operational Nowcast Impact</span>
-                <p className="font-sans text-xs text-sky-200 leading-relaxed mt-1">
+                <p className="font-sans text-xs text-indigo-200 leading-relaxed mt-1">
                   {selectedFeature.operationalInterpretation}
                 </p>
               </div>
 
-              <div className="rounded-lg border border-[#1E2D4A] bg-[#16233B]/60 p-3 text-xs text-slate-400 font-sans">
-                <span className="text-[#38BDF8] font-semibold">Observer Note:</span> If this channel experiences sensor dropout or excessive latency (&gt; 30m), the model automatically downweights its contribution and defaults to NWP reanalysis priors.
+              <div className="rounded-lg border border-white/[0.08] bg-[#111217] p-3 text-xs text-slate-400 font-sans">
+                <span className="text-indigo-300 font-semibold">Observer Note:</span> If this channel experiences sensor dropout or excessive latency (&gt; 30m), the model automatically downweights its contribution and defaults to NWP reanalysis priors.
               </div>
             </CardContent>
           </Card>

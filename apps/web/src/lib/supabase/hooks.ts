@@ -19,10 +19,18 @@ export function useRealtimeAlerts(initialAlerts: AlertItem[]) {
 
     if (isSupabaseConfigured && supabase) {
       try {
-        await supabase
-          .from("alerts")
-          .update({ status: "acknowledged" })
+        const { error: authErr } = await supabase
+          .from("authority_alert_events")
+          .update({ status: "ACKNOWLEDGED", updated_at: new Date().toISOString() })
           .eq("alert_id", alertId);
+        
+        if (authErr) {
+          // Fallback to legacy alerts table
+          await supabase
+            .from("alerts")
+            .update({ status: "acknowledged" })
+            .eq("alert_id", alertId);
+        }
       } catch (err) {
         console.warn("Failed to update alert in Supabase:", err);
       }
@@ -39,17 +47,29 @@ export function useRealtimeAlerts(initialAlerts: AlertItem[]) {
 
     async function fetchInitialAlerts() {
       try {
-        const { data, error } = await supabase!
-          .from("alerts")
+        // 1. Try authority_alert_events table first (Phase 9 authoritative)
+        let { data, error } = await supabase!
+          .from("authority_alert_events")
           .select("*")
           .order("issued_at", { ascending: false })
           .limit(20);
+
+        // 2. Fallback to legacy alerts table if authority_alert_events not yet populated
+        if (error || !data || data.length === 0) {
+          const fallbackRes = await supabase!
+            .from("alerts")
+            .select("*")
+            .order("issued_at", { ascending: false })
+            .limit(20);
+          data = fallbackRes.data;
+          error = fallbackRes.error;
+        }
 
         if (!error && data && data.length > 0 && isMounted) {
           const mapped: AlertItem[] = data.map((item: any) => ({
             id: item.alert_id || item.id,
             hazardType: item.hazard_type || "thunderstorm",
-            severity: item.severity || "watch",
+            severity: (item.severity?.toLowerCase() as any) || "watch",
             regionName: item.region_name || item.region_code || "Pilot Catchment",
             headline: item.headline || "Severe Weather Alert",
             description: item.description || "",
@@ -57,7 +77,7 @@ export function useRealtimeAlerts(initialAlerts: AlertItem[]) {
             validFrom: item.valid_from || new Date().toISOString(),
             validTo: item.valid_to || new Date().toISOString(),
             isOfficialWarning: Boolean(item.is_official_warning),
-            isAcknowledged: item.status === "acknowledged" || Boolean(item.is_acknowledged),
+            isAcknowledged: item.status?.toUpperCase() === "ACKNOWLEDGED" || item.status === "acknowledged" || Boolean(item.is_acknowledged),
             status: (item.status?.toUpperCase() as any) || "GENERATED",
             affectedCells: Array.isArray(item.affected_cells) ? item.affected_cells : [],
           }));

@@ -14,37 +14,37 @@
 
 export const sentinelTokens = {
   colors: {
-    // App Base & Surface Foundation (Sentinel Aurora)
-    background: "#080E1A",
-    backgroundSubtle: "#0B1322",
+    // App Base & Surface Foundation (Obsidian & Mineral Titanium)
+    background: "#0B0C10",
+    backgroundSubtle: "#111217",
     
     panel: {
-      base: "#111A2C",
-      subtle: "#0D1524",
-      elevated: "#16233B",
-      hover: "#1A2B47",
-      active: "#1F3456",
+      base: "#161820",
+      subtle: "#111217",
+      elevated: "#1D202B",
+      hover: "#252937",
+      active: "#1C1F30",
     },
 
     border: {
-      base: "#1E2E48",
-      subtle: "#152236",
-      highlight: "#2B4063",
-      focus: "#38BDF8",
+      base: "#272A38",
+      subtle: "#1C1E28",
+      highlight: "#3B3F52",
+      focus: "#6366F1",
     },
 
-    // Interactive & System Accents (Soft Sky Blue & Steel Blue, never for severity)
+    // Interactive & System Accents (Arctic Indigo & Titanium)
     interactive: {
-      accent: "#0284C7",
-      accentHover: "#0369A1",
-      accentSoft: "#38BDF8",
-      accentMuted: "#0C2438",
-      accentGlow: "rgba(56, 189, 248, 0.15)",
+      accent: "#4F46E5",
+      accentHover: "#4338CA",
+      accentSoft: "#818CF8",
+      accentMuted: "#1C1F30",
+      accentGlow: "rgba(99, 102, 241, 0.2)",
       // Aliases for seamless backward compatibility
       cyan: "#38BDF8",
       cyanHover: "#0284C7",
       cyanActive: "#0369A1",
-      cyanMuted: "#0C2438",
+      cyanMuted: "#1C1F30",
       cyanGlow: "rgba(56, 189, 248, 0.15)",
       cyanGlowStrong: "rgba(56, 189, 248, 0.3)",
     },
@@ -52,35 +52,35 @@ export const sentinelTokens = {
     // Typography Hierarchy
     text: {
       primary: "#F8FAFC",   // Primary headlines, key metrics
-      secondary: "#94A3B8", // Subtitles, metadata, table labels
-      muted: "#64748B",     // Captions, subtle units, disabled state
-      inverse: "#080E1A",   // Contrast text on bright accent pills
+      secondary: "#A1A1AA", // Subtitles, metadata, neutral labels
+      muted: "#71717A",     // Captions, subtle units, disabled state
+      inverse: "#0B0C10",   // Contrast text on bright accent pills
     },
 
-    // Hazard & Risk Severity System (Strictly for meteorological/hydrological risk)
+    // Hazard & Risk Severity System (Calibrated for Obsidian Titanium)
     severity: {
       low: {
         label: "LOW RISK",
         color: "#10B981",
-        bg: "rgba(6, 46, 32, 0.65)",
-        border: "rgba(16, 185, 129, 0.35)",
+        bg: "rgba(16, 46, 32, 0.75)",
+        border: "rgba(16, 185, 129, 0.4)",
         text: "#34D399",
         shapeSymbol: "●",
         shapeDesc: "Circle (Low)",
       },
       watch: {
         label: "WATCH",
-        color: "#EAB308",
-        bg: "rgba(61, 48, 5, 0.65)",
-        border: "rgba(234, 179, 8, 0.35)",
-        text: "#FDE047",
+        color: "#F59E0B",
+        bg: "rgba(52, 38, 12, 0.75)",
+        border: "rgba(245, 158, 11, 0.4)",
+        text: "#FCD34D",
         shapeSymbol: "◆",
         shapeDesc: "Diamond (Watch)",
       },
       warning: {
         label: "WARNING",
         color: "#F97316",
-        bg: "rgba(67, 27, 6, 0.65)",
+        bg: "rgba(58, 26, 12, 0.75)",
         border: "rgba(249, 115, 22, 0.4)",
         text: "#FB923C",
         shapeSymbol: "▲",
@@ -88,10 +88,10 @@ export const sentinelTokens = {
       },
       critical: {
         label: "CRITICAL",
-        color: "#EF4444",
-        bg: "rgba(69, 10, 10, 0.75)",
-        border: "rgba(239, 68, 68, 0.5)",
-        text: "#F87171",
+        color: "#F43F5E",
+        bg: "rgba(60, 18, 26, 0.8)",
+        border: "rgba(244, 63, 94, 0.5)",
+        text: "#FB7185",
         shapeSymbol: "▲",
         shapeDesc: "Pulse Triangle (Critical)",
       },

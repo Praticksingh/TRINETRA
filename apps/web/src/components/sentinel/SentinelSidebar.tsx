@@ -80,17 +80,17 @@ export const SentinelSidebar: React.FC = () => {
           <div key={item.id} className="relative group/btn">
             <button
               onClick={() => handleItemClick(item.id)}
-              className={`relative flex w-full items-center gap-3 rounded-lg px-3 py-2 text-xs font-sans transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] ${
+              className={`relative flex w-full items-center gap-3 rounded-xl px-3 py-2 text-xs font-sans transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1] active:translate-y-0.5 ${
                 isActive
-                  ? "bg-[#16233B] text-sky-400 font-semibold border border-sky-500/30 shadow-sm"
-                  : "text-slate-400 hover:bg-[#16233B]/50 hover:text-slate-200 border border-transparent font-medium"
+                  ? "bg-[#4F46E5] text-white font-semibold border border-indigo-400/40 shadow-clay-btn-primary"
+                  : "text-zinc-400 hover:bg-[#161820] hover:text-slate-200 hover:shadow-clay-btn border border-transparent font-medium"
               } ${isSidebarCollapsed ? "justify-center px-0" : "justify-between"}`}
               aria-current={isActive ? "page" : undefined}
             >
               {/* Collapsed Active Indicator Bar */}
               {isSidebarCollapsed && isActive && (
                 <span
-                  className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r bg-sky-400"
+                  className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r bg-indigo-400"
                   aria-hidden="true"
                 />
               )}
@@ -98,7 +98,7 @@ export const SentinelSidebar: React.FC = () => {
               <div className="flex items-center gap-3">
                 <Icon
                   className={`h-4 w-4 shrink-0 transition-colors ${
-                    isActive ? "text-sky-400" : "text-slate-400 group-hover/btn:text-slate-200"
+                    isActive ? "text-white" : "text-zinc-400 group-hover/btn:text-slate-200"
                   }`}
                 />
                 {!isSidebarCollapsed && <span className="truncate">{item.label}</span>}
@@ -106,8 +106,8 @@ export const SentinelSidebar: React.FC = () => {
 
               {!isSidebarCollapsed && item.badge && (
                 <span
-                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold font-mono ${
-                    item.badgeColor || "bg-sky-950 text-sky-300 border border-sky-800/50"
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold font-mono shadow-clay-badge ${
+                    item.badgeColor || "bg-[#1C1F30] text-indigo-300 border border-indigo-500/40"
                   }`}
                 >
                   {item.badge}
@@ -119,11 +119,11 @@ export const SentinelSidebar: React.FC = () => {
             {isSidebarCollapsed && (
               <div
                 role="tooltip"
-                className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 hidden -translate-y-1/2 items-center rounded-md border border-sky-500/20 bg-[#0d1726] px-2.5 py-1 text-xs font-sans font-medium text-slate-200 shadow-xl opacity-0 transition-opacity duration-150 md:group-hover/btn:flex group-hover/btn:opacity-100 whitespace-nowrap"
+                className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 hidden -translate-y-1/2 items-center rounded-xl border border-white/[0.1] bg-[#1D202B] px-3 py-1.5 text-xs font-sans font-medium text-slate-200 shadow-clay-card-elevated opacity-0 transition-opacity duration-150 md:group-hover/btn:flex group-hover/btn:opacity-100 whitespace-nowrap"
               >
                 <span>{item.label}</span>
                 {item.badge && (
-                  <span className="ml-1.5 rounded-full bg-rose-500 px-1 py-0.1 text-[9px] font-bold text-white">
+                  <span className="ml-1.5 rounded-full bg-rose-500 px-1.5 py-0.2 text-[9px] font-bold text-white shadow-clay-badge">
                     {item.badge}
                   </span>
                 )}
@@ -147,7 +147,7 @@ export const SentinelSidebar: React.FC = () => {
       )}
 
       <aside
-        className={`z-40 md:z-20 flex flex-col justify-between border-r border-[#1F3350] bg-[#090E1A]/95 backdrop-blur-md transition-all duration-200 select-none ${
+        className={`z-40 md:z-20 flex flex-col justify-between border-r border-white/[0.08] bg-[#0E0F14]/95 backdrop-blur-xl shadow-clay-card transition-all duration-200 select-none ${
           isSidebarCollapsed
             ? "hidden md:flex md:w-16"
             : "fixed inset-y-0 left-0 w-64 md:static md:w-56 shadow-2xl md:shadow-none animate-in slide-in-from-left duration-200"
@@ -159,32 +159,32 @@ export const SentinelSidebar: React.FC = () => {
           {renderNavGroup(operationsNavItems, "Operations")}
 
           {/* Group Divider */}
-          <div className="my-1 border-t border-[#1F3350]/60" />
+          <div className="my-1 border-t border-white/[0.08]" />
 
           {renderNavGroup(intelligenceNavItems, "Intelligence")}
         </div>
 
         {/* Bottom Section: Shortcuts, Design System, Legacy Console, Collapse Toggle */}
-        <div className="flex flex-col gap-1 border-t border-[#1E2E48] p-2">
+        <div className="flex flex-col gap-1 border-t border-white/[0.08] p-2">
           {!isSidebarCollapsed && (
-            <div className="px-3 pt-1 pb-0.5 text-[10px] font-sans font-semibold tracking-wider text-slate-500 uppercase select-none">
+            <div className="px-3 pt-1 pb-0.5 text-[10px] font-sans font-semibold tracking-wider text-zinc-500 uppercase select-none">
               Reference
             </div>
           )}
 
           <button
             onClick={openShortcutsModal}
-            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-sans font-medium text-slate-400 hover:bg-[#16233B]/60 hover:text-sky-300 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] ${
+            className={`flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-sans font-medium text-zinc-400 hover:bg-[#161820] hover:text-indigo-300 hover:shadow-clay-btn transition-all active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1] ${
               isSidebarCollapsed ? "justify-center px-0" : ""
             }`}
             title="Keyboard Shortcuts Reference (?)"
             aria-label="Keyboard Shortcuts Reference (?)"
           >
-            <HelpCircle className="h-4 w-4 shrink-0 text-sky-400" />
+            <HelpCircle className="h-4 w-4 shrink-0 text-indigo-400" />
             {!isSidebarCollapsed && (
               <div className="flex items-center justify-between w-full">
                 <span className="truncate">Shortcuts</span>
-                <kbd className="rounded border border-[#1E2E48] bg-[#0B1322] px-1 py-0.2 text-[9px] font-mono text-slate-400">
+                <kbd className="rounded-md border border-white/[0.08] bg-[#111217] px-1.5 py-0.5 text-[9px] font-mono text-zinc-400 shadow-clay-badge">
                   ?
                 </kbd>
               </div>
@@ -193,18 +193,18 @@ export const SentinelSidebar: React.FC = () => {
 
           <Link
             href="/design-system"
-            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-sans font-medium text-slate-400 hover:bg-[#16233B]/60 hover:text-sky-300 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] ${
+            className={`flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-sans font-medium text-zinc-400 hover:bg-[#161820] hover:text-indigo-300 hover:shadow-clay-btn transition-all active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1] ${
               isSidebarCollapsed ? "justify-center px-0" : ""
             }`}
             title="Open Design System Showcase"
           >
-            <Sparkles className="h-4 w-4 shrink-0 text-sky-400" />
+            <Sparkles className="h-4 w-4 shrink-0 text-indigo-400" />
             {!isSidebarCollapsed && <span className="truncate">Design System</span>}
           </Link>
 
           <Link
             href="/legacy"
-            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-sans font-medium text-slate-400 hover:bg-[#16233B]/60 hover:text-amber-300 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] ${
+            className={`flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-sans font-medium text-zinc-400 hover:bg-[#161820] hover:text-amber-300 hover:shadow-clay-btn transition-all active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1] ${
               isSidebarCollapsed ? "justify-center px-0" : ""
             }`}
             title="Open Legacy Console Baseline"
@@ -215,7 +215,7 @@ export const SentinelSidebar: React.FC = () => {
 
           <button
             onClick={toggleSidebar}
-            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-sans font-medium text-slate-400 hover:bg-[#16233B]/60 hover:text-slate-200 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] ${
+            className={`flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-sans font-medium text-zinc-400 hover:bg-[#161820] hover:text-slate-200 hover:shadow-clay-btn transition-all active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1] ${
               isSidebarCollapsed ? "justify-center px-0" : ""
             }`}
             title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}

@@ -27,6 +27,19 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    const targetUrl = process.env.ML_INFERENCE_SERVICE_URL || "http://localhost:8000";
+    return [
+      {
+        source: "/api/py/:path*",
+        destination: `${targetUrl}/api/v1/:path*`,
+      },
+      {
+        source: "/api/py-health",
+        destination: `${targetUrl}/health`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

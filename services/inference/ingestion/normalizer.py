@@ -99,6 +99,7 @@ class SpatiotemporalNormalizer:
             "quality_flag": overall_quality,
             "is_synthetic_replay": raw_batch.get("is_synthetic_replay", False),
             "tensor_hash": tensor_hash,
+            "raw_tensor": tensor,
             "tensor_summary": {
                 "min": float(tensor.min()),
                 "max": float(tensor.max()),

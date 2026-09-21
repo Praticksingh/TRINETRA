@@ -15,7 +15,7 @@ export const OverviewWorkspace: React.FC = () => {
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Top Title & Operational Status Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#1F3350] pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
         <div>
           <div className="flex items-center gap-2 font-sans text-xs text-sky-400 font-semibold tracking-wider uppercase">
             <span className="h-2 w-2 rounded-full bg-sky-400" />

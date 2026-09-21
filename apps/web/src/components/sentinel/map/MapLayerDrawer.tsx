@@ -75,25 +75,25 @@ export const MapLayerDrawer: React.FC<MapLayerDrawerProps> = ({ isOpen, onClose 
 
   return (
     <div
-      className="absolute top-14 left-3 z-30 w-80 rounded-xl border border-[#1F3350] bg-[#0C1322]/95 p-3.5 shadow-2xl backdrop-blur-md text-slate-200 animate-in fade-in slide-in-from-left-2 duration-150 font-sans"
+      className="absolute top-14 left-3 z-30 w-80 rounded-3xl border border-white/[0.08] bg-[#1D202B]/98 p-4 shadow-clay-card-elevated backdrop-blur-xl text-slate-200 animate-in fade-in slide-in-from-left-2 duration-150 font-sans"
       role="region"
       aria-label="Weather Map Layers"
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#1F3350]/80 pb-2.5 mb-3">
+      <div className="flex items-center justify-between border-b border-white/[0.08] pb-2.5 mb-3">
         <div className="flex items-center gap-2">
-          <Layers className="h-4 w-4 text-sky-400" />
+          <Layers className="h-4 w-4 text-indigo-400" />
           <span className="text-xs font-bold text-slate-100 uppercase tracking-wide">
             Weather Map Layers
           </span>
-          <span className="rounded bg-sky-950/70 px-1.5 py-0.2 text-[10px] font-bold text-sky-300 border border-sky-800/50 font-mono">
+          <span className="rounded-full bg-[#1C1F30] px-2 py-0.5 text-[10px] font-bold text-indigo-300 border border-indigo-500/40 font-mono shadow-clay-badge">
             {activeCount} Active
           </span>
         </div>
 
         <button
           onClick={onClose}
-          className="rounded p-1 text-slate-400 hover:text-slate-200 hover:bg-[#1F3350]/60 transition"
+          className="rounded-xl p-1 text-zinc-400 hover:text-slate-200 hover:bg-[#252937] transition shadow-clay-btn active:translate-y-0.5"
           aria-label="Close Layers Menu"
         >
           <X className="h-3.5 w-3.5" />
@@ -101,7 +101,7 @@ export const MapLayerDrawer: React.FC<MapLayerDrawerProps> = ({ isOpen, onClose 
       </div>
 
       {/* Layer Toggles */}
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         {layerItems.map((item) => {
           const isActive = layers[item.key];
           const Icon = item.icon;
@@ -110,17 +110,17 @@ export const MapLayerDrawer: React.FC<MapLayerDrawerProps> = ({ isOpen, onClose 
             <button
               key={item.key}
               onClick={() => toggleLayer(item.key)}
-              className={`flex w-full items-start justify-between rounded-lg border p-2 text-left transition-all duration-150 ${
+              className={`flex w-full items-start justify-between rounded-2xl border p-2.5 text-left transition-all duration-150 active:translate-y-0.5 ${
                 isActive
-                  ? "border-[#1F3350] bg-[#142235]/90 text-slate-100 shadow-sm"
-                  : "border-transparent bg-transparent text-[#91A5BB] hover:bg-[#142235]/40 hover:text-slate-300"
+                  ? "border-indigo-500/40 bg-[#252937] text-slate-100 shadow-clay-btn"
+                  : "border-white/[0.04] bg-[#111217]/60 text-zinc-400 hover:bg-[#161820] hover:text-slate-200"
               }`}
             >
               <div className="flex items-start gap-2.5">
-                <Icon className={`h-4 w-4 shrink-0 mt-0.5 ${isActive ? item.color : "text-slate-500"}`} />
+                <Icon className={`h-4 w-4 shrink-0 mt-0.5 ${isActive ? item.color : "text-zinc-500"}`} />
                 <div>
                   <div className="text-xs font-medium font-sans">{item.label}</div>
-                  <div className="text-[10px] text-[#91A5BB] font-mono leading-tight mt-0.5">
+                  <div className="text-[10px] text-zinc-400 font-mono leading-tight mt-0.5">
                     {item.description}
                   </div>
                 </div>
@@ -128,11 +128,11 @@ export const MapLayerDrawer: React.FC<MapLayerDrawerProps> = ({ isOpen, onClose 
 
               <div className="ml-2 mt-0.5 shrink-0">
                 {isActive ? (
-                  <span className="flex h-4 w-4 items-center justify-center rounded bg-sky-950 text-sky-400 border border-sky-600/50">
+                  <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#1C1F30] text-indigo-400 border border-indigo-400/50 shadow-clay-badge">
                     <Check className="h-3 w-3" />
                   </span>
                 ) : (
-                  <span className="flex h-4 w-4 items-center justify-center rounded border border-[#1F3350] bg-[#0F1A2A]" />
+                  <span className="flex h-4 w-4 items-center justify-center rounded-full border border-white/[0.08] bg-[#0B0C10]" />
                 )}
               </div>
             </button>
@@ -141,7 +141,7 @@ export const MapLayerDrawer: React.FC<MapLayerDrawerProps> = ({ isOpen, onClose 
       </div>
 
       {/* Quick Action Footer */}
-      <div className="mt-3 pt-2.5 border-t border-[#1F3350]/80 flex justify-between text-[10px] font-mono text-[#91A5BB]">
+      <div className="mt-3 pt-2.5 border-t border-white/[0.08] flex justify-between text-[10px] font-mono text-zinc-400">
         <span>Projection: EPSG:4326</span>
         <span>Resolution: 0.04° (~4km)</span>
       </div>

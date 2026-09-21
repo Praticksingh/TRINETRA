@@ -23,44 +23,44 @@ export const AlertLifecycleBadge: React.FC<AlertLifecycleBadgeProps> = ({
   > = {
     GENERATED: {
       label: "GENERATED",
-      bg: "bg-[#0F3847]/80",
-      text: "text-[#36D9E8]",
-      border: "border-[#36D9E8]/40",
+      bg: "bg-[#1C1F30]",
+      text: "text-indigo-300",
+      border: "border-indigo-500/40",
       icon: Sparkles,
     },
     UNDER_REVIEW: {
       label: "UNDER REVIEW",
-      bg: "bg-amber-950/70",
+      bg: "bg-[#241F12]",
       text: "text-amber-300",
-      border: "border-amber-700/50",
+      border: "border-amber-500/40",
       icon: Eye,
     },
     DISPATCHED: {
       label: "DISPATCHED",
-      bg: "bg-purple-950/70",
-      text: "text-purple-300",
-      border: "border-purple-700/50",
+      bg: "bg-[#251429]",
+      text: "text-fuchsia-300",
+      border: "border-fuchsia-500/40",
       icon: Send,
     },
     ACKNOWLEDGED: {
       label: "ACKNOWLEDGED",
-      bg: "bg-emerald-950/70",
+      bg: "bg-[#11221A]",
       text: "text-emerald-300",
-      border: "border-emerald-700/50",
+      border: "border-emerald-500/40",
       icon: CheckCircle2,
     },
     RESOLVED: {
       label: "RESOLVED",
-      bg: "bg-slate-800/80",
-      text: "text-slate-300",
-      border: "border-slate-700",
+      bg: "bg-[#1D202B]",
+      text: "text-slate-400",
+      border: "border-white/[0.08]",
       icon: Archive,
     },
     REVOKED: {
       label: "REVOKED",
-      bg: "bg-rose-950/40",
+      bg: "bg-[#241418]",
       text: "text-rose-400",
-      border: "border-rose-800/60",
+      border: "border-rose-500/40",
       icon: XCircle,
     },
   };
@@ -69,14 +69,14 @@ export const AlertLifecycleBadge: React.FC<AlertLifecycleBadgeProps> = ({
   const Icon = current.icon;
 
   const sizeClasses = {
-    xs: "px-1.5 py-0.2 text-[9px] gap-1 font-mono",
-    sm: "px-2 py-0.5 text-[10px] gap-1.5 font-mono",
-    md: "px-2.5 py-1 text-xs gap-1.5 font-mono",
+    xs: "px-2 py-0.5 text-[9px] gap-1 font-mono",
+    sm: "px-2.5 py-0.5 text-[10px] gap-1.5 font-mono",
+    md: "px-3 py-1 text-xs gap-1.5 font-mono",
   };
 
   return (
     <span
-      className={`inline-flex items-center rounded border font-semibold uppercase tracking-wider select-none ${current.bg} ${current.text} ${current.border} ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center rounded-full border font-semibold uppercase tracking-wider select-none shadow-clay-badge ${current.bg} ${current.text} ${current.border} ${sizeClasses[size]} ${className}`}
       role="status"
     >
       {showIcon && <Icon className="h-3 w-3" />}

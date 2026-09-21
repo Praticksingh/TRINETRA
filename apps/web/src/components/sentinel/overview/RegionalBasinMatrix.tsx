@@ -8,7 +8,7 @@ import { GRID_CELLS } from "@/app/forecast/ForecastMap";
 import { MapPin, ArrowRight, Mountain, Droplets, Waves } from "lucide-react";
 
 export const RegionalBasinMatrix: React.FC = () => {
-  const { setSelectedCell, setCurrentView } = useSentinel();
+  const { cells, setSelectedCell, setCurrentView } = useSentinel();
 
   return (
     <Card variant="base">
@@ -18,7 +18,7 @@ export const RegionalBasinMatrix: React.FC = () => {
           <CardTitle>Regional Catchment Risk Matrix</CardTitle>
         </div>
         <span className="text-xs font-sans text-slate-400">
-          6 Key Himalayan Watersheds Monitored
+          {cells.length} Key Himalayan Watersheds Monitored
         </span>
       </CardHeader>
 
@@ -37,7 +37,7 @@ export const RegionalBasinMatrix: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1F3350]/60">
-              {GRID_CELLS.map((cell) => {
+              {cells.map((cell) => {
                 const isCritical = cell.severity === "critical";
                 const isWarning = cell.severity === "warning";
 

@@ -24,22 +24,22 @@ export default function LocationResults({
 }: LocationResultsProps) {
   if (results.length === 0) {
     return (
-      <div className="rounded-b-lg border-x border-b border-slate-800 bg-[#0d1424] p-4 text-center font-mono text-xs text-slate-500 shadow-2xl">
+      <div className="rounded-2xl border border-white/[0.08] bg-[#1D202B] p-4 text-center font-mono text-xs text-zinc-400 shadow-clay-card-elevated">
         No catchment or monitoring station found matching query.
       </div>
     );
   }
 
   return (
-    <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-80 overflow-y-auto rounded-lg border border-slate-800 bg-[#0c1322] shadow-2xl backdrop-blur-md divide-y divide-slate-800/80">
+    <div className="absolute left-0 right-0 top-full z-50 mt-1.5 max-h-80 overflow-y-auto rounded-2xl border border-white/[0.08] bg-[#1D202B]/98 shadow-clay-card-elevated backdrop-blur-xl divide-y divide-white/[0.05] p-1.5 space-y-1">
       {results.map((loc) => (
         <button
           key={loc.id}
           onClick={() => onSelectLocation(loc)}
-          className="flex w-full items-center justify-between p-3 text-left transition hover:bg-slate-800/70 focus:bg-slate-800/90 focus:outline-none"
+          className="flex w-full items-center justify-between p-2.5 rounded-xl text-left transition hover:bg-[#252937] hover:shadow-clay-btn focus:bg-[#252937] focus:outline-none active:translate-y-0.5"
         >
           <div className="flex items-start gap-3">
-            <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded border border-slate-700 bg-slate-800/80 text-cyan-400">
+            <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg border border-white/[0.08] bg-[#111217] text-indigo-400 shadow-clay-btn">
               <MapPin className="h-3.5 w-3.5" />
             </div>
             <div>
@@ -47,17 +47,17 @@ export default function LocationResults({
                 <span className="font-semibold text-slate-100 text-xs sm:text-sm">
                   {loc.name}
                 </span>
-                <span className="text-[10px] font-mono text-slate-400">
+                <span className="text-[10px] font-mono text-zinc-400">
                   {loc.district}
                 </span>
               </div>
-              <div className="flex items-center gap-3 text-[11px] text-slate-400 font-mono mt-0.5">
+              <div className="flex items-center gap-3 text-[11px] text-zinc-400 font-mono mt-0.5">
                 <span className="flex items-center gap-1">
-                  <Waves className="h-3 w-3 text-blue-400" />
+                  <Waves className="h-3 w-3 text-indigo-400" />
                   {loc.basin}
                 </span>
                 <span className="flex items-center gap-1">
-                  <Mountain className="h-3 w-3 text-slate-400" />
+                  <Mountain className="h-3 w-3 text-zinc-400" />
                   {loc.elevationM}m MSL
                 </span>
               </div>
@@ -66,7 +66,7 @@ export default function LocationResults({
 
           <div className="flex items-center gap-2">
             <RiskBadge severity={loc.currentRisk} size="sm" />
-            <div className="flex h-6 w-6 items-center justify-center rounded bg-slate-800 text-cyan-400 hover:bg-cyan-950 transition">
+            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#111217] text-indigo-400 shadow-clay-btn hover:text-indigo-300 transition">
               <Navigation2 className="h-3 w-3" />
             </div>
           </div>

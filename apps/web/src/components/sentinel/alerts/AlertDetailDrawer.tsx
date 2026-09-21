@@ -159,13 +159,13 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
             <Badge severity={alert.severity}>{alert.severity.toUpperCase()}</Badge>
             <AlertLifecycleBadge status={currentStatus} />
           </div>
-          <span className="rounded bg-amber-950/80 px-2 py-0.5 text-[10px] font-semibold text-amber-300 border border-amber-800/60 font-sans">
+          <span className="rounded-full bg-amber-950/60 px-2.5 py-0.5 text-[10px] font-semibold text-amber-300 border border-amber-800/50 shadow-clay-badge font-sans">
             MODEL ADVISORY (NOT OFFICIAL)
           </span>
         </div>
 
         {/* Lifecycle Progression Visualizer */}
-        <div className="rounded-lg border border-[#1E2D4A] bg-[#16233B] p-3 space-y-2">
+        <div className="rounded-2xl border border-white/[0.08] bg-[#1D202B]/90 p-3.5 space-y-2.5 shadow-clay-btn">
           <div className="text-[10px] uppercase font-semibold text-slate-400">
             Lifecycle State Machine
           </div>
@@ -177,18 +177,18 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
               return (
                 <div key={st} className="flex flex-col items-center">
                   <div
-                    className={`h-1.5 w-full rounded-full mb-1 transition-all ${
+                    className={`h-2 w-full rounded-full mb-1 transition-all ${
                       isCurrent
-                        ? "bg-[#38BDF8] shadow-[0_0_8px_rgba(56,189,248,0.5)]"
+                        ? "bg-[#6366F1] shadow-[0_0_8px_rgba(99,102,241,0.5)]"
                         : isPast
-                        ? "bg-emerald-500"
-                        : "bg-slate-800"
+                        ? "bg-emerald-500 shadow-sm"
+                        : "bg-[#111217] shadow-clay-inset"
                     }`}
                   />
                   <span
                     className={`text-[9px] font-sans truncate w-full font-medium ${
                       isCurrent
-                        ? "text-[#38BDF8] font-semibold"
+                        ? "text-indigo-300 font-semibold"
                         : isPast
                         ? "text-emerald-400"
                         : "text-slate-500"
@@ -203,11 +203,11 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
         </div>
 
         {/* Narrative & Details */}
-        <div className="rounded-lg border border-[#1E2D4A] bg-[#16233B] p-3.5 space-y-2.5 font-sans">
+        <div className="rounded-2xl border border-white/[0.08] bg-[#1D202B]/90 p-4 space-y-2.5 font-sans shadow-clay-btn">
           <h3 className="text-sm font-semibold text-slate-100">{alert.headline}</h3>
           <p className="text-xs text-slate-300 leading-relaxed font-sans">{alert.description}</p>
 
-          <div className="pt-2 border-t border-[#1E2D4A]/80 grid grid-cols-2 gap-2 text-xs text-slate-400">
+          <div className="pt-2 border-t border-white/[0.08] grid grid-cols-2 gap-2 text-xs text-slate-400">
             <div>
               <span>Valid From:</span>
               <div className="text-slate-200 font-semibold font-mono text-[11px]">{alert.validFrom.replace("T", " ").slice(0, 16)} UTC</div>
@@ -266,7 +266,7 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
           )}
 
           {currentStatus === "RESOLVED" && (
-            <div className="rounded-lg border border-slate-700 bg-slate-900/60 p-2.5 text-center text-slate-400 text-xs font-sans">
+            <div className="rounded-2xl border border-white/[0.08] bg-[#161820] p-3 text-center text-slate-400 text-xs font-sans shadow-clay-card">
               ✓ This advisory has been formally resolved and archived.
             </div>
           )}
@@ -277,7 +277,7 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            leftIcon={<MapPin className="h-3.5 w-3.5 text-[#38BDF8]" />}
+            leftIcon={<MapPin className="h-3.5 w-3.5 text-indigo-400" />}
             onClick={() => {
               onFocusMap(alert);
               onClose();
@@ -298,7 +298,7 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            leftIcon={<FileCode className="h-3.5 w-3.5 text-[#38BDF8]" />}
+            leftIcon={<FileCode className="h-3.5 w-3.5 text-indigo-400" />}
             onClick={handleExportGeoJson}
             className="col-span-2"
           >
@@ -307,7 +307,7 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
         </div>
 
         {/* Audit Log Record */}
-        <div className="rounded-lg border border-[#1E2D4A] bg-[#16233B]/60 p-3 space-y-1.5 text-xs font-sans text-slate-400">
+        <div className="rounded-2xl border border-white/[0.08] bg-[#111217] p-3.5 space-y-1.5 text-xs font-sans text-slate-400 shadow-clay-inset">
           <div className="font-semibold text-slate-200 uppercase text-[10px] tracking-wider">Provenance Audit Record</div>
           <div>Issued At: <span className="font-mono text-slate-300">{alert.issuedAt}</span></div>
           <div>Trigger Engine: Spatiotemporal Conv3D (Multitask v1.0.0)</div>

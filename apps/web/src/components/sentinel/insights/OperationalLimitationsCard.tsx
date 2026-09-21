@@ -55,7 +55,7 @@ export const OperationalLimitationsCard: React.FC = () => {
         <Card variant="base">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <CloudRain className="h-4 w-4 text-[#38BDF8]" />
+              <CloudRain className="h-4 w-4 text-indigo-400" />
               <CardTitle className="font-sans text-sm font-semibold">2. Warm-Rain Orographic Cloud Undercatch</CardTitle>
             </div>
           </CardHeader>
@@ -63,7 +63,7 @@ export const OperationalLimitationsCard: React.FC = () => {
             <p className="text-xs leading-relaxed">
               Certain orographically forced cloudbursts occur in relatively shallow convective clouds without deep ice-phase tops reaching -40°C. These events produce torrential rainfall without registering dramatic infrared cloud-top temperature drops on geostationary satellites.
             </p>
-            <div className="rounded-lg border border-sky-500/30 bg-sky-500/10 p-2.5 text-xs text-sky-200 font-sans">
+            <div className="rounded-lg border border-indigo-500/30 bg-[#1C1F30] p-2.5 text-xs text-indigo-200 font-sans">
               <strong>System Mitigation:</strong> NWP low-level moisture flux convergence and high relative humidity (&gt; 85%) are combined with topographic slope indices to prevent false-negative misses.
             </div>
           </CardContent>
@@ -113,7 +113,7 @@ export const OperationalLimitationsCard: React.FC = () => {
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
             <span>Audit Standard: Compliant with IMD/SDMA Nowcasting Safety Directives</span>
           </div>
-          <span className="text-[#38BDF8] font-mono text-[11px]">Doc Ref: TRINETRA-SAF-2026-V1</span>
+          <span className="text-indigo-300 font-mono text-[11px]">Doc Ref: TRINETRA-SAF-2026-V1</span>
         </CardContent>
       </Card>
     </div>

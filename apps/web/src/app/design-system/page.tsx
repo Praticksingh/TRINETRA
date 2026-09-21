@@ -45,29 +45,29 @@ export default function DesignSystemShowcase() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B1220] text-slate-100 p-4 sm:p-8 font-sans">
+    <div className="min-h-screen bg-[#0B0C10] text-slate-100 p-4 sm:p-8 font-sans">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Navigation & Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#1F3350] pb-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#1F3350] bg-[#142235] text-slate-300 hover:text-[#36D9E8] hover:border-[#36D9E8]/50 transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.08] bg-[#161820] text-slate-300 hover:text-indigo-300 hover:border-indigo-500/50 transition-colors shadow-clay-btn active:translate-y-0.5"
               title="Return to Sentinel Console"
             >
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-xs font-bold text-[#36D9E8] uppercase tracking-wider">
+                <span className="font-mono text-xs font-bold text-indigo-400 uppercase tracking-wider">
                   TRINETRA SENTINEL
                 </span>
-                <span className="rounded bg-[#0F3847] px-2 py-0.5 text-[10px] font-mono text-[#36D9E8] border border-[#36D9E8]/40">
-                  DESIGN SYSTEM v1.0
+                <span className="rounded-full bg-[#1C1F30] px-2.5 py-0.5 text-[10px] font-mono text-indigo-300 border border-indigo-500/40 shadow-clay-badge">
+                  OBSIDIAN TITANIUM CLAYMORPHISM
                 </span>
               </div>
               <h1 className="text-xl font-bold text-slate-100 mt-1 font-sans">
-                Visual Foundation & Reusable Primitives
+                Tactile 3D Molded Surfaces & Visual Foundation
               </h1>
             </div>
           </div>
@@ -95,52 +95,115 @@ export default function DesignSystemShowcase() {
             <h2 className="text-base font-semibold text-slate-200 uppercase font-mono tracking-wider">
               1. Master Tokens & Color Semantics
             </h2>
-            <span className="text-xs font-mono text-[#91A5BB]">
-              Strict Separation: Cyan = Telemetry, Amber/Red = Risk Only
+            <span className="text-xs font-mono text-slate-400">
+              Obsidian & Mineral Titanium: Molded 3D Surfaces with Dual Inner Lighting
             </span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 font-mono text-xs">
             {/* App Background */}
-            <div className="rounded-lg border border-[#1F3350] bg-[#0B1220] p-3 shadow">
-              <div className="h-10 rounded bg-[#0B1220] border border-[#1F3350] mb-2" />
-              <div className="font-bold text-slate-200">#0B1220</div>
-              <div className="text-[10px] text-[#91A5BB]">App Background</div>
+            <div className="rounded-2xl border border-white/[0.08] bg-[#161820] p-3 shadow-clay-card">
+              <div className="h-10 rounded-xl bg-[#0B0C10] border border-white/[0.05] shadow-clay-inset mb-2" />
+              <div className="font-bold text-slate-200">#0B0C10</div>
+              <div className="text-[10px] text-slate-400">Deep Canvas</div>
             </div>
 
-            {/* Slate Surface Panel */}
-            <div className="rounded-lg border border-[#1F3350] bg-[#142235] p-3 shadow">
-              <div className="h-10 rounded bg-[#142235] border border-[#1F3350] mb-2" />
-              <div className="font-bold text-slate-200">#142235</div>
-              <div className="text-[10px] text-[#91A5BB]">Slate Panel Surface</div>
+            {/* Clay Surface Panel */}
+            <div className="rounded-2xl border border-white/[0.08] bg-[#161820] p-3 shadow-clay-card">
+              <div className="h-10 rounded-xl bg-[#161820] border border-white/[0.08] shadow-clay-btn mb-2" />
+              <div className="font-bold text-slate-200">#161820</div>
+              <div className="text-[10px] text-slate-400">Molded Surface</div>
             </div>
 
-            {/* Elevated Panel */}
-            <div className="rounded-lg border border-[#2B476F] bg-[#1B2C44] p-3 shadow">
-              <div className="h-10 rounded bg-[#1B2C44] border border-[#2B476F] mb-2" />
-              <div className="font-bold text-slate-200">#1B2C44</div>
-              <div className="text-[10px] text-[#91A5BB]">Elevated Surface</div>
+            {/* Elevated Clay Surface */}
+            <div className="rounded-2xl border border-white/[0.08] bg-[#1D202B] p-3 shadow-clay-card-elevated">
+              <div className="h-10 rounded-xl bg-[#1D202B] border border-white/[0.08] shadow-clay-card mb-2" />
+              <div className="font-bold text-slate-200">#1D202B</div>
+              <div className="text-[10px] text-slate-400">Elevated Card</div>
             </div>
 
-            {/* Interactive Cyan */}
-            <div className="rounded-lg border border-[#36D9E8]/40 bg-[#0F3847] p-3 shadow">
-              <div className="h-10 rounded bg-[#36D9E8] mb-2" />
-              <div className="font-bold text-[#36D9E8]">#36D9E8</div>
-              <div className="text-[10px] text-[#91A5BB]">Interactive Cyan</div>
+            {/* Arctic Indigo Accent */}
+            <div className="rounded-2xl border border-indigo-500/30 bg-[#1C1F30] p-3 shadow-clay-btn-primary">
+              <div className="h-10 rounded-xl bg-[#4F46E5] mb-2 shadow-sm" />
+              <div className="font-bold text-indigo-300">#6366F1</div>
+              <div className="text-[10px] text-indigo-200">Arctic Indigo</div>
             </div>
 
             {/* Low Risk */}
-            <div className="rounded-lg border border-emerald-700/60 bg-emerald-950/40 p-3 shadow">
-              <div className="h-10 rounded bg-emerald-600 mb-2" />
-              <div className="font-bold text-emerald-300">● Low (Green)</div>
+            <div className="rounded-2xl border border-emerald-500/30 bg-[#11221A] p-3 shadow-clay-card">
+              <div className="h-10 rounded-xl bg-emerald-600 mb-2 shadow-sm" />
+              <div className="font-bold text-emerald-300">● Low (Emerald)</div>
               <div className="text-[10px] text-emerald-400/80">Nominal Severity</div>
             </div>
 
             {/* Critical Risk */}
-            <div className="rounded-lg border border-red-700/60 bg-red-950/60 p-3 shadow">
-              <div className="h-10 rounded bg-red-600 mb-2" />
-              <div className="font-bold text-red-300">▲ Critical (Red)</div>
-              <div className="text-[10px] text-red-400/80">Immediate Surge</div>
+            <div className="rounded-2xl border border-rose-500/40 bg-[#241418] p-3 shadow-clay-btn-danger">
+              <div className="h-10 rounded-xl bg-rose-600 mb-2 shadow-sm" />
+              <div className="font-bold text-rose-300">▲ Critical (Rose)</div>
+              <div className="text-[10px] text-rose-400/80">Immediate Surge</div>
+            </div>
+          </div>
+        </section>
+
+        {/* 2. Dark Claymorphism 3D Physics & Tactile Controls */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-base font-semibold text-slate-200 uppercase font-mono tracking-wider">
+              2. Tactile Clay Physics Demonstration
+            </h2>
+            <span className="text-xs font-mono text-indigo-400">
+              Interactive Click Compression & Molded Surfaces
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Pillowy 3D Card */}
+            <div className="rounded-3xl border border-white/[0.08] bg-[#161820] p-5 shadow-clay-card-elevated space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold uppercase text-indigo-400 tracking-wider">Molded Depth</span>
+                <span className="rounded-full bg-[#1C1F30] px-2.5 py-0.5 text-[10px] font-mono text-indigo-300 border border-indigo-500/40 shadow-clay-badge">
+                  Dual Light
+                </span>
+              </div>
+              <h3 className="text-sm font-bold text-white">Dual Specular Lighting</h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Top-left specular light highlight combined with bottom-right deep ambient shadow gives pillowy tactile elevation on dark canvas.
+              </p>
+            </div>
+
+            {/* Tactile Button Compression */}
+            <div className="rounded-3xl border border-white/[0.08] bg-[#161820] p-5 shadow-clay-card space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold uppercase text-emerald-400 tracking-wider">Physical Action</span>
+                <span className="rounded-full bg-[#11221A] px-2.5 py-0.5 text-[10px] font-mono text-emerald-300 border border-emerald-800/40 shadow-clay-badge">
+                  Click to Press
+                </span>
+              </div>
+              <h3 className="text-sm font-bold text-white">Tactile Button Compression</h3>
+              <div className="flex items-center gap-2 pt-1">
+                <Button variant="primary" size="sm">
+                  Press Me (Primary)
+                </Button>
+                <Button variant="danger" size="sm">
+                  Danger Action
+                </Button>
+              </div>
+            </div>
+
+            {/* Stamped Clay Inset */}
+            <div className="rounded-3xl border border-white/[0.08] bg-[#161820] p-5 shadow-clay-card space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold uppercase text-amber-400 tracking-wider">Stamped Inset</span>
+                <span className="rounded-full bg-[#241F12] px-2.5 py-0.5 text-[10px] font-mono text-amber-300 border border-amber-800/40 shadow-clay-badge">
+                  Recessed
+                </span>
+              </div>
+              <h3 className="text-sm font-bold text-white">Debossed / Stamped Tray</h3>
+              <div className="rounded-2xl bg-[#111217] p-3 shadow-clay-inset border border-white/[0.04]">
+                <span className="font-mono text-xs text-slate-400">
+                  shadow-clay-inset: 2px 2px 5px rgba(0,0,0,0.6)
+                </span>
+              </div>
             </div>
           </div>
         </section>
@@ -181,8 +244,8 @@ export default function DesignSystemShowcase() {
                     <Button variant="danger">Destructive / Revoke</Button>
                   </div>
 
-                  <div className="pt-4 border-t border-[#1F3350]/80">
-                    <div className="text-xs font-mono text-[#91A5BB] mb-2 uppercase">
+                  <div className="pt-4 border-t border-white/[0.08]">
+                    <div className="text-xs font-mono text-slate-400 mb-2 uppercase">
                       Size Hierarchy (xs, sm, md, lg)
                     </div>
                     <div className="flex flex-wrap items-center gap-3">
@@ -207,7 +270,7 @@ export default function DesignSystemShowcase() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div>
-                    <div className="text-xs font-mono text-[#91A5BB] mb-2 uppercase">
+                    <div className="text-xs font-mono text-slate-400 mb-2 uppercase">
                       Hazard Severity Badges (With geometric shape cues)
                     </div>
                     <div className="flex flex-wrap items-center gap-3">
@@ -218,8 +281,8 @@ export default function DesignSystemShowcase() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-[#1F3350]/80">
-                    <div className="text-xs font-mono text-[#91A5BB] mb-2 uppercase">
+                  <div className="pt-4 border-t border-white/[0.08]">
+                    <div className="text-xs font-mono text-slate-400 mb-2 uppercase">
                       Operational Metadata & Provenance Badges
                     </div>
                     <div className="flex flex-wrap items-center gap-3">
@@ -286,29 +349,29 @@ export default function DesignSystemShowcase() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <div className="rounded-lg border border-[#1F3350] bg-[#0F1A2A] p-3">
+                    <div className="rounded-2xl border border-white/[0.08] bg-[#111217] p-3 shadow-clay-inset">
                       <StatusDot status="nominal" label="NOMINAL (INSAT)" />
-                      <div className="text-[10px] text-[#91A5BB] mt-1">Satellite feed lag: 12 min</div>
+                      <div className="text-[10px] text-slate-400 mt-1">Satellite feed lag: 12 min</div>
                     </div>
-                    <div className="rounded-lg border border-[#1F3350] bg-[#0F1A2A] p-3">
+                    <div className="rounded-2xl border border-white/[0.08] bg-[#111217] p-3 shadow-clay-inset">
                       <StatusDot status="delayed" label="DELAYED (NWP)" />
-                      <div className="text-[10px] text-[#91A5BB] mt-1">Reanalysis lag: 48 min</div>
+                      <div className="text-[10px] text-slate-400 mt-1">Reanalysis lag: 48 min</div>
                     </div>
-                    <div className="rounded-lg border border-[#1F3350] bg-[#0F1A2A] p-3">
+                    <div className="rounded-2xl border border-white/[0.08] bg-[#111217] p-3 shadow-clay-inset">
                       <StatusDot status="stale" label="STALE FEED" />
-                      <div className="text-[10px] text-[#91A5BB] mt-1">Feed age exceeds 60m</div>
+                      <div className="text-[10px] text-slate-400 mt-1">Feed age exceeds 60m</div>
                     </div>
-                    <div className="rounded-lg border border-[#1F3350] bg-[#0F1A2A] p-3">
+                    <div className="rounded-2xl border border-white/[0.08] bg-[#111217] p-3 shadow-clay-inset">
                       <StatusDot status="degraded" label="RUNOFF DEGRADED" />
-                      <div className="text-[10px] text-[#91A5BB] mt-1">Missing soil probe fallback</div>
+                      <div className="text-[10px] text-slate-400 mt-1">Missing soil probe fallback</div>
                     </div>
-                    <div className="rounded-lg border border-[#1F3350] bg-[#0F1A2A] p-3">
+                    <div className="rounded-2xl border border-white/[0.08] bg-[#111217] p-3 shadow-clay-inset">
                       <StatusDot status="offline" label="OFFLINE" pulse={false} />
-                      <div className="text-[10px] text-[#91A5BB] mt-1">DWR Radar offline</div>
+                      <div className="text-[10px] text-slate-400 mt-1">DWR Radar offline</div>
                     </div>
-                    <div className="rounded-lg border border-[#1F3350] bg-[#0F1A2A] p-3">
+                    <div className="rounded-2xl border border-white/[0.08] bg-[#111217] p-3 shadow-clay-inset">
                       <StatusDot status="replay" label="SYNTHETIC REPLAY" />
-                      <div className="text-[10px] text-[#91A5BB] mt-1">Historical test benchmark</div>
+                      <div className="text-[10px] text-slate-400 mt-1">Historical test benchmark</div>
                     </div>
                   </div>
                 </CardContent>
@@ -362,15 +425,15 @@ export default function DesignSystemShowcase() {
           position="right"
         >
           <div className="space-y-4 text-xs">
-            <div className="rounded border border-[#1F3350] bg-[#0F1A2A] p-3">
-              <span className="text-[#36D9E8] font-mono font-bold">DRAWER FUNCTIONALITY</span>
+            <div className="rounded-2xl border border-white/[0.08] bg-[#111217] p-3 shadow-clay-inset">
+              <span className="text-indigo-400 font-mono font-bold">DRAWER FUNCTIONALITY</span>
               <p className="text-slate-300 mt-1">
                 This slide-over drawer will house the Right-Side Risk Inspector, Alert Center details, and Advanced Layer Controls in subsequent phases.
               </p>
             </div>
 
             <div className="space-y-2">
-              <div className="text-[11px] font-mono text-[#91A5BB]">KEYBOARD INTERACTIONS</div>
+              <div className="text-[11px] font-mono text-slate-400">KEYBOARD INTERACTIONS</div>
               <ul className="list-disc pl-4 text-slate-300 space-y-1">
                 <li>Press <strong>Escape</strong> to close anywhere</li>
                 <li>Click outside backdrop to dismiss</li>

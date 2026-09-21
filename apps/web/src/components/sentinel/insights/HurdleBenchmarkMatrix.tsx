@@ -120,7 +120,7 @@ export const HurdleBenchmarkMatrix: React.FC = () => {
         <CardHeader>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <Award className="h-4 w-4 text-[#38BDF8]" />
+              <Award className="h-4 w-4 text-indigo-400" />
               <CardTitle className="font-sans text-sm font-semibold">TRINETRA Operational Deployment Hurdle Protocol</CardTitle>
             </div>
             <Badge variant="emerald" size="sm">
@@ -135,19 +135,19 @@ export const HurdleBenchmarkMatrix: React.FC = () => {
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-            <div className="rounded-lg border border-[#1E2D4A] bg-[#16233B] p-3">
+            <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
               <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Hurdle Criterion 1</div>
               <div className="text-slate-100 font-semibold font-mono mt-0.5">PR-AUC Delta ≥ +1000 bps</div>
               <div className="text-[11px] text-emerald-400 font-medium mt-1">Achieved: +1813 bps (+18.1%)</div>
             </div>
 
-            <div className="rounded-lg border border-[#1E2D4A] bg-[#16233B] p-3">
+            <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
               <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Hurdle Criterion 2</div>
               <div className="text-slate-100 font-semibold font-mono mt-0.5">ECE Score &lt; 0.100</div>
               <div className="text-[11px] text-emerald-400 font-medium mt-1">Achieved: 0.084 (Calibrated)</div>
             </div>
 
-            <div className="rounded-lg border border-[#1E2D4A] bg-[#16233B] p-3">
+            <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
               <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Hurdle Criterion 3</div>
               <div className="text-slate-100 font-semibold font-mono mt-0.5">Inference Latency &lt; 100 ms</div>
               <div className="text-[11px] text-emerald-400 font-medium mt-1">Achieved: 3.7 ms on GPU</div>
@@ -161,17 +161,17 @@ export const HurdleBenchmarkMatrix: React.FC = () => {
         <CardHeader>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <BarChart3 className="h-4 w-4 text-[#38BDF8]" />
+              <BarChart3 className="h-4 w-4 text-indigo-400" />
               <CardTitle className="font-sans text-sm font-semibold">Held-Out Test Set Verification (Monsoon Jul–Sep 2025)</CardTitle>
             </div>
 
             {/* Metric Mode Filter */}
-            <div className="flex items-center gap-1 rounded-lg bg-[#080E1A] p-1 border border-[#1E2D4A] font-sans text-xs">
+            <div className="flex items-center gap-1 rounded-lg bg-[#111217] p-1 border border-white/[0.08] font-sans text-xs">
               <button
                 onClick={() => setSelectedMetric("prAuc")}
                 className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
                   selectedMetric === "prAuc"
-                    ? "bg-sky-500/15 text-sky-300 border border-sky-500/30 font-semibold"
+                    ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold"
                     : "text-slate-400 hover:text-slate-200"
                 }`}
               >
@@ -181,7 +181,7 @@ export const HurdleBenchmarkMatrix: React.FC = () => {
                 onClick={() => setSelectedMetric("f1")}
                 className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
                   selectedMetric === "f1"
-                    ? "bg-sky-500/15 text-sky-300 border border-sky-500/30 font-semibold"
+                    ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold"
                     : "text-slate-400 hover:text-slate-200"
                 }`}
               >
@@ -191,7 +191,7 @@ export const HurdleBenchmarkMatrix: React.FC = () => {
                 onClick={() => setSelectedMetric("reliability")}
                 className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
                   selectedMetric === "reliability"
-                    ? "bg-sky-500/15 text-sky-300 border border-sky-500/30 font-semibold"
+                    ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold"
                     : "text-slate-400 hover:text-slate-200"
                 }`}
               >
@@ -204,7 +204,7 @@ export const HurdleBenchmarkMatrix: React.FC = () => {
         <CardContent className="p-0 overflow-x-auto">
           <table className="w-full text-left font-sans text-xs border-collapse">
             <thead>
-              <tr className="border-b border-[#1E2D4A] bg-[#111A2C] text-[11px] text-slate-400 font-semibold uppercase tracking-wider">
+              <tr className="border-b border-white/[0.08] bg-[#111217] text-[11px] text-slate-400 font-semibold uppercase tracking-wider">
                 <th className="py-3 px-4">Hazard Phenomenon</th>
                 <th className="py-3 px-3">Horizon</th>
                 <th className="py-3 px-3 text-right">Tree Baseline</th>
@@ -215,17 +215,17 @@ export const HurdleBenchmarkMatrix: React.FC = () => {
                 <th className="py-3 px-4 text-center">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1E2D4A]/60">
+            <tbody className="divide-y divide-white/[0.04]">
               {BENCHMARK_DATA.map((row, idx) => (
-                <tr key={idx} className="hover:bg-[#16233B]/60 transition-colors">
+                <tr key={idx} className="hover:bg-[#1D202B]/60 transition-colors">
                   <td className="py-3 px-4 font-semibold text-slate-200">
                     {row.hazard}
                   </td>
-                  <td className="py-3 px-3 text-sky-300 font-medium">{row.leadTime}</td>
+                  <td className="py-3 px-3 text-indigo-300 font-medium">{row.leadTime}</td>
                   <td className="py-3 px-3 text-right text-slate-400 font-mono">
                     {selectedMetric === "f1" ? row.treeF1.toFixed(3) : row.treePrAuc.toFixed(3)}
                   </td>
-                  <td className="py-3 px-3 text-right font-semibold font-mono text-[#38BDF8]">
+                  <td className="py-3 px-3 text-right font-semibold font-mono text-indigo-300">
                     {selectedMetric === "f1" ? row.deepF1.toFixed(3) : row.deepPrAuc.toFixed(3)}
                   </td>
                   <td className="py-3 px-3 text-right font-semibold font-mono text-emerald-400">

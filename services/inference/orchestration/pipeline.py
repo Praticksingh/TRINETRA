@@ -82,19 +82,40 @@ class ForecastPipeline:
 
             # Step 2: Deep Spatiotemporal Inference
             job.transition_to(JobStatus.INFERRING)
-            # Produce 4D tensor sequence for deep net [T=4, C=10, 15, 15]
-            tensor_seq = np.zeros((4, 10, 15, 15), dtype=np.float32)
-            for t in range(4):
-                tensor_seq[t, 0, :, :] = (205.0 - 5.0 * t - 200.0) / 100.0
-                tensor_seq[t, 1, :, :] = (2.2 + 0.4 * t) / 10.0
-                tensor_seq[t, 2, :, :] = (-15.5 * (1.0 + 0.1 * t)) / 15.0
-                tensor_seq[t, 3, :, :] = (3350.0 + 100.0 * t) / 4000.0
-                tensor_seq[t, 4, :, :] = 18.0 / 200.0
-                tensor_seq[t, 5, :, :] = (64.0 + 1.5 * t) / 80.0
-                tensor_seq[t, 6, :, :] = (-1.6 - 0.2 * t) / 2.0
-                tensor_seq[t, 7, :, :] = 2800.0 / 4000.0
-                tensor_seq[t, 8, :, :] = 38.0 / 60.0
-                tensor_seq[t, 9, :, :] = 12.0 / 15.0
+            raw_tensor = norm_result.get("raw_tensor")
+            if raw_tensor is not None and getattr(raw_tensor, "ndim", 0) == 3 and raw_tensor.shape[0] == 10:
+                H, W = raw_tensor.shape[1], raw_tensor.shape[2]
+                tensor_seq = np.zeros((4, 10, H, W), dtype=np.float32)
+                for t in range(4):
+                    tensor_seq[t] = raw_tensor.copy()
+                    # Apply physical convective evolution: t=0 (earlier) to t=3 (current observation)
+                    cooling_k_hr = raw_tensor[2]
+                    # Updraft cooling accumulates towards current time
+                    delta_k = (cooling_k_hr / 60.0) * (3 - t) * 30.0
+                    tensor_seq[t, 0] = np.clip(raw_tensor[0] - delta_k, 180.0, 330.0) / 100.0
+                    tensor_seq[t, 1] = tensor_seq[t, 1] / 10.0
+                    tensor_seq[t, 2] = tensor_seq[t, 2] / 20.0
+                    tensor_seq[t, 3] = tensor_seq[t, 3] / 4000.0
+                    tensor_seq[t, 4] = tensor_seq[t, 4] / 200.0
+                    tensor_seq[t, 5] = tensor_seq[t, 5] / 80.0
+                    tensor_seq[t, 6] = tensor_seq[t, 6] / 2.0
+                    tensor_seq[t, 7] = tensor_seq[t, 7] / 4000.0
+                    tensor_seq[t, 8] = tensor_seq[t, 8] / 60.0
+                    tensor_seq[t, 9] = tensor_seq[t, 9] / 15.0
+            else:
+                # Fallback to standard 15x15 representative convective profile
+                tensor_seq = np.zeros((4, 10, 15, 15), dtype=np.float32)
+                for t in range(4):
+                    tensor_seq[t, 0, :, :] = (205.0 - 5.0 * t - 200.0) / 100.0
+                    tensor_seq[t, 1, :, :] = (2.2 + 0.4 * t) / 10.0
+                    tensor_seq[t, 2, :, :] = (-15.5 * (1.0 + 0.1 * t)) / 15.0
+                    tensor_seq[t, 3, :, :] = (3350.0 + 100.0 * t) / 4000.0
+                    tensor_seq[t, 4, :, :] = 18.0 / 200.0
+                    tensor_seq[t, 5, :, :] = (64.0 + 1.5 * t) / 80.0
+                    tensor_seq[t, 6, :, :] = (-1.6 - 0.2 * t) / 2.0
+                    tensor_seq[t, 7, :, :] = 2800.0 / 4000.0
+                    tensor_seq[t, 8, :, :] = 38.0 / 60.0
+                    tensor_seq[t, 9, :, :] = 12.0 / 15.0
 
             deep_preds = self.deep_inference.predict(
                 tensor_data=tensor_seq,

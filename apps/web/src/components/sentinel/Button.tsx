@@ -26,28 +26,28 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    // Variant styling (Sentinel Aurora)
+    // 3D Molded Claymorphism variant styling
     const variantClasses = {
       primary:
-        "bg-[#0284C7] text-white font-medium hover:bg-[#0369A1] active:bg-[#075985] shadow-sm border border-[#38BDF8]/40",
+        "bg-[#4F46E5] text-white font-semibold shadow-clay-btn-primary hover:bg-[#4338CA] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-clay-btn-pressed border border-indigo-400/40",
       secondary:
-        "bg-[#111A2C] text-slate-200 hover:text-white hover:bg-[#16233B] border border-[#1E2E48] hover:border-[#2B4063] active:bg-[#1A2B47]",
+        "bg-[#1D202B] text-slate-200 hover:text-white hover:bg-[#252937] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-clay-btn-pressed shadow-clay-btn border border-white/[0.08]",
       ghost:
-        "bg-transparent text-slate-300 hover:text-[#38BDF8] hover:bg-[#111A2C]/60 border border-transparent",
+        "bg-transparent text-slate-300 hover:text-indigo-300 hover:bg-white/[0.05] border border-transparent active:translate-y-0.5",
       danger:
-        "bg-rose-950/80 text-rose-200 hover:bg-rose-900 border border-rose-700/60 hover:border-rose-600 active:bg-rose-950",
+        "bg-[#BE123C] text-white font-semibold hover:bg-[#9F1239] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-clay-btn-pressed shadow-clay-btn-danger border border-rose-400/40",
       outline:
-        "bg-transparent text-[#38BDF8] border border-[#38BDF8]/40 hover:bg-[#0284C7]/10 hover:border-[#38BDF8]",
+        "bg-transparent text-indigo-400 border border-indigo-500/40 hover:bg-indigo-950/40 hover:border-indigo-400 shadow-sm active:translate-y-0.5",
       active:
-        "bg-[#0C2438] text-[#38BDF8] border border-[#0284C7]/60 font-semibold",
+        "bg-[#1C1F30] text-indigo-300 border border-indigo-500/60 shadow-clay-btn-pressed font-semibold",
     };
 
-    // Size styling
+    // Pillowy Clay Size styling
     const sizeClasses = {
-      xs: "h-6 px-2 text-[10px] gap-1 rounded font-mono",
-      sm: "h-7 px-2.5 text-xs gap-1.5 rounded font-mono",
-      md: "h-9 px-3.5 text-xs gap-2 rounded-md font-sans font-medium",
-      lg: "h-11 px-5 text-sm gap-2.5 rounded-md font-sans font-medium",
+      xs: "h-6 px-2.5 text-[10px] gap-1 rounded-lg font-sans",
+      sm: "h-7.5 px-3 text-xs gap-1.5 rounded-xl font-sans",
+      md: "h-9 px-4 text-xs gap-2 rounded-xl font-sans font-medium",
+      lg: "h-11 px-5 text-sm gap-2.5 rounded-2xl font-sans font-medium",
     };
 
     const isDisabled = disabled || isLoading;
@@ -56,7 +56,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         disabled={isDisabled}
-        className={`inline-flex items-center justify-center select-none transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] focus-visible:ring-offset-2 focus-visible:ring-offset-[#080E1A] ${
+        className={`inline-flex items-center justify-center select-none transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 ${
           variantClasses[variant]
         } ${sizeClasses[size]} ${
           isDisabled ? "opacity-50 cursor-not-allowed pointer-events-none" : "cursor-pointer"

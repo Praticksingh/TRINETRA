@@ -268,6 +268,48 @@ def get_sample_normalized_batch():
     return normalizer.process_raw_batch(raw_sample)
 
 
+# --- Disaster Scenarios Endpoints ---
+from ingestion.scenarios import list_scenarios, get_scenario
+
+
+@app.get("/api/v1/ingestion/scenarios", tags=["Scenarios"])
+def get_available_scenarios():
+    """Returns curated historical benchmark disaster scenarios for operational testing and demonstration."""
+    return {"scenarios": list_scenarios(), "count": len(list_scenarios())}
+
+
+@app.post("/api/v1/ingestion/scenarios/{scenario_id}/trigger", tags=["Scenarios"])
+def trigger_scenario_nowcast(scenario_id: str):
+    """
+    Executes an end-to-end nowcast cycle conditioned on a historical or operational scenario.
+    Returns dynamic predictions, GeoJSON feature polygons, and updated alert status.
+    """
+    try:
+        scenario = get_scenario(scenario_id)
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+    raw_sample = generate_synthetic_nowcast_payload(
+        observation_timestamp=scenario["date"],
+        event_scenario=scenario["name"],
+    )
+    prof = scenario["meteorological_profile"]
+    raw_sample["insat"]["cooling_rate_k_hr"][2][2] = prof["cooling_rate_k_hr"]
+    raw_sample["insat"]["tir1_bt_k"][2][2] = prof["tir1_bt_k"]
+    raw_sample["imdaa"]["cape_j_kg"][2][2] = prof["cape_j_kg"]
+    raw_sample["imdaa"]["cin_j_kg"][2][2] = prof["cin_j_kg"]
+    raw_sample["imdaa"]["tpw_mm"][2][2] = prof["tpw_iwv_mm"]
+
+    snapshot = forecast_pipeline.execute_cycle(
+        raw_observation_batch=raw_sample,
+        is_synthetic_replay=True,
+        trigger_source=f"scenario_{scenario_id}",
+    )
+    snapshot["scenario"] = scenario
+    return snapshot
+
+
+
 # --- Phase 4 Baseline Forecast Models & Benchmarks ---
 
 import json

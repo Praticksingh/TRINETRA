@@ -35,9 +35,9 @@ export const Badge: React.FC<BadgeProps> = ({
       : "low";
 
   const sizeClasses = {
-    xs: "px-1.5 py-0.2 text-[9px] gap-1 font-mono",
-    sm: "px-2 py-0.5 text-[10px] gap-1.5 font-mono",
-    md: "px-2.5 py-1 text-xs gap-1.5 font-mono font-medium",
+    xs: "px-2 py-0.5 text-[9px] gap-1 font-sans rounded-full shadow-clay-badge border border-white/[0.08]",
+    sm: "px-2.5 py-0.5 text-[10px] gap-1.5 font-sans rounded-full shadow-clay-badge border border-white/[0.08]",
+    md: "px-3 py-1 text-xs gap-1.5 font-sans font-medium rounded-full shadow-clay-badge border border-white/[0.08]",
   };
 
   const iconSizes = {
@@ -64,7 +64,7 @@ export const Badge: React.FC<BadgeProps> = ({
       <span
         role="status"
         aria-label={`${config.label}: ${config.shapeDesc}`}
-        className={`inline-flex items-center rounded border tracking-wider uppercase font-semibold select-none ${sizeClasses[size]} ${className}`}
+        className={`inline-flex items-center tracking-wider uppercase font-semibold select-none ${sizeClasses[size]} ${className}`}
         style={{
           backgroundColor: config.bg,
           borderColor: config.border,
@@ -96,20 +96,20 @@ export const Badge: React.FC<BadgeProps> = ({
     );
   }
 
-  // Non-severity utility variants (Sentinel Aurora)
+  // Non-severity utility variants (Obsidian Titanium Claymorphism)
   const variantStyles = {
-    cyan: "bg-[#0C2438] border-[#38BDF8]/40 text-[#38BDF8]",
-    neutral: "bg-[#111A2C] border-[#1E2E48] text-slate-300",
-    purple: "bg-purple-950/60 border-purple-800/40 text-purple-300",
-    emerald: "bg-emerald-950/60 border-emerald-800/40 text-emerald-300",
-    outline: "bg-transparent border-[#1E2E48] text-slate-400",
-    severity: "bg-[#111A2C] border-[#1E2E48] text-slate-300",
+    cyan: "bg-[#1C1F30] text-indigo-300 border-indigo-500/40 shadow-clay-badge",
+    neutral: "bg-[#1D202B] text-slate-200 border-white/[0.08] shadow-clay-badge",
+    purple: "bg-[#201633] text-purple-300 border-purple-500/40 shadow-clay-badge",
+    emerald: "bg-[#11221A] text-emerald-300 border-emerald-500/40 shadow-clay-badge",
+    outline: "bg-transparent border-[#272A38] text-slate-300 shadow-sm",
+    severity: "bg-[#1D202B] text-slate-200 border-white/[0.08] shadow-clay-badge",
   };
 
   return (
     <span
       role="status"
-      className={`inline-flex items-center rounded border font-semibold select-none ${variantStyles[variant]} ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center font-semibold select-none ${variantStyles[variant]} ${sizeClasses[size]} ${className}`}
       {...props}
     >
       {pulse && <span className="h-1.5 w-1.5 rounded-full bg-current animate-ping" />}

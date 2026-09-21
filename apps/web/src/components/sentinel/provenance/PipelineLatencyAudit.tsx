@@ -73,11 +73,11 @@ export const PipelineLatencyAudit: React.FC = () => {
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4 text-[#36D9E8]" />
+            <Zap className="h-4 w-4 text-indigo-400" />
             <CardTitle>End-to-End Inference Cycle Latency Audit</CardTitle>
           </div>
           <div className="flex items-center gap-2 font-mono text-xs">
-            <span className="text-[#91A5BB]">TOTAL CYCLE:</span>
+            <span className="text-slate-400">TOTAL CYCLE:</span>
             <strong className="text-emerald-400">
               {(totalLatencyMs / 1000).toFixed(2)}s / 5.0s SLA
             </strong>
@@ -98,10 +98,10 @@ export const PipelineLatencyAudit: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="rounded-lg border border-[#1E2D4A] bg-[#16233B]/70 p-3 flex flex-wrap items-center justify-between gap-2 font-sans text-xs"
+                className="rounded-xl border border-white/[0.08] bg-[#1D202B]/80 p-3 flex flex-wrap items-center justify-between gap-2 font-sans text-xs shadow-clay-card"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="flex h-5 w-5 items-center justify-center rounded bg-slate-800 text-[10px] text-slate-300 font-semibold">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-lg bg-[#111217] text-[10px] text-slate-300 font-semibold shadow-clay-badge">
                     {idx + 1}
                   </span>
                   <div>
@@ -119,7 +119,7 @@ export const PipelineLatencyAudit: React.FC = () => {
                     <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Execution Time</span>
                     <span
                       className={`font-semibold font-mono ${
-                        isGpu ? "text-[#38BDF8]" : "text-slate-200"
+                        isGpu ? "text-indigo-300" : "text-slate-200"
                       }`}
                     >
                       {stage.durationMs < 10

@@ -3,17 +3,41 @@
  * Strict TypeScript types for spatiotemporal observations, nowcast forecasts, and alert lifecycles.
  */
 
-export type SeverityLevel = 'none' | 'advisory' | 'watch' | 'warning';
+export type SeverityLevel = 'none' | 'advisory' | 'watch' | 'warning' | 'critical';
 
 export type HazardType = 'thunderstorm' | 'cloudburst' | 'flash_flood' | 'multi_hazard';
 
 export type AlertStatus =
-  | 'generated'
-  | 'reviewed'
-  | 'issued'
-  | 'acknowledged'
-  | 'resolved'
-  | 'expired';
+  | 'GENERATED'
+  | 'UNDER_REVIEW'
+  | 'DISPATCHED'
+  | 'ACKNOWLEDGED'
+  | 'RESOLVED'
+  | 'REVOKED';
+
+export interface IWVMetrics {
+  tpw_mm: number;
+  accumulation_rate_mm_hr: number;
+  moisture_flux_convergence: number;
+  vertical_shear_mps: number;
+}
+
+export interface DisasterScenario {
+  id: string;
+  name: string;
+  date: string;
+  description: string;
+  focal_region: string;
+  key_hazards: HazardType[];
+  atmospheric_profile: {
+    cape: number;
+    cin: number;
+    cooling_rate: number;
+    tpw: number;
+    slope_deg: number;
+    twi: number;
+  };
+}
 
 export interface LatLngPoint {
   lat: number;

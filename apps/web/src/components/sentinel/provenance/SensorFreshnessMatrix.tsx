@@ -82,10 +82,10 @@ export const SensorFreshnessMatrix: React.FC = () => {
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Satellite className="h-4 w-4 text-[#36D9E8]" />
+            <Satellite className="h-4 w-4 text-indigo-400" />
             <CardTitle>Upstream Sensor Feeds & Ingestion Latencies</CardTitle>
           </div>
-          <span className="font-mono text-[10px] text-[#91A5BB]">
+          <span className="font-mono text-[10px] text-slate-400">
             POLL CADENCE: 60 SECONDS
           </span>
         </div>
@@ -101,11 +101,11 @@ export const SensorFreshnessMatrix: React.FC = () => {
           return (
             <div
               key={feed.id}
-              className="rounded-lg border border-[#1E2D4A] bg-[#16233B]/70 p-3 space-y-2 hover:border-slate-600 transition-colors font-sans text-xs"
+              className="rounded-xl border border-white/[0.08] bg-[#1D202B]/80 p-3 space-y-2 hover:border-slate-600 transition-colors font-sans text-xs shadow-clay-card"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#111A2C] border border-sky-500/30 text-[#38BDF8]">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#1C1F30] border border-indigo-500/30 text-indigo-300 shadow-clay-btn">
                     <Icon className="h-3.5 w-3.5" />
                   </div>
                   <div>
@@ -140,7 +140,7 @@ export const SensorFreshnessMatrix: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-400 border-t border-[#1E2D4A]/60 pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-400 border-t border-white/[0.06] pt-2">
                 <div>
                   <span className="text-slate-400">Channel:</span> <span className="text-slate-300">{feed.channel}</span>
                 </div>

@@ -7,6 +7,7 @@ import { SentinelSidebar } from "@/components/sentinel/SentinelSidebar";
 import { SentinelSystemDrawer } from "@/components/sentinel/SentinelSystemDrawer";
 import { CommandPalette } from "@/components/sentinel/CommandPalette";
 import { KeyboardShortcutsModal } from "@/components/sentinel/KeyboardShortcutsModal";
+import { CustomObservationModal } from "@/components/sentinel/CustomObservationModal";
 import AlertPanel from "@/app/alerts/AlertPanel";
 import { GRID_CELLS } from "@/app/forecast/ForecastMap";
 
@@ -193,6 +194,9 @@ export const SentinelShell: React.FC<SentinelShellProps> = ({ children }) => {
           isOpen={isShortcutsModalOpen}
           onClose={closeShortcutsModal}
         />
+
+        {/* Custom Observation Ingestion Modal */}
+        <CustomObservationModal />
       </div>
     </div>
   );

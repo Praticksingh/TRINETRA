@@ -120,8 +120,8 @@ export default function LocationSearch({
             setQuery(e.target.value);
             setIsOpen(true);
           }}
-          placeholder="Search basin, catchment, or station (e.g., Rishikesh, Kedarnath)..."
-          className="w-full h-8 rounded-lg border border-[#1F3350] bg-[#111A2C]/90 pl-9 pr-12 text-xs text-slate-100 placeholder-slate-400 shadow-inner backdrop-blur focus:border-sky-500/60 focus:outline-none focus:ring-1 focus:ring-sky-500/30 font-sans"
+          placeholder="Search catchments..."
+          className="w-full h-8 rounded-xl border border-white/[0.08] bg-[#111217] pl-9 pr-12 text-xs text-slate-100 placeholder-zinc-400 shadow-clay-inset backdrop-blur focus:border-indigo-500/60 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 font-sans"
         />
         {query ? (
           <button
@@ -129,13 +129,13 @@ export default function LocationSearch({
               setQuery("");
               setIsOpen(false);
             }}
-            className="absolute right-2.5 text-slate-400 hover:text-slate-200"
+            className="absolute right-2.5 text-zinc-400 hover:text-slate-200"
             aria-label="Clear search query"
           >
             <X className="h-3.5 w-3.5" />
           </button>
         ) : (
-          <span className="pointer-events-none absolute right-2.5 hidden sm:inline-block rounded bg-slate-800/80 px-1.5 py-0.5 text-[9px] font-mono text-slate-400 border border-slate-700/50">
+          <span className="pointer-events-none absolute right-2.5 hidden sm:inline-block rounded-md bg-[#1D202B] px-1.5 py-0.5 text-[9px] font-mono text-zinc-400 border border-white/[0.08] shadow-clay-badge">
             ⌘K
           </span>
         )}

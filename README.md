@@ -6,7 +6,7 @@
 [![Next.js Build](https://img.shields.io/badge/next.js-14.2%20App%20Router-blue)](https://github.com/Praticksingh/TRINETRA)
 [![Design System](https://img.shields.io/badge/UI%2FUX-Sentinel%20Aurora%202.0-0284C7)](https://github.com/Praticksingh/TRINETRA)
 [![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-emerald)](https://github.com/Praticksingh/TRINETRA)
-[![Model Hurdle](https://img.shields.io/badge/Conv3D%20Candidate-Hurdle%20Cleared%20(%2B1560%20bps)-cyan)](https://github.com/Praticksingh/TRINETRA)
+[![Model Hurdle](https://img.shields.io/badge/Conv3D%20Candidate-Hurdle%20Cleared%20(%2B1267%20bps)-cyan)](https://github.com/Praticksingh/TRINETRA)
 [![CAP Standard](https://img.shields.io/badge/CAP-v1.2%20OASIS-orange)](https://github.com/Praticksingh/TRINETRA)
 [![License](https://img.shields.io/badge/License-MIT-slate)](https://github.com/Praticksingh/TRINETRA)
 
@@ -78,7 +78,7 @@ flowchart TB
 | **2** | **Supabase Backend Foundation** | **COMPLETED** | PostGIS spatial schema, RLS security policies, Supabase Edge Functions, Realtime subscription hooks. |
 | **3** | **Data Ingestion & Normalization Layer** | **COMPLETED** | INSAT, IMDAA, and DEM adapters; 0.04° WGS84 normalizer; SHA-256 tensor provenance hashing; data freshness monitors. |
 | **4** | **Baseline Forecast Engine** | **COMPLETED** | Zero-leakage temporal split (2020–2025); Persistence decay ($T_{1/2}=75\text{m}$); Climatological diurnal prior; Random Forest baseline ($F_1=0.708, \text{PR-AUC}=0.725$). |
-| **5** | **Spatiotemporal Multi-Task AI Model** | **COMPLETED** | Conv3D multi-task architecture; Binary Focal Loss ($\gamma=2.0, \alpha=0.75$); Temperature scaling calibration; **Hurdle Cleared** ($F_1=0.864, \text{PR-AUC}=0.906$, $+1560$ bps over baseline). |
+| **5** | **Spatiotemporal Multi-Task AI Model** | **COMPLETED** | Conv3D multi-task architecture; Binary Focal Loss ($\gamma=2.0, \alpha=0.75$); Temperature scaling calibration; **Hurdle Cleared** ($F_1=0.835, \text{PR-AUC}=0.856$, $+1267$ bps over baseline). |
 | **6** | **Terrain-Aware Flash-Flood Risk Layer** | **COMPLETED** | DEM slope and Topographic Wetness Index (TWI) processor; Non-linear hydrometeorological surge interaction; Dual-factor attribution ($P_{\text{meteo}}$ vs $S_{\text{terrain}}$). |
 | **7** | **Real-Time Inference & Forecast Orchestration** | **COMPLETED** | Idempotent state machine (`job_manager.py`); RFC 7946 GeoJSON FeatureCollection generation; Live "NOWCAST CYCLE" console trigger with stale-data safeguards. |
 | **8** | **GIS Dashboard & Explainable AI** | **COMPLETED** | Gradient/SHAP feature attribution engine; Non-causal XAI disclaimers; Color-independent accessibility shape cues (●, ◆, ▲); Automated time-lapse scrubber with speed controls. |
@@ -98,7 +98,7 @@ All models were evaluated on the strictly held-out Monsoon 2025 test dataset (**
 | **Climatology Prior** | — | $T+2\text{h}$ | 0.285 | 0.240 | 0.165 | 0.142 | <1 ms | Baseline |
 | **Persistence Decay** | — | $T+2\text{h}$ | 0.542 | 0.518 | 0.128 | 0.110 | <1 ms | Baseline |
 | **Tree Baseline (RF)** | 8.2 MB | $T+2\text{h}$ | 0.708 | 0.725 | 0.089 | 0.098 | 12.4 ms | Benchmark Standard |
-| **Conv3D Multi-Task AI** | **632 KB** | **$T+2\text{h}$** | **0.864** | **0.906** | **0.070** | **0.084** | **3.7 ms** | **HURDLE CLEARED (+1560 bps)** |
+| **Conv3D Multi-Task AI** | **632 KB** | **$T+2\text{h}$** | **0.835** | **0.856** | **0.090** | **0.151** | **3.7 ms** | **HURDLE CLEARED (+1267 bps)** |
 
 ---
 

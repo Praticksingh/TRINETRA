@@ -6,17 +6,17 @@ import { FilterMode, GRID_CELLS } from "@/app/forecast/ForecastMap";
 import { Filter, Flame, Waves, Mountain, Compass } from "lucide-react";
 
 export const HazardFilterBar: React.FC = () => {
-  const { filterMode, setFilterMode } = useSentinel();
+  const { cells, filterMode, setFilterMode } = useSentinel();
 
   const filterCounts = useMemo(() => {
     return {
-      all: GRID_CELLS.length,
-      critical: GRID_CELLS.filter((c) => c.severity === "critical" || c.severity === "warning").length,
-      flash_flood: GRID_CELLS.filter((c) => c.probabilities.flashFlood >= 0.7).length,
-      steep_gorges: GRID_CELLS.filter((c) => c.terrain.slopeDeg >= 35.0).length,
-      foothills: GRID_CELLS.filter((c) => c.terrain.elevationM < 800).length,
+      all: cells.length,
+      critical: cells.filter((c) => c.severity === "critical" || c.severity === "warning").length,
+      flash_flood: cells.filter((c) => c.probabilities.flashFlood >= 0.7).length,
+      steep_gorges: cells.filter((c) => c.terrain.slopeDeg >= 35.0).length,
+      foothills: cells.filter((c) => c.terrain.elevationM < 800).length,
     };
-  }, []);
+  }, [cells]);
 
   const filterOptions: Array<{
     id: FilterMode;
@@ -29,31 +29,31 @@ export const HazardFilterBar: React.FC = () => {
       id: "all",
       label: "All Sectors",
       badgeCount: filterCounts.all,
-      activeClasses: "bg-sky-950/80 text-sky-300 font-semibold border-sky-500/40 shadow-sm",
+      activeClasses: "bg-[#1C1F30] text-indigo-300 font-semibold border-indigo-500/40 shadow-sm",
     },
     {
       id: "critical",
       label: "Critical (▲)",
       badgeCount: filterCounts.critical,
-      activeClasses: "bg-rose-950/90 text-rose-300 font-semibold border-rose-600/60 shadow-sm",
+      activeClasses: "bg-[#241418] text-rose-300 font-semibold border-rose-500/40 shadow-sm",
     },
     {
       id: "flash_flood",
       label: "Flash Flood",
       badgeCount: filterCounts.flash_flood,
-      activeClasses: "bg-blue-950/90 text-blue-300 font-semibold border-blue-600/60 shadow-sm",
+      activeClasses: "bg-[#1C1F30] text-indigo-300 font-semibold border-indigo-500/40 shadow-sm",
     },
     {
       id: "steep_gorges",
       label: "Steep Slopes (≥35°)",
       badgeCount: filterCounts.steep_gorges,
-      activeClasses: "bg-amber-950/90 text-amber-300 font-semibold border-amber-600/60 shadow-sm",
+      activeClasses: "bg-[#241F12] text-amber-300 font-semibold border-amber-500/40 shadow-sm",
     },
     {
       id: "foothills",
       label: "Foothills (<800m)",
       badgeCount: filterCounts.foothills,
-      activeClasses: "bg-emerald-950/90 text-emerald-300 font-semibold border-emerald-600/60 shadow-sm",
+      activeClasses: "bg-[#11221A] text-emerald-300 font-semibold border-emerald-500/40 shadow-sm",
     },
   ];
 
@@ -61,10 +61,10 @@ export const HazardFilterBar: React.FC = () => {
     <div
       role="toolbar"
       aria-label="Hazard Sector Filters"
-      className="hidden md:flex items-center gap-1.5 rounded-full border border-[#1F3350] bg-[#0c1424]/95 px-3 py-1 text-xs font-sans shadow-2xl backdrop-blur-md select-none"
+      className="hidden md:flex items-center gap-1.5 rounded-2xl border border-white/[0.08] bg-[#161820]/95 px-3 py-1.5 text-xs font-sans shadow-clay-card backdrop-blur-xl select-none"
     >
-      <span className="text-slate-400 font-medium pr-1 text-[11px] flex items-center gap-1">
-        <Filter className="h-3 w-3 text-sky-400" />
+      <span className="text-zinc-400 font-medium pr-1 text-[11px] flex items-center gap-1">
+        <Filter className="h-3 w-3 text-indigo-400" />
         Filter:
       </span>
 
@@ -75,16 +75,16 @@ export const HazardFilterBar: React.FC = () => {
           <button
             key={opt.id}
             onClick={() => setFilterMode(opt.id)}
-            className={`rounded-full px-2.5 py-0.5 transition-all duration-150 flex items-center gap-1.5 border text-xs ${
+            className={`rounded-xl px-2.5 py-1 transition-all duration-150 flex items-center gap-1.5 border text-xs active:translate-y-0.5 ${
               isActive
-                ? opt.activeClasses
-                : "border-transparent text-slate-400 hover:text-slate-200 hover:bg-[#16233B]/50 font-medium"
+                ? `${opt.activeClasses} shadow-clay-btn`
+                : "border-transparent text-zinc-400 hover:text-slate-200 hover:bg-[#1D202B] hover:shadow-clay-btn font-medium"
             }`}
           >
             <span>{opt.label}</span>
             <span
-              className={`rounded-full px-1.5 py-0.1 text-[10px] font-mono font-bold ${
-                isActive ? "bg-black/30 text-white" : "bg-[#16233B] text-slate-400"
+              className={`rounded-full px-2 py-0.5 text-[10px] font-mono font-bold shadow-clay-badge ${
+                isActive ? "bg-black/40 text-white" : "bg-[#111217] text-zinc-400"
               }`}
             >
               {opt.badgeCount}

@@ -30,9 +30,9 @@ export const TimelineWorkspace: React.FC = () => {
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Title Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#1E2D4A] pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
         <div>
-          <div className="flex items-center gap-2 font-sans text-xs text-[#38BDF8] font-semibold uppercase tracking-wider">
+          <div className="flex items-center gap-2 font-sans text-xs text-indigo-400 font-semibold uppercase tracking-wider">
             <Clock className="h-4 w-4" />
             <span>Forecast Evolution Engine (Now to +6 Hours)</span>
           </div>
@@ -121,10 +121,10 @@ export const TimelineWorkspace: React.FC = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-[#1E2D4A]/60">
+                  <div className="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-white/[0.06]">
                     <div>
                       <span className="text-slate-400">Atmospheric Risk: </span>
-                      <span className="text-sky-300 font-semibold">{Math.round(adjustedCloudburst * 100)}%</span>
+                      <span className="text-indigo-300 font-semibold">{Math.round(adjustedCloudburst * 100)}%</span>
                     </div>
                     <div>
                       <span className="text-slate-400">Slope Incline: </span>
@@ -135,7 +135,7 @@ export const TimelineWorkspace: React.FC = () => {
 
                 <CardFooter className="justify-between text-[11px] font-sans">
                   <span>Elevation: {cell.terrain.elevationM}m MSL</span>
-                  <span className="text-[#38BDF8] font-semibold group-hover:underline flex items-center gap-1">
+                  <span className="text-indigo-400 font-semibold group-hover:underline flex items-center gap-1">
                     <span>Inspect Cell</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </span>

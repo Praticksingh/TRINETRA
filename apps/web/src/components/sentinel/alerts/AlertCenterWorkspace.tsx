@@ -110,9 +110,9 @@ export const AlertCenterWorkspace: React.FC = () => {
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Title Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#1F3350] pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
         <div>
-          <div className="flex items-center gap-2 font-sans text-xs text-sky-400 font-semibold uppercase tracking-wider">
+          <div className="flex items-center gap-2 font-sans text-xs text-indigo-400 font-semibold uppercase tracking-wider">
             <Bell className="h-4 w-4" />
             <span>Alerts & Incident Queue</span>
           </div>
@@ -128,7 +128,7 @@ export const AlertCenterWorkspace: React.FC = () => {
           <Button
             variant="secondary"
             size="sm"
-            leftIcon={<FileCode className="h-3.5 w-3.5 text-sky-400" />}
+            leftIcon={<FileCode className="h-3.5 w-3.5 text-indigo-400" />}
             onClick={handleExportAllGeoJson}
           >
             Export All GeoJSON
@@ -148,7 +148,7 @@ export const AlertCenterWorkspace: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by river basin, district, or headline..."
-                className="w-full rounded-lg border border-[#1E2D4A] bg-[#16233B] pl-9 pr-3 py-1.5 text-xs text-slate-100 placeholder-slate-400 focus:outline-none focus:border-sky-400 font-sans"
+                className="w-full rounded-lg border border-white/[0.08] bg-[#111217] shadow-clay-inset pl-9 pr-3 py-1.5 text-xs text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500/60 font-sans"
               />
             </div>
 
@@ -158,7 +158,7 @@ export const AlertCenterWorkspace: React.FC = () => {
               <select
                 value={severityFilter}
                 onChange={(e) => setSeverityFilter(e.target.value)}
-                className="rounded-lg border border-[#1E2D4A] bg-[#16233B] px-2 py-1 text-slate-200 text-xs focus:outline-none cursor-pointer"
+                className="rounded-lg border border-white/[0.08] bg-[#111217] shadow-clay-inset px-2 py-1 text-slate-200 text-xs focus:outline-none cursor-pointer"
               >
                 <option value="all">All Severities</option>
                 <option value="critical">Critical Only (▲)</option>
@@ -173,7 +173,7 @@ export const AlertCenterWorkspace: React.FC = () => {
               <select
                 value={hazardFilter}
                 onChange={(e) => setHazardFilter(e.target.value)}
-                className="rounded-lg border border-[#1E2D4A] bg-[#16233B] px-2 py-1 text-slate-200 text-xs focus:outline-none cursor-pointer"
+                className="rounded-lg border border-white/[0.08] bg-[#111217] shadow-clay-inset px-2 py-1 text-slate-200 text-xs focus:outline-none cursor-pointer"
               >
                 <option value="all">All Hazards</option>
                 <option value="flash_flood">Flash Flood</option>
@@ -188,7 +188,7 @@ export const AlertCenterWorkspace: React.FC = () => {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="rounded-lg border border-[#1E2D4A] bg-[#16233B] px-2 py-1 text-slate-200 text-xs focus:outline-none cursor-pointer"
+                className="rounded-lg border border-white/[0.08] bg-[#111217] shadow-clay-inset px-2 py-1 text-slate-200 text-xs focus:outline-none cursor-pointer"
               >
                 <option value="active">Active Unresolved</option>
                 <option value="GENERATED">Generated</option>
@@ -208,7 +208,7 @@ export const AlertCenterWorkspace: React.FC = () => {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-left font-sans text-xs text-slate-200">
-              <thead className="border-b border-[#1E2D4A] bg-[#111A2C] text-[11px] text-slate-400 uppercase tracking-wider font-semibold">
+              <thead className="border-b border-white/[0.08] bg-[#111217] text-[11px] text-slate-400 uppercase tracking-wider font-semibold">
                 <tr>
                   <th className="px-4 py-3">Lifecycle State</th>
                   <th className="px-3 py-3">Severity</th>
@@ -218,13 +218,13 @@ export const AlertCenterWorkspace: React.FC = () => {
                   <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1E2D4A]/60">
+              <tbody className="divide-y divide-white/[0.04]">
                 {filteredAlerts.length > 0 ? (
                   filteredAlerts.map((item) => (
                     <tr
                       key={item.id}
                       onClick={() => setSelectedAlert(item)}
-                      className="hover:bg-[#16233B]/60 cursor-pointer transition-colors duration-150"
+                      className="hover:bg-[#1D202B]/60 cursor-pointer transition-colors duration-150"
                     >
                       {/* Lifecycle Status */}
                       <td className="px-4 py-3">

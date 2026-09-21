@@ -88,9 +88,19 @@ interface SentinelContextType {
   closeShortcutsModal: () => void;
 
   // Selected Location & Grid Focus
+  cells: SelectedCellData[];
   selectedCell: SelectedCellData | null;
   setSelectedCell: (cell: SelectedCellData | null) => void;
   focusLocationByCellId: (cellId: string) => void;
+
+  // Historical & Operational Disaster Scenarios
+  activeScenarioId: string;
+  loadScenario: (scenarioId: string) => Promise<void>;
+
+  // Custom File / Observation Ingestion Modal
+  isCustomObservationOpen: boolean;
+  openCustomObservation: () => void;
+  closeCustomObservation: () => void;
 
   // Forecast Time Evolution
   horizonMinutes: number;
@@ -122,6 +132,52 @@ interface SentinelContextType {
   triggerNowcastCycle: () => Promise<void>;
 }
 
+function transformBackendCellToCellData(backendCell: any, validTime: string): SelectedCellData {
+  const h2 = backendCell.horizons?.["2h"] || {};
+  return {
+    cellId: backendCell.cell_id,
+    name: backendCell.basin_name || backendCell.name,
+    coordinates: backendCell.centroid,
+    severity: (backendCell.severity?.toLowerCase() as any) || "watch",
+    horizonMinutes: 120,
+    validTime: validTime,
+    probabilities: {
+      thunderstorm: h2.thunderstorm_prob ?? backendCell.probabilities?.thunderstorm ?? 0.72,
+      cloudburst: h2.cloudburst_prob ?? backendCell.probabilities?.cloudburst ?? 0.54,
+      flashFlood: backendCell.flash_flood_risk ?? backendCell.probabilities?.flashFlood ?? 0.68,
+    },
+    terrain: {
+      slopeDeg: backendCell.terrain?.slope_deg ?? 36.0,
+      elevationM: backendCell.terrain?.elevation_m ?? 1450,
+      twi: backendCell.terrain?.twi ?? 11.2,
+      catchmentVuln: backendCell.terrain_susceptibility ?? 0.75,
+    },
+    xaiAttribution: [
+      {
+        feature: "cloudburst",
+        label: "Convective Updraft & CTT Drop",
+        contribution: Math.round((backendCell.meteorological_forcing || 0.44) * 100) / 100,
+        observedValue: -18.5,
+        unit: "K/hr",
+      },
+      {
+        feature: "slope",
+        label: "Steep Gorge Channeling",
+        contribution: Math.round((backendCell.terrain_susceptibility || 0.36) * 100) / 100,
+        observedValue: backendCell.terrain?.slope_deg ?? 38.4,
+        unit: "°",
+      },
+      {
+        feature: "tpw",
+        label: "Integrated Water Vapor (IWV)",
+        contribution: 0.20,
+        observedValue: 58.2,
+        unit: "mm",
+      },
+    ],
+  };
+}
+
 const SentinelContext = createContext<SentinelContextType | null>(null);
 
 export const SentinelProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -132,6 +188,14 @@ export const SentinelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isAlertDrawerOpen, setIsAlertDrawerOpen] = useState<boolean>(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState<boolean>(false);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState<boolean>(false);
+  const [isCustomObservationOpen, setIsCustomObservationOpen] = useState<boolean>(false);
+
+  const openCustomObservation = () => setIsCustomObservationOpen(true);
+  const closeCustomObservation = () => setIsCustomObservationOpen(false);
+
+  // Dynamic Grid Cells
+  const [cells, setCells] = useState<SelectedCellData[]>(GRID_CELLS);
+  const [activeScenarioId, setActiveScenarioId] = useState<string>("kedarnath_2013");
 
   // Modal actions
   const toggleCommandPalette = () => setIsCommandPaletteOpen((prev) => !prev);
@@ -141,6 +205,8 @@ export const SentinelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const toggleShortcutsModal = () => setIsShortcutsModalOpen((prev) => !prev);
   const openShortcutsModal = () => setIsShortcutsModalOpen(true);
   const closeShortcutsModal = () => setIsShortcutsModalOpen(false);
+
+  const toggleCustomObservation = () => setIsCustomObservationOpen((prev) => !prev);
 
   // Selected cell
   const [selectedCell, setSelectedCell] = useState<SelectedCellData | null>(null);
@@ -182,7 +248,7 @@ export const SentinelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const focusLocationByCellId = (cellId: string) => {
-    const matching = GRID_CELLS.find((c) => c.cellId === cellId);
+    const matching = cells.find((c) => c.cellId === cellId) || GRID_CELLS.find((c) => c.cellId === cellId);
     if (matching) {
       setSelectedCell(matching);
       setCurrentView("map");
@@ -196,10 +262,48 @@ export const SentinelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
+  const loadScenario = async (scenarioId: string) => {
+    setIsTriggeringCycle(true);
+    setActiveScenarioId(scenarioId);
+    try {
+      const res = await fetch(`/api/py/ingestion/scenarios/${scenarioId}/trigger`, {
+        method: "POST",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setActiveJobId(data.job_id || `job_scenario_${scenarioId}`);
+        setLastGenTime(new Date().toISOString().replace("T", " ").substring(0, 19) + " UTC");
+        if (data.cells && data.cells.length > 0) {
+          const transformed = data.cells.map((c: any) => transformBackendCellToCellData(c, data.generated_at));
+          setCells(transformed);
+          const targetId = data.scenario?.target_cell_id;
+          const matching = transformed.find((c: any) => c.cellId === targetId);
+          if (matching) setSelectedCell(matching);
+        }
+      } else {
+        throw new Error("Scenario trigger failed");
+      }
+    } catch {
+      // Offline fallback: update selected cell based on scenario
+      if (scenarioId === "kedarnath_2013") {
+        const ked = cells.find((c) => c.cellId === "3073_7906") || GRID_CELLS[2];
+        setSelectedCell(ked);
+      } else if (scenarioId === "chamoli_2021") {
+        const cham = cells.find((c) => c.cellId === "3055_7935") || GRID_CELLS[4];
+        setSelectedCell(cham);
+      } else {
+        const har = cells.find((c) => c.cellId === "2994_7816") || GRID_CELLS[5];
+        setSelectedCell(har);
+      }
+    } finally {
+      setIsTriggeringCycle(false);
+    }
+  };
+
   const triggerNowcastCycle = async () => {
     setIsTriggeringCycle(true);
     try {
-      const res = await fetch("http://localhost:8000/api/v1/orchestration/trigger", {
+      const res = await fetch("/api/py/orchestration/trigger", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ is_synthetic_replay: true, source: "sentinel_console_trigger" }),
@@ -208,8 +312,16 @@ export const SentinelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const data = await res.json();
         setActiveJobId(data.job_id || "job_nowcast_active");
         setLastGenTime(new Date().toISOString().replace("T", " ").substring(0, 19) + " UTC");
+        if (data.cells && data.cells.length > 0) {
+          const transformed = data.cells.map((c: any) => transformBackendCellToCellData(c, data.generated_at));
+          setCells(transformed);
+          if (selectedCell) {
+            const updated = transformed.find((c: any) => c.cellId === selectedCell.cellId);
+            if (updated) setSelectedCell(updated);
+          }
+        }
       }
-    } catch (err) {
+    } catch {
       // Graceful offline fallback simulation
       const fakeId = `job_nowcast_${Math.floor(Date.now() / 1000)}_${Math.random().toString(36).substring(2, 8)}`;
       setActiveJobId(fakeId);
@@ -248,9 +360,15 @@ export const SentinelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         toggleShortcutsModal,
         openShortcutsModal,
         closeShortcutsModal,
+        isCustomObservationOpen,
+        openCustomObservation,
+        closeCustomObservation,
+        cells,
         selectedCell,
         setSelectedCell,
         focusLocationByCellId,
+        activeScenarioId,
+        loadScenario,
         horizonMinutes,
         setHorizonMinutes,
         baseTimestampUtc,

@@ -15,23 +15,23 @@ export const Card: React.FC<CardProps> = ({
   ...props
 }) => {
   const variantClasses = {
-    base: "bg-[#111A2C] border border-[#1E2E48] shadow-[0_4px_20px_-2px_rgba(2,6,17,0.5)]",
-    elevated: "bg-[#16233B] border border-[#2B4063] shadow-[0_10px_30px_-4px_rgba(2,6,17,0.7)]",
-    subtle: "bg-[#0D1524] border border-[#152236]",
+    base: "bg-[#161820] border border-white/[0.08] shadow-clay-card rounded-2xl",
+    elevated: "bg-[#1D202B] border border-white/[0.12] shadow-clay-card-elevated rounded-2xl",
+    subtle: "bg-[#111217] border border-white/[0.05] shadow-clay-card rounded-2xl",
     interactive:
-      "bg-[#111A2C] border border-[#1E2E48] hover:border-[#2B4063] hover:bg-[#1A2B47] transition-all duration-150 cursor-pointer",
+      "bg-[#161820] border border-white/[0.08] shadow-clay-card hover:shadow-clay-card-elevated hover:bg-[#1D202B] hover:-translate-y-0.5 active:translate-y-0 active:shadow-clay-card transition-all duration-200 cursor-pointer rounded-2xl",
   };
 
   const accentClasses = {
     none: "",
-    cyan: "border-l-4 border-l-[#0284C7]",
-    critical: "border-l-4 border-l-[#EF4444]",
-    warning: "border-l-4 border-l-[#EAB308]",
+    cyan: "border-l-4 border-l-indigo-500",
+    critical: "border-l-4 border-l-rose-500",
+    warning: "border-l-4 border-l-amber-500",
   };
 
   return (
     <div
-      className={`rounded-lg overflow-hidden text-slate-200 ${variantClasses[variant]} ${accentClasses[borderAccent]} ${className}`}
+      className={`overflow-hidden text-slate-200 transition-all ${variantClasses[variant]} ${accentClasses[borderAccent]} ${className}`}
       {...props}
     >
       {children}
@@ -46,7 +46,7 @@ export const CardHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
 }) => {
   return (
     <div
-      className={`flex items-center justify-between border-b border-[#1E2E48]/80 px-4 py-3 bg-[#0D1524]/60 ${className}`}
+      className={`flex items-center justify-between border-b border-white/[0.06] px-5 py-3.5 bg-white/[0.02] ${className}`}
       {...props}
     >
       {children}
@@ -61,7 +61,7 @@ export const CardTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({
 }) => {
   return (
     <h3
-      className={`text-sm font-semibold tracking-wide text-slate-100 font-sans ${className}`}
+      className={`text-sm font-semibold tracking-wide text-white font-sans ${className}`}
       {...props}
     >
       {children}
@@ -76,7 +76,7 @@ export const CardDescription: React.FC<React.HTMLAttributes<HTMLParagraphElement
 }) => {
   return (
     <p
-      className={`text-[11px] text-[#91A5BB] font-mono mt-0.5 ${className}`}
+      className={`text-xs text-slate-400 font-sans mt-0.5 ${className}`}
       {...props}
     >
       {children}
@@ -90,7 +90,7 @@ export const CardContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => {
   return (
-    <div className={`p-4 ${className}`} {...props}>
+    <div className={`p-5 ${className}`} {...props}>
       {children}
     </div>
   );
@@ -103,7 +103,7 @@ export const CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
 }) => {
   return (
     <div
-      className={`flex items-center justify-between border-t border-[#1F3350]/80 px-4 py-2.5 bg-[#0F1A2A]/40 text-xs font-mono text-[#91A5BB] ${className}`}
+      className={`flex items-center justify-between border-t border-white/[0.06] px-5 py-3 bg-black/20 text-xs font-sans text-slate-400 ${className}`}
       {...props}
     >
       {children}

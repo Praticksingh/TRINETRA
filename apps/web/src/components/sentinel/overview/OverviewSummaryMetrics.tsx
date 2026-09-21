@@ -9,11 +9,11 @@ import { GRID_CELLS } from "@/app/forecast/ForecastMap";
 import { Flame, Clock, Bell, Wifi, ArrowUpRight } from "lucide-react";
 
 export const OverviewSummaryMetrics: React.FC = () => {
-  const { alerts, horizonMinutes, setHorizonMinutes, baseTimestampUtc, setCurrentView, setSelectedCell } = useSentinel();
+  const { alerts, cells, horizonMinutes, setHorizonMinutes, baseTimestampUtc, setCurrentView, setSelectedCell } = useSentinel();
 
-  // Find the highest severity cell
-  const criticalCells = GRID_CELLS.filter((c) => c.severity === "critical");
-  const highestCell = criticalCells[0] || GRID_CELLS[0];
+  // Find the highest severity cell from dynamic cells
+  const criticalCells = cells.filter((c) => c.severity === "critical");
+  const highestCell = criticalCells[0] || cells.find((c) => c.severity === "warning") || cells[0] || GRID_CELLS[0];
 
   // Count active alerts by severity
   const criticalCount = alerts.filter((a) => a.severity === "critical").length;

@@ -120,6 +120,7 @@ interface ForecastMapProps {
   horizonMinutes: number;
   className?: string;
   filterMode?: FilterMode;
+  cells?: SelectedCellData[];
 }
 
 export default function ForecastMap({
@@ -129,6 +130,7 @@ export default function ForecastMap({
   horizonMinutes,
   className = "",
   filterMode = "all",
+  cells = GRID_CELLS,
 }: ForecastMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -147,7 +149,7 @@ export default function ForecastMap({
     return true;
   };
 
-  const matchingCellsCount = useMemo(() => GRID_CELLS.filter(isCellMatch).length, [filterMode]);
+  const matchingCellsCount = useMemo(() => cells.filter(isCellMatch).length, [cells, filterMode]);
 
   // 1. Initialize Leaflet Map
   useEffect(() => {
@@ -169,13 +171,12 @@ export default function ForecastMap({
         attributionControl: true,
       });
 
-      // CartoDB Dark Matter base layer
+      // Esri Dark Gray Canvas base layer (clean, high-contrast, watermark-free)
       const darkTile = L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
         {
-          attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; OpenStreetMap',
-          subdomains: "abcd",
-          maxZoom: 19,
+          attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ",
+          maxZoom: 16,
         }
       ).addTo(map);
 
@@ -234,11 +235,10 @@ export default function ForecastMap({
       const map = mapInstanceRef.current;
       map.removeLayer(tileLayerRef.current);
 
-      let url = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+      let url = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}";
       let options: any = {
-        attribution: '&copy; CARTO &copy; OpenStreetMap',
-        subdomains: "abcd",
-        maxZoom: 19,
+        attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ",
+        maxZoom: 16,
       };
 
       if (basemap === "satellite") {
@@ -293,7 +293,7 @@ export default function ForecastMap({
       }
 
       // Draw Grid Cells
-      GRID_CELLS.forEach((cell) => {
+      cells.forEach((cell) => {
         const matches = isCellMatch(cell);
         const isSelected = selectedCell?.cellId === cell.cellId;
         const lat = cell.coordinates[1];
@@ -330,7 +330,7 @@ export default function ForecastMap({
         ];
 
         const polygon = L.polygon(cellBounds, {
-          color: isSelected ? "#38bdf8" : borderHex,
+          color: isSelected ? "#6366F1" : borderHex,
           weight: isSelected ? 2.5 : 1.2,
           fillColor: bgHex,
           fillOpacity: matches ? (isSelected ? 0.45 : 0.25) : 0.05,
@@ -405,7 +405,7 @@ export default function ForecastMap({
         marker.addTo(markersGroup);
       });
     });
-  }, [layers, selectedCell, filterMode, isMapReady, onSelectCell]);
+  }, [layers, selectedCell, filterMode, isMapReady, onSelectCell, cells]);
 
   const handleZoomIn = () => mapInstanceRef.current?.zoomIn();
   const handleZoomOut = () => mapInstanceRef.current?.zoomOut();
@@ -420,11 +420,11 @@ export default function ForecastMap({
 
       {/* Top Left: Pilot Domain Status */}
       <div className="absolute top-3 left-3 z-10 hidden sm:flex items-center gap-2 font-sans text-xs">
-        <div className="flex items-center gap-2 rounded-lg border border-[#1E2D4A] bg-[#111A2C]/90 px-3 py-1.5 text-slate-200 backdrop-blur shadow-lg">
-          <Compass className="h-4 w-4 text-[#38BDF8]" />
+        <div className="flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-[#161820]/95 px-3 py-1.5 text-slate-200 backdrop-blur shadow-clay-card">
+          <Compass className="h-4 w-4 text-indigo-400" />
           <span className="font-semibold tracking-wide">UTTARAKHAND CONVECTIVE CORRIDOR</span>
         </div>
-        <div className="rounded-lg border border-[#1E2D4A] bg-[#111A2C]/80 px-2.5 py-1.5 text-slate-400 backdrop-blur text-[11px]">
+        <div className="rounded-2xl border border-white/[0.08] bg-[#161820]/80 px-2.5 py-1.5 text-slate-400 backdrop-blur text-[11px] shadow-clay-card">
           EPSG:4326 • 0.04° (~4km)
         </div>
       </div>
@@ -432,13 +432,13 @@ export default function ForecastMap({
       {/* Top Right: Basemap Switcher & Zoom Controls */}
       <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
         {/* Basemap Toggle Pills */}
-        <div className="flex items-center rounded-lg border border-[#1E2D4A] bg-[#111A2C]/90 p-1 backdrop-blur shadow-lg font-sans text-xs">
+        <div className="flex items-center rounded-2xl border border-white/[0.08] bg-[#161820]/95 p-1 backdrop-blur shadow-clay-card font-sans text-xs">
           <button
             onClick={() => setBasemap("dark")}
-            className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 transition font-medium ${
+            className={`flex items-center gap-1.5 rounded-xl px-2.5 py-1 transition font-medium ${
               basemap === "dark"
-                ? "bg-sky-500/15 text-sky-300 border border-sky-500/30"
-                : "text-slate-400 hover:text-slate-200 hover:bg-[#16233B]"
+                ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold shadow-clay-badge"
+                : "text-slate-400 hover:text-slate-200 hover:bg-[#1D202B]"
             }`}
             title="Dark Matter Tactical GIS Basemap"
           >
@@ -447,10 +447,10 @@ export default function ForecastMap({
           </button>
           <button
             onClick={() => setBasemap("satellite")}
-            className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 transition font-medium ${
+            className={`flex items-center gap-1.5 rounded-xl px-2.5 py-1 transition font-medium ${
               basemap === "satellite"
-                ? "bg-sky-500/15 text-sky-300 border border-sky-500/30"
-                : "text-slate-400 hover:text-slate-200 hover:bg-[#16233B]"
+                ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold shadow-clay-badge"
+                : "text-slate-400 hover:text-slate-200 hover:bg-[#1D202B]"
             }`}
             title="Orbital Satellite Basemap"
           >
@@ -459,10 +459,10 @@ export default function ForecastMap({
           </button>
           <button
             onClick={() => setBasemap("topo")}
-            className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 transition font-medium ${
+            className={`flex items-center gap-1.5 rounded-xl px-2.5 py-1 transition font-medium ${
               basemap === "topo"
-                ? "bg-sky-500/15 text-sky-300 border border-sky-500/30"
-                : "text-slate-400 hover:text-slate-200 hover:bg-[#16233B]"
+                ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold shadow-clay-badge"
+                : "text-slate-400 hover:text-slate-200 hover:bg-[#1D202B]"
             }`}
             title="Shaded Relief Topography Basemap"
           >
@@ -472,24 +472,24 @@ export default function ForecastMap({
         </div>
 
         {/* Zoom Controls */}
-        <div className="flex items-center rounded-lg border border-[#1E2D4A] bg-[#111A2C]/90 p-1 backdrop-blur shadow-lg">
+        <div className="flex items-center rounded-2xl border border-white/[0.08] bg-[#161820]/95 p-1 backdrop-blur shadow-clay-card">
           <button
             onClick={handleZoomIn}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-slate-300 hover:bg-[#16233B] hover:text-[#38BDF8] transition"
+            className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed"
             title="Zoom In"
           >
             <ZoomIn className="h-4 w-4" />
           </button>
           <button
             onClick={handleZoomOut}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-slate-300 hover:bg-[#16233B] hover:text-[#38BDF8] transition"
+            className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed"
             title="Zoom Out"
           >
             <ZoomOut className="h-4 w-4" />
           </button>
           <button
             onClick={handleReset}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-slate-300 hover:bg-[#16233B] hover:text-[#38BDF8] transition"
+            className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed"
             title="Reset to Uttarakhand Corridor"
           >
             <RotateCcw className="h-3.5 w-3.5" />
@@ -498,7 +498,7 @@ export default function ForecastMap({
       </div>
 
       {/* Bottom Right: Accessible Geometric Shape Cue Legend */}
-      <div className="absolute bottom-3 right-3 z-10 flex items-center gap-3 rounded-lg border border-[#1E2D4A] bg-[#111A2C]/95 px-3 py-1.5 font-sans text-xs text-slate-300 backdrop-blur shadow-xl">
+      <div className="absolute bottom-3 right-3 z-10 flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-[#161820]/95 px-3 py-1.5 font-sans text-xs text-slate-300 backdrop-blur shadow-clay-card">
         <span className="text-slate-400 font-semibold uppercase text-[10px] tracking-wider">Severity:</span>
         <div className="flex items-center gap-1.5">
           <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />

@@ -54,9 +54,9 @@ export const ProvenanceWorkspace: React.FC = () => {
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Title Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#1E2D4A] pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
         <div>
-          <div className="flex items-center gap-2 font-sans text-xs text-[#38BDF8] font-semibold uppercase tracking-wider">
+          <div className="flex items-center gap-2 font-sans text-xs text-indigo-400 font-semibold uppercase tracking-wider">
             <Database className="h-4 w-4" />
             <span>Data Sources & System Health</span>
           </div>
@@ -83,9 +83,9 @@ export const ProvenanceWorkspace: React.FC = () => {
 
       {/* Ephemeral Trigger Banner */}
       {triggerStatus && (
-        <div className="rounded-lg border border-sky-500/40 bg-sky-500/10 p-3 text-xs font-sans text-sky-200 flex items-center justify-between animate-in fade-in">
+        <div className="rounded-2xl border border-indigo-500/40 bg-[#1C1F30] p-3 text-xs font-sans text-indigo-200 flex items-center justify-between shadow-clay-card animate-in fade-in">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-[#38BDF8]" />
+            <CheckCircle2 className="h-4 w-4 text-indigo-400" />
             <span>{triggerStatus}</span>
           </div>
         </div>
@@ -111,8 +111,8 @@ export const ProvenanceWorkspace: React.FC = () => {
 
         <Card variant="base" borderAccent="cyan">
           <CardContent className="p-3">
-            <div className="text-[10px] text-[#38BDF8] uppercase tracking-wider font-semibold">Processing Speed</div>
-            <div className="text-sm font-semibold font-mono text-sky-300 mt-1">
+            <div className="text-[10px] text-indigo-300 uppercase tracking-wider font-semibold">Processing Speed</div>
+            <div className="text-sm font-semibold font-mono text-indigo-200 mt-1">
               {isBaselineActive ? "120 ms" : "3.7 ms"}
             </div>
             <span className="text-[10px] text-emerald-400 font-medium">GPU Accelerated</span>
