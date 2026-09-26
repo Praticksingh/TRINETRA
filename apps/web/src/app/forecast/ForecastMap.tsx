@@ -127,6 +127,7 @@ interface ForecastMapProps {
   className?: string;
   filterMode?: FilterMode;
   cells?: SelectedCellData[];
+  topCenterSlot?: React.ReactNode;
 }
 
 export default function ForecastMap({
@@ -137,6 +138,7 @@ export default function ForecastMap({
   className = "",
   filterMode = "all",
   cells = GRID_CELLS,
+  topCenterSlot,
 }: ForecastMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -549,100 +551,111 @@ export default function ForecastMap({
       {/* Real Interactive Leaflet Container */}
       <div ref={mapContainerRef} className="h-full w-full z-0" />
 
-      {/* Top Left: Pilot Domain Status */}
-      <div className="absolute top-3 left-3 z-10 hidden lg:flex items-center gap-2 font-sans text-xs">
-        <div className="flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-[#161820]/95 px-3 py-1.5 text-slate-200 backdrop-blur shadow-clay-card">
-          <Compass className="h-4 w-4 text-indigo-400" />
-          <span className="font-semibold tracking-wide">UTTARAKHAND CONVECTIVE CORRIDOR</span>
-        </div>
-        <div className="rounded-2xl border border-white/[0.08] bg-[#161820]/80 px-2.5 py-1.5 text-slate-400 backdrop-blur text-[11px] shadow-clay-card">
-          EPSG:4326 • 0.04° (~4km)
-        </div>
-      </div>
-
-      {/* Top Right: Basemap Switcher & Zoom Controls */}
-      <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
-        {/* Basemap Toggle Pills */}
-        <div className="flex items-center rounded-2xl border border-white/[0.08] bg-[#161820]/95 p-1 backdrop-blur shadow-clay-card font-sans text-xs">
-          <button
-            onClick={() => setBasemap("dark")}
-            className={`flex items-center gap-1.5 rounded-xl px-2.5 py-1 transition font-medium ${
-              basemap === "dark"
-                ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold shadow-clay-badge"
-                : "text-slate-400 hover:text-slate-200 hover:bg-[#1D202B]"
-            }`}
-            title="Dark Matter Tactical GIS Basemap"
-          >
-            <MapIcon className="h-3.5 w-3.5" />
-            <span className="hidden md:inline">Dark</span>
-          </button>
-          <button
-            onClick={() => setBasemap("satellite")}
-            className={`flex items-center gap-1.5 rounded-xl px-2.5 py-1 transition font-medium ${
-              basemap === "satellite"
-                ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold shadow-clay-badge"
-                : "text-slate-400 hover:text-slate-200 hover:bg-[#1D202B]"
-            }`}
-            title="Orbital Satellite Basemap"
-          >
-            <Satellite className="h-3.5 w-3.5" />
-            <span className="hidden md:inline">Satellite</span>
-          </button>
-          <button
-            onClick={() => setBasemap("topo")}
-            className={`flex items-center gap-1.5 rounded-xl px-2.5 py-1 transition font-medium ${
-              basemap === "topo"
-                ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold shadow-clay-badge"
-                : "text-slate-400 hover:text-slate-200 hover:bg-[#1D202B]"
-            }`}
-            title="Shaded Relief Topography Basemap"
-          >
-            <Mountain className="h-3.5 w-3.5" />
-            <span className="hidden md:inline">Terrain</span>
-          </button>
+      {/* Top Unified Tactical Command Bar: Single flex container guarantees zero overlapping */}
+      <div className="absolute top-3 inset-x-3 z-10 flex items-center justify-between pointer-events-none gap-1.5 sm:gap-2">
+        {/* Left: Domain Indicator */}
+        <div className="pointer-events-auto hidden lg:flex items-center gap-1.5 shrink-0 font-sans text-xs">
+          <div className="flex items-center gap-1.5 rounded-2xl border border-white/[0.08] bg-[#161820]/95 px-2.5 py-1 text-slate-200 backdrop-blur shadow-clay-card">
+            <Compass className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
+            <span className="font-semibold tracking-wide hidden 2xl:inline">UTTARAKHAND CONVECTIVE CORRIDOR</span>
+            <span className="font-semibold tracking-wide 2xl:hidden">UTTARAKHAND</span>
+          </div>
+          <div className="hidden 2xl:flex rounded-2xl border border-white/[0.08] bg-[#161820]/80 px-2 py-1 text-slate-400 backdrop-blur text-[11px] shadow-clay-card">
+            EPSG:4326 • 0.04°
+          </div>
         </div>
 
-        {/* Tactical Controls: Locate Me, Zoom In/Out, Reset */}
-        <div className="flex items-center gap-1 rounded-2xl border border-white/[0.08] bg-[#161820]/95 p-1 backdrop-blur shadow-clay-card">
-          <button
-            onClick={handleLocateMe}
-            disabled={isLocating}
-            className={`flex h-7 w-7 items-center justify-center rounded-xl transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed ${
-              isLocating
-                ? "bg-indigo-600/50 text-indigo-200 animate-pulse"
-                : "text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300"
-            }`}
-            title="Locate My Current GPS Position"
-            aria-label="Locate My Current GPS Position"
-          >
-            {isLocating ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <Crosshair className="h-3.5 w-3.5" />
-            )}
-          </button>
-          <div className="h-3.5 w-px bg-white/[0.08]" />
-          <button
-            onClick={handleZoomIn}
-            className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed"
-            title="Zoom In"
-          >
-            <ZoomIn className="h-4 w-4" />
-          </button>
-          <button
-            onClick={handleZoomOut}
-            className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed"
-            title="Zoom Out"
-          >
-            <ZoomOut className="h-4 w-4" />
-          </button>
-          <button
-            onClick={handleReset}
-            className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed"
-            title="Reset to Uttarakhand Corridor"
-          >
-            <RotateCcw className="h-3.5 w-3.5" />
-          </button>
+        {/* Center: Hazard Filter Bar Slot */}
+        {topCenterSlot && (
+          <div className="pointer-events-auto min-w-0 flex-1 flex justify-center max-w-xl mx-auto overflow-hidden">
+            {topCenterSlot}
+          </div>
+        )}
+
+        {/* Right: Basemap Switcher & Tactical Controls */}
+        <div className="pointer-events-auto flex items-center gap-1 sm:gap-1.5 shrink-0">
+          {/* Basemap Toggle Pills */}
+          <div className="flex items-center rounded-2xl border border-white/[0.08] bg-[#161820]/95 p-0.5 sm:p-1 backdrop-blur shadow-clay-card font-sans text-xs">
+            <button
+              onClick={() => setBasemap("dark")}
+              className={`flex items-center gap-1 rounded-xl px-2 py-1 transition font-medium ${
+                basemap === "dark"
+                  ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold shadow-clay-badge"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[#1D202B]"
+              }`}
+              title="Dark Matter Tactical GIS Basemap"
+            >
+              <MapIcon className="h-3.5 w-3.5" />
+              <span className="hidden xl:inline">Dark</span>
+            </button>
+            <button
+              onClick={() => setBasemap("satellite")}
+              className={`flex items-center gap-1 rounded-xl px-2 py-1 transition font-medium ${
+                basemap === "satellite"
+                  ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold shadow-clay-badge"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[#1D202B]"
+              }`}
+              title="Orbital Satellite Basemap"
+            >
+              <Satellite className="h-3.5 w-3.5" />
+              <span className="hidden xl:inline">Satellite</span>
+            </button>
+            <button
+              onClick={() => setBasemap("topo")}
+              className={`flex items-center gap-1 rounded-xl px-2 py-1 transition font-medium ${
+                basemap === "topo"
+                  ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold shadow-clay-badge"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[#1D202B]"
+              }`}
+              title="Shaded Relief Topography Basemap"
+            >
+              <Mountain className="h-3.5 w-3.5" />
+              <span className="hidden xl:inline">Terrain</span>
+            </button>
+          </div>
+
+          {/* Tactical Controls: Locate Me, Zoom In/Out, Reset */}
+          <div className="flex items-center gap-1 rounded-2xl border border-white/[0.08] bg-[#161820]/95 p-1 backdrop-blur shadow-clay-card">
+            <button
+              onClick={handleLocateMe}
+              disabled={isLocating}
+              className={`flex h-7 w-7 items-center justify-center rounded-xl transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed ${
+                isLocating
+                  ? "bg-indigo-600/50 text-indigo-200 animate-pulse"
+                  : "text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300"
+              }`}
+              title="Locate My Current GPS Position"
+              aria-label="Locate My Current GPS Position"
+            >
+              {isLocating ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Crosshair className="h-3.5 w-3.5" />
+              )}
+            </button>
+            <div className="h-3.5 w-px bg-white/[0.08]" />
+            <button
+              onClick={handleZoomIn}
+              className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed"
+              title="Zoom In"
+            >
+              <ZoomIn className="h-4 w-4" />
+            </button>
+            <button
+              onClick={handleZoomOut}
+              className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed"
+              title="Zoom Out"
+            >
+              <ZoomOut className="h-4 w-4" />
+            </button>
+            <button
+              onClick={handleReset}
+              className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed"
+              title="Reset to Uttarakhand Corridor"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
       </div>
 

@@ -42,7 +42,7 @@ export const MapWorkspace: React.FC = () => {
 
   return (
     <div className="relative flex flex-1 h-full w-full overflow-hidden bg-[#0B0C10]">
-      {/* 1. Full-Screen Interactive GIS Map */}
+      {/* 1. Full-Screen Interactive GIS Map with Unified Top Bar */}
       <main className="relative h-full w-full z-0">
         <ForecastMap
           cells={cells}
@@ -51,13 +51,14 @@ export const MapWorkspace: React.FC = () => {
           onSelectCell={setSelectedCell}
           horizonMinutes={horizonMinutes}
           filterMode={filterMode}
+          topCenterSlot={<HazardFilterBar />}
         />
       </main>
 
       <OperationalRail activeLayerCount={activeLayerCount} onOpenLayers={() => setIsLayerDrawerOpen(true)} />
 
-      {/* Compact layer entry point for tablet and mobile. */}
-      <div className="absolute top-4 left-4 z-20 lg:hidden">
+      {/* Compact layer entry point for tablet and mobile */}
+      <div className="absolute top-14 left-3 z-20 lg:hidden">
         <button
           onClick={() => setIsLayerDrawerOpen(!isLayerDrawerOpen)}
           className="flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-[#161820]/95 px-3 py-1.5 text-xs font-sans font-medium text-slate-200 hover:text-indigo-300 hover:bg-[#1D202B] shadow-clay-card backdrop-blur-md transition select-none active:translate-y-0.5 active:shadow-clay-btn-pressed"
@@ -79,13 +80,8 @@ export const MapWorkspace: React.FC = () => {
         />
       </div>
 
-      {/* 3. Top-Center Quick Hazard Filter Bar */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
-        <HazardFilterBar />
-      </div>
-
       {/* 4. Bottom-Center Floating Timeline Scrubber Dock */}
-      <div className="absolute bottom-4 sm:bottom-5 left-1/2 -translate-x-1/2 z-20 w-full max-w-3xl px-2 sm:px-4 pointer-events-auto">
+      <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-20 w-full max-w-xl lg:max-w-2xl xl:max-w-3xl px-2 sm:px-4 pointer-events-auto">
         <TimelineDock
           currentHorizonMinutes={horizonMinutes}
           onHorizonChange={setHorizonMinutes}

@@ -84,7 +84,7 @@ function SentinelWorkspaceContent() {
       </main>
 
       {/* Unobtrusive Floating Atmospheric Soundings Pill (Bottom Left) */}
-      <div className="absolute bottom-4 left-4 z-20 pointer-events-auto">
+      <div className="absolute bottom-24 2xl:bottom-4 left-3 sm:left-4 z-20 pointer-events-auto">
         {!isSoundingsOpen ? (
           <button
             onClick={() => setIsSoundingsOpen(true)}

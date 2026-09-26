@@ -10,7 +10,7 @@ export const MapLegend: React.FC = () => {
     <div
       role="region"
       aria-label="Map Severity Legend"
-      className="absolute bottom-28 right-3 sm:bottom-4 sm:right-4 z-20 rounded-2xl border border-white/[0.08] bg-[#161820]/95 p-3 font-sans text-xs text-slate-300 backdrop-blur-xl shadow-clay-card select-none max-w-[calc(100vw-24px)]"
+      className="absolute bottom-24 2xl:bottom-4 right-3 sm:right-4 z-20 rounded-2xl border border-white/[0.08] bg-[#161820]/95 p-3 font-sans text-xs text-slate-300 backdrop-blur-xl shadow-clay-card select-none max-w-[calc(100vw-24px)]"
     >
       <div className="flex items-center justify-between gap-2.5 sm:gap-3">
         <div className="flex items-center gap-2 text-[11px]">

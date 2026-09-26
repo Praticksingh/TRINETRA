@@ -127,23 +127,23 @@ export const SentinelHeader: React.FC = () => {
                 ADVISORY
               </span>
             </div>
-            <span className="text-[10px] text-zinc-400 hidden xl:block leading-none mt-0.5">
+            <span className="text-[10px] text-zinc-400 hidden 2xl:block leading-none mt-0.5">
               Hyper-Local Convective Weather Intelligence
             </span>
           </div>
         </div>
 
         {/* Disaster Scenario Selector (Prominent for easy evaluation) */}
-        <div className="hidden lg:flex items-center ml-2 pl-3 border-l border-white/[0.08]">
-          <div className="flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-[#1A1612] hover:border-amber-400/50 px-2.5 h-8 transition text-xs shadow-clay-btn active:translate-y-0.5">
+        <div className="hidden lg:flex items-center ml-1 xl:ml-2 pl-2 xl:pl-3 border-l border-white/[0.08]">
+          <div className="flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-[#1A1612] hover:border-amber-400/50 px-2 sm:px-2.5 h-8 transition text-xs shadow-clay-btn active:translate-y-0.5">
             <Flame className="h-3.5 w-3.5 text-amber-400 shrink-0" />
-            <span className="text-[11px] text-zinc-400 font-medium">Scenario:</span>
+            <span className="text-[11px] text-zinc-400 font-medium hidden xl:inline">Scenario:</span>
             <div className="relative flex items-center">
               <select
                 value={activeScenarioId}
                 onChange={(e) => loadScenario(e.target.value)}
                 aria-label="Select Disaster Scenario"
-                className="appearance-none bg-transparent pr-4 text-xs font-semibold text-amber-300 focus:outline-none cursor-pointer"
+                className="appearance-none bg-transparent pr-4 text-xs font-semibold text-amber-300 focus:outline-none cursor-pointer max-w-[130px] xl:max-w-[170px] truncate"
               >
                 <option value="kedarnath_2013" className="bg-[#161820] text-amber-300">
                   2013 Kedarnath (Critical)
@@ -162,7 +162,7 @@ export const SentinelHeader: React.FC = () => {
       </div>
 
       {/* 2. Center: Catchment Search */}
-      <div className="hidden md:flex flex-1 max-w-xs lg:max-w-sm mx-3 items-center">
+      <div className="hidden md:flex flex-1 max-w-[180px] lg:max-w-[230px] xl:max-w-[280px] mx-2 xl:mx-3 items-center transition-all">
         <LocationSearch onLocationSelect={handleLocationSelect} className="w-full" />
       </div>
 
@@ -180,12 +180,13 @@ export const SentinelHeader: React.FC = () => {
 
         {/* Model Engine Selector */}
         <div className="hidden xl:flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-[#1D202B] px-2.5 h-8 text-xs shadow-clay-btn">
-          <span className="text-zinc-400 text-[11px]">Model:</span>
+          <Cpu className="h-3.5 w-3.5 text-indigo-400 shrink-0 hidden 2xl:block" />
+          <span className="text-zinc-400 text-[11px] hidden 2xl:inline">Model:</span>
           <div className="relative flex items-center">
             <select
               value={selectedModel}
               onChange={(e) => setSelectedModel(e.target.value)}
-              className="appearance-none bg-transparent pr-4 text-xs font-medium text-indigo-400 focus:outline-none cursor-pointer"
+              className="appearance-none bg-transparent pr-4 text-xs font-medium text-indigo-400 focus:outline-none cursor-pointer max-w-[130px] xl:max-w-[160px] truncate"
               aria-label="Select Machine Learning Inference Model"
             >
               <option value="spatiotemporal_v1" className="bg-[#161820] text-slate-200">
@@ -336,18 +337,18 @@ export const SentinelHeader: React.FC = () => {
         <button
           onClick={triggerNowcastCycle}
           disabled={isTriggeringCycle}
-          className="flex items-center gap-1.5 rounded-xl border border-indigo-500/40 bg-[#1C1F30] px-3 h-8 text-xs font-medium text-indigo-300 hover:bg-[#25293E] hover:border-indigo-400/60 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed disabled:opacity-50"
+          className="flex items-center gap-1.5 rounded-xl border border-indigo-500/40 bg-[#1C1F30] px-2.5 sm:px-3 h-8 text-xs font-medium text-indigo-300 hover:bg-[#25293E] hover:border-indigo-400/60 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed disabled:opacity-50 shrink-0"
           title="Run Automated Forecast Cycle"
           aria-label="Run Automated Forecast Cycle"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${isTriggeringCycle ? "animate-spin" : ""}`} />
-          <span className="hidden lg:inline">{isTriggeringCycle ? "Updating..." : "Run Forecast"}</span>
+          <span className="hidden xl:inline">{isTriggeringCycle ? "Updating..." : "Run Forecast"}</span>
         </button>
 
         {/* Alerts Drawer Button */}
         <button
           onClick={toggleAlertDrawer}
-          className={`relative flex items-center gap-1.5 rounded-xl border px-2.5 h-8 text-xs font-medium transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed ${
+          className={`relative flex items-center gap-1.5 rounded-xl border px-2.5 h-8 text-xs font-medium transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed shrink-0 ${
             unacknowledgedAlertsCount > 0
               ? "border-rose-500/60 bg-[#241418] text-rose-300 hover:bg-[#301A20] shadow-clay-btn-danger"
               : "border-white/[0.08] bg-[#1D202B] text-slate-300 hover:border-slate-600"
@@ -356,9 +357,9 @@ export const SentinelHeader: React.FC = () => {
           aria-label={`Open Alerts Drawer${unacknowledgedAlertsCount > 0 ? `, ${unacknowledgedAlertsCount} active alerts` : ""}`}
         >
           <Bell className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Alerts</span>
+          <span className="hidden md:inline">Alerts</span>
           {unacknowledgedAlertsCount > 0 && (
-            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow-clay-badge">
+            <span className="flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow-clay-badge">
               {unacknowledgedAlertsCount}
             </span>
           )}

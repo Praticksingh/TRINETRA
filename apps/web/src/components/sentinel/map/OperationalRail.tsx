@@ -32,7 +32,7 @@ export const OperationalRail: React.FC<OperationalRailProps> = ({ activeLayerCou
     return (
       <aside
         aria-label="Operational incident queue collapsed"
-        className="absolute top-4 left-4 z-20 hidden lg:flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-[#161820]/95 px-3 py-1.5 shadow-clay-card backdrop-blur-xl select-none"
+        className="absolute top-14 left-3 z-20 hidden lg:flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-[#161820]/95 px-3 py-1.5 shadow-clay-card backdrop-blur-xl select-none"
       >
         <button
           onClick={() => setIsCollapsed(false)}
@@ -62,7 +62,7 @@ export const OperationalRail: React.FC<OperationalRailProps> = ({ activeLayerCou
   return (
     <aside
       aria-label="Operational incident queue"
-      className="absolute top-16 bottom-24 left-4 z-20 hidden w-72 flex-col overflow-hidden rounded-3xl border border-white/[0.08] bg-[#161820]/95 shadow-clay-card-elevated backdrop-blur-xl lg:flex animate-in fade-in slide-in-from-left-2 duration-150"
+      className="absolute top-14 bottom-24 left-3 z-20 hidden w-72 flex-col overflow-hidden rounded-3xl border border-white/[0.08] bg-[#161820]/95 shadow-clay-card-elevated backdrop-blur-xl lg:flex animate-in fade-in slide-in-from-left-2 duration-150"
     >
       <div className="border-b border-white/[0.08] px-4 py-3">
         <div className="flex items-center justify-between gap-3">
