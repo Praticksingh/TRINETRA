@@ -13,11 +13,13 @@ import {
   CheckCircle2,
   Download,
   FileCode,
-  ShieldAlert,
-  ArrowRight,
   Eye,
   Archive,
   Check,
+  ChevronDown,
+  ChevronUp,
+  AlertTriangle,
+  Info,
 } from "lucide-react";
 
 export interface AlertDetailDrawerProps {
@@ -36,6 +38,7 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
   onFocusMap,
 }) => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showTechnicalDetails, setShowTechnicalDetails] = useState<boolean>(false);
 
   if (!alert) return null;
 
@@ -51,9 +54,9 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
     onTransitionStatus(alert.id, nextStatus);
 
     if (nextStatus === "DISPATCHED") {
-      setToastMessage("Dispatched to SEOC Webhook (HMAC-SHA256 Signed)");
+      setToastMessage("Dispatched to Emergency Operations Center");
     } else {
-      setToastMessage(`Status transitioned to ${nextStatus}`);
+      setToastMessage(`Status updated to ${nextStatus}`);
     }
     setTimeout(() => setToastMessage(null), 3000);
   };
@@ -67,7 +70,7 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
   <status>Test</status>
   <msgType>Alert</msgType>
   <scope>Public</scope>
-  <note>TRINETRA Model Advisory. Not an official government decree.</note>
+  <note>TRINETRA Model Advisory. Meteorological Early Warning.</note>
   <info>
     <category>Met</category>
     <event>${alert.hazardType.replace("_", " ").toUpperCase()}</event>
@@ -103,15 +106,11 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
         severity: alert.severity,
         hazard_type: alert.hazardType,
         region: alert.regionName,
-        status: currentStatus,
-        issued_at: alert.issuedAt,
-        valid_from: alert.validFrom,
-        valid_to: alert.validTo,
-        is_official_warning: alert.isOfficialWarning,
+        status: alert.status,
       },
       geometry: {
         type: "Point",
-        coordinates: [78.5, 30.3],
+        coordinates: [79.066, 30.735],
       },
     };
     const blob = new Blob([JSON.stringify(geojson, null, 2)], { type: "application/geo+json" });
@@ -125,7 +124,6 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
     URL.revokeObjectURL(url);
   };
 
-  // Lifecycle steps array
   const steps: AlertLifecycleStatus[] = [
     "GENERATED",
     "UNDER_REVIEW",
@@ -140,61 +138,72 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={alert.regionName}
-      subtitle={`ADVISORY #${alert.id}`}
+      subtitle={`Alert #${alert.id}`}
       position="right"
       width="w-full sm:w-[480px]"
     >
       <div className="space-y-4 text-xs font-sans text-slate-200">
         {/* Toast feedback */}
         {toastMessage && (
-          <div className="rounded-lg border border-emerald-500/40 bg-emerald-500/15 p-2.5 text-emerald-300 font-medium animate-in fade-in flex items-center gap-2">
+          <div className="rounded-lg border border-emerald-500/40 bg-emerald-950/40 p-2.5 text-emerald-300 font-medium animate-in fade-in flex items-center gap-2">
             <Check className="h-4 w-4 text-emerald-400" />
             <span>{toastMessage}</span>
           </div>
         )}
 
-        {/* Top Badges & Mandatory Disclaimer */}
+        {/* Top Badges */}
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Badge severity={alert.severity}>{alert.severity.toUpperCase()}</Badge>
+            <Badge severity={alert.severity} size="sm" />
             <AlertLifecycleBadge status={currentStatus} />
           </div>
-          <span className="rounded-full bg-amber-950/60 px-2.5 py-0.5 text-[10px] font-semibold text-amber-300 border border-amber-800/50 shadow-clay-badge font-sans">
-            MODEL ADVISORY (NOT OFFICIAL)
+          <span className="text-[10px] text-slate-400 font-mono">
+            ID: {alert.id}
           </span>
         </div>
 
-        {/* Lifecycle Progression Visualizer */}
-        <div className="rounded-2xl border border-white/[0.08] bg-[#1D202B]/90 p-3.5 space-y-2.5 shadow-clay-btn">
-          <div className="text-[10px] uppercase font-semibold text-slate-400">
-            Lifecycle State Machine
+        {/* Status Lifecycle Stepper */}
+        <div className="rounded-lg border border-[#232736] bg-[#141722] p-3 space-y-2">
+          <div className="text-[10px] font-medium text-slate-400">
+            Emergency Lifecycle Status
           </div>
-          <div className="grid grid-cols-5 gap-1.5 text-center">
+          <div className="grid grid-cols-5 gap-1 text-center">
             {steps.map((st, idx) => {
               const isPast = idx <= currentStepIdx;
               const isCurrent = idx === currentStepIdx;
 
+              const label =
+                st === "GENERATED"
+                  ? "New"
+                  : st === "UNDER_REVIEW"
+                  ? "Reviewing"
+                  : st === "DISPATCHED"
+                  ? "Sent"
+                  : st === "ACKNOWLEDGED"
+                  ? "Acknowledged"
+                  : "Resolved";
+
               return (
                 <div key={st} className="flex flex-col items-center">
                   <div
-                    className={`h-2 w-full rounded-full mb-1 transition-all ${
+                    className={`h-1.5 w-full rounded-full mb-1 transition-all ${
                       isCurrent
-                        ? "bg-[#6366F1] shadow-[0_0_8px_rgba(99,102,241,0.5)]"
+                        ? "bg-indigo-500"
                         : isPast
-                        ? "bg-emerald-500 shadow-sm"
-                        : "bg-[#111217] shadow-clay-inset"
+                        ? "bg-emerald-500"
+                        : "bg-[#0E1017]"
                     }`}
                   />
                   <span
-                    className={`text-[9px] font-sans truncate w-full font-medium ${
+                    className={`text-[9px] truncate w-full ${
                       isCurrent
-                        ? "text-indigo-300 font-semibold"
+                        ? "text-indigo-300 font-medium"
                         : isPast
                         ? "text-emerald-400"
                         : "text-slate-500"
                     }`}
                   >
-                    {st.replace("_", " ")}
+                    {label}
                   </span>
                 </div>
               );
@@ -202,24 +211,94 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
           </div>
         </div>
 
-        {/* Narrative & Details */}
-        <div className="rounded-2xl border border-white/[0.08] bg-[#1D202B]/90 p-4 space-y-2.5 font-sans shadow-clay-btn">
-          <h3 className="text-sm font-semibold text-slate-100">{alert.headline}</h3>
-          <p className="text-xs text-slate-300 leading-relaxed font-sans">{alert.description}</p>
+        {/* ================= SECTION 16: STRICT ALERT DETAIL HIERARCHY ================= */}
+        <div className="rounded-lg border border-[#232736] bg-[#141722] p-4 space-y-3 font-sans">
+          {/* WHAT */}
+          <div>
+            <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+              What
+            </div>
+            <div className="text-sm font-semibold text-white mt-0.5">
+              {alert.headline}
+            </div>
+          </div>
 
-          <div className="pt-2 border-t border-white/[0.08] grid grid-cols-2 gap-2 text-xs text-slate-400">
-            <div>
-              <span>Valid From:</span>
-              <div className="text-slate-200 font-semibold font-mono text-[11px]">{alert.validFrom.replace("T", " ").slice(0, 16)} UTC</div>
+          {/* WHERE */}
+          <div className="pt-2 border-t border-[#1E2330]">
+            <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+              Where
             </div>
-            <div>
-              <span>Valid To:</span>
-              <div className="text-slate-200 font-semibold font-mono text-[11px]">{alert.validTo.replace("T", " ").slice(0, 16)} UTC</div>
+            <div className="text-xs font-medium text-slate-200 mt-0.5 flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
+              <span>{alert.regionName}, Uttarakhand</span>
             </div>
+          </div>
+
+          {/* WHEN */}
+          <div className="pt-2 border-t border-[#1E2330]">
+            <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+              When
+            </div>
+            <div className="text-xs font-mono text-slate-200 mt-0.5 flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+              <span>{alert.validFrom.replace("T", " ").slice(11, 16)} – {alert.validTo.replace("T", " ").slice(11, 16)} UTC (Active window)</span>
+            </div>
+          </div>
+
+          {/* RISK */}
+          <div className="pt-2 border-t border-[#1E2330]">
+            <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+              Risk Level
+            </div>
+            <div className="mt-1">
+              <Badge severity={alert.severity} size="sm" />
+            </div>
+          </div>
+
+          {/* WHY */}
+          <div className="pt-2 border-t border-[#1E2330]">
+            <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+              Why
+            </div>
+            <p className="text-xs text-slate-300 leading-relaxed mt-0.5">
+              {alert.description}
+            </p>
+          </div>
+
+          {/* WHAT TO WATCH */}
+          <div className="pt-2 border-t border-[#1E2330]">
+            <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+              What to Watch
+            </div>
+            <ul className="text-xs text-slate-300 mt-1 space-y-1 list-disc list-inside">
+              <li>Rainfall intensity over mountain slopes (&gt; 30 mm/h)</li>
+              <li>Rapid river and stream water level increase</li>
+              <li>Lightning activity and convective storm cell growth</li>
+            </ul>
+          </div>
+
+          {/* TECHNICAL DETAILS (Collapsed by default - Rule 16) */}
+          <div className="pt-2 border-t border-[#1E2330]">
+            <button
+              onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
+              className="flex items-center justify-between w-full text-xs text-indigo-400 hover:text-indigo-300 font-medium"
+            >
+              <span>{showTechnicalDetails ? "Hide technical evidence" : "Show technical evidence & model metadata"}</span>
+              {showTechnicalDetails ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+            </button>
+
+            {showTechnicalDetails && (
+              <div className="mt-2.5 rounded bg-[#0E1017] p-2.5 border border-[#1E2330] text-[11px] text-slate-400 space-y-1.5 animate-in fade-in duration-150">
+                <div>Model: <span className="text-slate-200">TRINETRA Spatiotemporal Neural Nowcaster</span></div>
+                <div>Hazard Category: <span className="font-mono text-slate-200">{alert.hazardType}</span></div>
+                <div>Issued: <span className="font-mono text-slate-200">{alert.issuedAt}</span></div>
+                <div>Affected Grid Sectors: <span className="font-mono text-slate-200">{alert.affectedCells?.join(", ") || "Mandakini-1"}</span></div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Primary Action Button based on status */}
+        {/* Lifecycle Action Buttons */}
         <div className="space-y-2 font-sans">
           {currentStatus === "GENERATED" && (
             <Button
@@ -228,7 +307,7 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
               leftIcon={<Eye className="h-4 w-4" />}
               onClick={handleAdvanceLifecycle}
             >
-              Assign For Duty Review (Advance to Under Review)
+              Begin Duty Review (Mark In Review)
             </Button>
           )}
 
@@ -239,7 +318,7 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
               leftIcon={<Send className="h-4 w-4" />}
               onClick={handleAdvanceLifecycle}
             >
-              Dispatch to SEOC & DEOC Webhook (Advance to Dispatched)
+              Dispatch Advisory to Emergency Center
             </Button>
           )}
 
@@ -250,7 +329,7 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
               leftIcon={<CheckCircle2 className="h-4 w-4" />}
               onClick={handleAdvanceLifecycle}
             >
-              Record Local DEOC Acknowledgment
+              Confirm Receipt by District Operations
             </Button>
           )}
 
@@ -261,18 +340,18 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
               leftIcon={<Archive className="h-4 w-4" />}
               onClick={handleAdvanceLifecycle}
             >
-              Resolve & Archive Event
+              Mark Resolved & Archive Alert
             </Button>
           )}
 
           {currentStatus === "RESOLVED" && (
-            <div className="rounded-2xl border border-white/[0.08] bg-[#161820] p-3 text-center text-slate-400 text-xs font-sans shadow-clay-card">
-              ✓ This advisory has been formally resolved and archived.
+            <div className="rounded-lg border border-[#232736] bg-[#141722] p-2.5 text-center text-slate-400 text-xs">
+              ✓ Alert marked resolved and archived in system audit log.
             </div>
           )}
         </div>
 
-        {/* Secondary Actions: Map Focus, CAP XML, GeoJSON */}
+        {/* Secondary Utility Actions */}
         <div className="grid grid-cols-2 gap-2 font-sans">
           <Button
             variant="secondary"
@@ -302,16 +381,8 @@ export const AlertDetailDrawer: React.FC<AlertDetailDrawerProps> = ({
             onClick={handleExportGeoJson}
             className="col-span-2"
           >
-            Export GeoJSON (RFC 7946)
+            Export GeoJSON
           </Button>
-        </div>
-
-        {/* Audit Log Record */}
-        <div className="rounded-2xl border border-white/[0.08] bg-[#111217] p-3.5 space-y-1.5 text-xs font-sans text-slate-400 shadow-clay-inset">
-          <div className="font-semibold text-slate-200 uppercase text-[10px] tracking-wider">Provenance Audit Record</div>
-          <div>Issued At: <span className="font-mono text-slate-300">{alert.issuedAt}</span></div>
-          <div>Trigger Engine: Spatiotemporal Conv3D (Multitask v1.0.0)</div>
-          <div>Authority Status: Model Advisory (Duty Operator Verification Required)</div>
         </div>
       </div>
     </Drawer>

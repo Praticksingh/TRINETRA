@@ -134,10 +134,10 @@ export default function RiskPanel({
           <div className="flex items-center justify-between mb-2">
             <span className="font-mono font-semibold text-[11px] text-cyan-300 uppercase flex items-center gap-1.5">
               <Layers className="h-3.5 w-3.5 text-cyan-400" />
-              Dual-Factor Flash-Flood Attribution
+              Main Factors Behind the Risk
             </span>
-            <span className="rounded bg-slate-800 px-1.5 py-0.5 text-[9px] font-mono text-cyan-400 border border-slate-700">
-              {dominantDriver}
+            <span className="rounded bg-slate-800 px-1.5 py-0.5 text-[9px] font-sans font-medium text-cyan-400 border border-slate-700">
+              {dominantDriver === "TERRAIN_AMPLIFIED" ? "Terrain Effect" : dominantDriver === "METEOROLOGY_DRIVEN" ? "Rain Driven" : "Rain & Steep Terrain"}
             </span>
           </div>
 
@@ -145,9 +145,9 @@ export default function RiskPanel({
             {/* Factor 1: Dynamic Weather Forcing */}
             <div>
               <div className="flex items-center justify-between text-[11px] mb-1">
-                <span className="text-slate-300 flex items-center gap-1">
+                <span className="text-slate-300 flex items-center gap-1 font-sans">
                   <Droplets className="h-3 w-3 text-cyan-400" />
-                  Meteorological Forcing (P_meteo)
+                  Rain & Storm Conditions (P_meteo)
                 </span>
                 <span className="font-bold text-cyan-300">{Math.round(pMeteo * 100)}%</span>
               </div>
@@ -157,18 +157,18 @@ export default function RiskPanel({
                   style={{ width: `${Math.round(pMeteo * 100)}%` }}
                 />
               </div>
-              <div className="flex justify-between text-[9px] text-slate-400 mt-0.5">
-                <span>Cloudburst: {Math.round(cellData.probabilities.cloudburst * 100)}%</span>
-                <span>Thunderstorm: {Math.round(cellData.probabilities.thunderstorm * 100)}%</span>
+              <div className="flex justify-between text-[9px] text-slate-400 mt-0.5 font-sans">
+                <span>Heavy rain chance: {Math.round(cellData.probabilities.cloudburst * 100)}%</span>
+                <span>Thunderstorm chance: {Math.round(cellData.probabilities.thunderstorm * 100)}%</span>
               </div>
             </div>
 
             {/* Factor 2: Static Terrain Susceptibility */}
             <div>
               <div className="flex items-center justify-between text-[11px] mb-1">
-                <span className="text-slate-300 flex items-center gap-1">
+                <span className="text-slate-300 flex items-center gap-1 font-sans">
                   <Mountain className="h-3 w-3 text-amber-400" />
-                  Terrain Susceptibility (S_terrain)
+                  Terrain Vulnerability (S_terrain)
                 </span>
                 <span className="font-bold text-amber-400">{Math.round(sTerrain * 100)}%</span>
               </div>
@@ -178,19 +178,19 @@ export default function RiskPanel({
                   style={{ width: `${Math.round(sTerrain * 100)}%` }}
                 />
               </div>
-              <div className="flex justify-between text-[9px] text-slate-400 mt-0.5">
+              <div className="flex justify-between text-[9px] text-slate-400 mt-0.5 font-sans">
                 <span>Slope: {cellData.terrain.slopeDeg.toFixed(1)}°</span>
-                <span>TWI: {cellData.terrain.twi.toFixed(1)}</span>
-                <span>Relief: {cellData.terrain.elevationM}m</span>
+                <span>Water Collection (TWI): {cellData.terrain.twi.toFixed(1)}</span>
+                <span>Elevation: {cellData.terrain.elevationM}m</span>
               </div>
             </div>
 
             {/* Factor 3: Surge Amplification Interaction */}
             <div className="pt-2 border-t border-slate-800/80">
               <div className="flex items-center justify-between text-[11px] mb-1">
-                <span className="text-slate-300 flex items-center gap-1">
+                <span className="text-slate-300 flex items-center gap-1 font-sans font-medium">
                   <Activity className="h-3 w-3 text-rose-400" />
-                  Fused Flash-Flood Risk (R_surge)
+                  Flash Flood Risk
                 </span>
                 <span className="font-extrabold text-rose-400">
                   {Math.round(cellData.probabilities.flashFlood * 100)}%
@@ -202,12 +202,12 @@ export default function RiskPanel({
                   style={{ width: `${Math.round(cellData.probabilities.flashFlood * 100)}%` }}
                 />
               </div>
-              <div className="text-[9px] text-slate-400 mt-1 leading-tight">
+              <div className="text-[10px] text-slate-400 mt-1 leading-relaxed font-sans">
                 {dominantDriver === "TERRAIN_AMPLIFIED"
-                  ? "Hydraulic confinement in steep ravine amplifies moderate rain into surge potential."
+                  ? "Steep mountain slopes can funnel moderate rainfall quickly into valleys."
                   : dominantDriver === "METEOROLOGY_DRIVEN"
-                  ? "Extreme localized convective rainfall core exceeds catchment infiltration rate."
-                  : "Compound threat: high rainfall intensity coinciding with steep, convergent mountain terrain."}
+                  ? "Heavy rain is falling faster than the local river basin can absorb it."
+                  : "High rainfall is combining with steep mountain terrain to increase flood risk."}
               </div>
             </div>
           </div>
@@ -217,42 +217,42 @@ export default function RiskPanel({
         <div className="rounded border border-slate-800 bg-slate-900/40 p-3">
           <div className="flex items-center gap-1.5 text-cyan-400 font-mono font-semibold text-[11px] mb-2 uppercase">
             <Mountain className="h-3.5 w-3.5" />
-            <span>DEM Topography & Catchment Dynamics</span>
+            <span>Terrain Details & Slope</span>
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-slate-300 font-mono text-[11px]">
             <div className="rounded bg-slate-800/50 p-2 border border-slate-800">
-              <div className="text-slate-400 text-[10px]">SLOPE GRADIENT</div>
+              <div className="text-slate-400 text-[10px] font-sans">TERRAIN SLOPE</div>
               <div className="text-sm font-bold text-slate-100">
                 {cellData.terrain.slopeDeg.toFixed(1)}°
               </div>
-              <div className="text-[9px] text-slate-400 mt-0.5">
-                {cellData.terrain.slopeDeg > 35 ? "Extreme Incline" : "Moderate Incline"}
+              <div className="text-[9px] text-slate-400 mt-0.5 font-sans">
+                {cellData.terrain.slopeDeg > 35 ? "Very Steep Slope" : "Moderate Slope"}
               </div>
             </div>
 
             <div className="rounded bg-slate-800/50 p-2 border border-slate-800">
-              <div className="text-slate-400 text-[10px]">TOPOGRAPHIC WETNESS</div>
+              <div className="text-slate-400 text-[10px] font-sans">WATER COLLECTION (TWI)</div>
               <div className="text-sm font-bold text-slate-100">
                 {cellData.terrain.twi.toFixed(1)}
               </div>
-              <div className="text-[9px] text-slate-400 mt-0.5">Convergent Drainage Channel</div>
+              <div className="text-[9px] text-slate-400 mt-0.5 font-sans">Natural drainage basin</div>
             </div>
 
             <div className="rounded bg-slate-800/50 p-2 border border-slate-800">
-              <div className="text-slate-400 text-[10px]">ELEVATION (MSL)</div>
+              <div className="text-slate-400 text-[10px] font-sans">ELEVATION</div>
               <div className="text-sm font-bold text-slate-100">
                 {cellData.terrain.elevationM} m
               </div>
-              <div className="text-[9px] text-slate-400 mt-0.5">Himalayan Catchment</div>
+              <div className="text-[9px] text-slate-400 mt-0.5 font-sans">Above sea level</div>
             </div>
 
             <div className="rounded bg-slate-800/50 p-2 border border-slate-800">
-              <div className="text-slate-400 text-[10px]">CATCHMENT VULNERABILITY</div>
+              <div className="text-slate-400 text-[10px] font-sans">TERRAIN VULNERABILITY</div>
               <div className="text-sm font-bold text-rose-300">
                 {(cellData.terrain.catchmentVuln * 10).toFixed(1)} / 10
               </div>
-              <div className="text-[9px] text-rose-400 mt-0.5">Hydrological Vulnerability</div>
+              <div className="text-[9px] text-rose-400 mt-0.5 font-sans">Slope & runoff risk</div>
             </div>
           </div>
         </div>
@@ -260,18 +260,18 @@ export default function RiskPanel({
         {/* Explainable AI Attribution */}
         <div className="rounded border border-slate-800 bg-[#0a0f1d] p-3">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-mono font-semibold text-[11px] text-slate-300 uppercase flex items-center gap-1.5">
+            <span className="font-sans font-semibold text-xs text-slate-200 flex items-center gap-1.5">
               <Info className="h-3.5 w-3.5 text-cyan-400" />
-              XAI Contributing Factor Attribution
+              Why the Forecast Looks This Way
             </span>
-            <span className="text-[9px] font-mono text-slate-400">SHAP / Feature Weights</span>
+            <span className="text-[10px] font-sans text-slate-400">AI Factor Weights</span>
           </div>
 
           <div className="space-y-2">
             {cellData.xaiAttribution.map((factor, idx) => (
               <div key={idx} className="space-y-1">
                 <div className="flex items-center justify-between font-mono text-[11px]">
-                  <span className="text-slate-300">{factor.label}</span>
+                  <span className="text-slate-300 font-sans">{factor.label}</span>
                   <span className="text-cyan-300 font-bold">
                     +{Math.round(factor.contribution * 100)}%
                   </span>
@@ -291,8 +291,8 @@ export default function RiskPanel({
             ))}
           </div>
 
-          <div className="mt-3 rounded border border-slate-800 bg-slate-900/60 p-2 text-[10px] text-slate-400 leading-relaxed font-mono">
-            <strong>Operational Transparency:</strong> Attributions represent relative input feature importance within the spatiotemporal model. They provide operational guidance without claiming deterministic causal certainty.
+          <div className="mt-3 rounded border border-slate-800 bg-slate-900/60 p-2 text-[10px] text-slate-400 leading-relaxed font-sans">
+            <strong>Understanding this forecast:</strong> These factors show what influenced the AI model&apos;s prediction the most for this area.
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useId } from "react";
+import React, { createContext, useContext } from "react";
 
 interface TabsContextType {
   activeTab: string;
@@ -42,9 +42,9 @@ export const TabList: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
 
   const listStyles = {
     segmented:
-      "inline-flex items-center rounded-lg border border-[#1F3350] bg-[#0F1A2A] p-1 gap-1",
+      "inline-flex items-center rounded-lg border border-[#222634] bg-[#0E1017] p-1 gap-1",
     underline:
-      "flex items-center border-b border-[#1F3350] gap-4 w-full",
+      "flex items-center border-b border-[#222634] gap-4 w-full",
   };
 
   return (
@@ -77,15 +77,15 @@ export const TabTrigger: React.FC<TabTriggerProps> = ({
   const isActive = activeTab === value;
 
   const triggerStyles = {
-    segmented: `px-3 py-1 text-xs font-mono rounded transition-all duration-150 select-none ${
+    segmented: `px-3 py-1.5 text-xs font-sans rounded-md transition-all duration-150 select-none ${
       isActive
-        ? "bg-[#142235] text-[#36D9E8] font-bold shadow border border-[#36D9E8]/40"
-        : "text-[#91A5BB] hover:text-slate-200 hover:bg-[#142235]/40"
+        ? "bg-[#181C28] text-slate-100 font-medium shadow-sm border border-[#2B3142]"
+        : "text-slate-400 hover:text-slate-200 hover:bg-[#181C28]/50"
     }`,
-    underline: `pb-2 px-1 text-xs font-medium transition-all duration-150 border-b-2 select-none flex items-center gap-2 ${
+    underline: `pb-2 px-1 text-xs font-sans font-medium transition-all duration-150 border-b-2 select-none flex items-center gap-2 ${
       isActive
-        ? "border-[#36D9E8] text-[#36D9E8] font-bold"
-        : "border-transparent text-[#91A5BB] hover:text-slate-200 hover:border-[#1F3350]"
+        ? "border-indigo-400 text-indigo-300 font-medium"
+        : "border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700"
     }`,
   };
 
@@ -100,10 +100,10 @@ export const TabTrigger: React.FC<TabTriggerProps> = ({
       <span>{children}</span>
       {typeof badgeCount === "number" && (
         <span
-          className={`rounded-full px-1.5 py-0.2 text-[9px] font-mono font-bold ${
+          className={`rounded-full px-1.5 py-0.5 text-[10px] font-mono font-medium ${
             isActive
-              ? "bg-[#0F3847] text-[#36D9E8] border border-[#36D9E8]/40"
-              : "bg-[#142235] text-[#91A5BB] border border-[#1F3350]"
+              ? "bg-indigo-950/70 text-indigo-300 border border-indigo-500/40"
+              : "bg-[#181C28] text-slate-400 border border-[#2B3142]"
           }`}
         >
           {badgeCount}

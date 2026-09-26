@@ -3,41 +3,46 @@
 import React from "react";
 import { useSentinel } from "@/context/SentinelContext";
 import { OverviewSummaryMetrics } from "./OverviewSummaryMetrics";
-import { PriorityRiskCard } from "./PriorityRiskCard";
+import { OverviewStoryCard } from "./OverviewStoryCard";
+import { OverviewTimelineStrip } from "./OverviewTimelineStrip";
 import { RegionalBasinMatrix } from "./RegionalBasinMatrix";
 import { RecentActivityStrip } from "./RecentActivityStrip";
 import { Button } from "@/components/sentinel/Button";
-import { ArrowRight, RefreshCw, ShieldCheck } from "lucide-react";
+import { ArrowRight, RefreshCw, MapPin } from "lucide-react";
 
 export const OverviewWorkspace: React.FC = () => {
-  const { setCurrentView, triggerNowcastCycle, isTriggeringCycle } = useSentinel();
+  const { setCurrentView, triggerNowcastCycle, isTriggeringCycle, lastGenTime, isLiveConnected } = useSentinel();
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
-      {/* Top Title & Operational Status Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+    <div className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-7 space-y-5 max-w-7xl mx-auto w-full">
+      {/* 1. Location & Context Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#1E2330] pb-4">
         <div>
-          <div className="flex items-center gap-2 font-sans text-xs text-sky-400 font-semibold tracking-wider uppercase">
-            <span className="h-2 w-2 rounded-full bg-sky-400" />
-            <span>Operational Overview</span>
+          <div className="flex items-center gap-2 text-xs text-indigo-400 font-medium">
+            <MapPin className="h-3.5 w-3.5" />
+            <span>Uttarakhand, India • Mandakini & Alaknanda River Valleys</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-100 font-sans mt-1">
-            Uttarakhand Convective Hazard Corridor
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-100 font-sans mt-0.5">
+            Current Weather Risk Overview
           </h1>
-          <p className="text-xs text-slate-400 font-sans mt-0.5">
-            2–6 Hour Lead Window • Mandakini, Alaknanda & Ganga Headwaters
-          </p>
+          <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
+            <span>Last updated {lastGenTime}</span>
+            <span>•</span>
+            <span className="text-emerald-400 font-medium">
+              {isLiveConnected ? "Live data active" : "Historical simulation active"}
+            </span>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <Button
             variant="secondary"
             size="sm"
-            leftIcon={<RefreshCw className={`h-3.5 w-3.5 ${isTriggeringCycle ? "animate-spin text-sky-400" : ""}`} />}
+            leftIcon={<RefreshCw className={`h-3.5 w-3.5 ${isTriggeringCycle ? "animate-spin text-indigo-400" : ""}`} />}
             onClick={triggerNowcastCycle}
             disabled={isTriggeringCycle}
           >
-            {isTriggeringCycle ? "Running forecast..." : "Run Forecast Update"}
+            {isTriggeringCycle ? "Updating..." : "Update Forecast"}
           </Button>
 
           <Button
@@ -46,28 +51,33 @@ export const OverviewWorkspace: React.FC = () => {
             rightIcon={<ArrowRight className="h-3.5 w-3.5" />}
             onClick={() => setCurrentView("map")}
           >
-            View on Weather Map
+            Open Weather Map
           </Button>
         </div>
       </div>
 
-      {/* 1. Summary Metrics Strip */}
-      <section aria-label="Key Operational Metrics">
+      {/* 2. Current Weather Story & Key Hazards */}
+      <section aria-label="Current Weather Story">
+        <OverviewStoryCard />
+      </section>
+
+      {/* 3. Top-Level Scannable Metrics Strip */}
+      <section aria-label="Primary Weather Indicators">
         <OverviewSummaryMetrics />
       </section>
 
-      {/* 2. Priority Active Risk Threat */}
-      <section aria-label="Highest Priority Modeled Threat">
-        <PriorityRiskCard />
+      {/* 4. Forecast Timeline (Next 6 Hours) */}
+      <section aria-label="Forecast Timeline">
+        <OverviewTimelineStrip />
       </section>
 
-      {/* 3. Regional Basin Risk Matrix */}
-      <section aria-label="Regional Catchment Risk Matrix">
+      {/* 5. Regional River Basins Matrix (Responsive table/cards) */}
+      <section aria-label="Monitored River Basins">
         <RegionalBasinMatrix />
       </section>
 
-      {/* 4. Recent Alert Lifecycle Audit Activity */}
-      <section aria-label="Advisory Lifecycle Activity">
+      {/* 6. Recent Weather Alert Updates */}
+      <section aria-label="Recent Weather Alert Activity">
         <RecentActivityStrip />
       </section>
     </div>

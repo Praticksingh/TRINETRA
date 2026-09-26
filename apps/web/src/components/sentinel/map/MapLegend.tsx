@@ -9,15 +9,15 @@ export const MapLegend: React.FC = () => {
   return (
     <div
       role="region"
-      aria-label="Map Severity Legend"
+      aria-label="Map Risk Level Legend"
       className="absolute bottom-24 2xl:bottom-4 right-3 sm:right-4 z-20 rounded-2xl border border-white/[0.08] bg-[#161820]/95 p-3 font-sans text-xs text-slate-300 backdrop-blur-xl shadow-clay-card select-none max-w-[calc(100vw-24px)]"
     >
       <div className="flex items-center justify-between gap-2.5 sm:gap-3">
         <div className="flex items-center gap-2 text-[11px]">
-          <span className="text-zinc-400 font-semibold uppercase text-[10px] tracking-wider">Severity:</span>
+          <span className="text-zinc-400 font-semibold uppercase text-[10px] tracking-wider">Risk Level:</span>
           <div className="flex items-center gap-1 text-emerald-400 font-medium">
             <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 shadow-sm" />
-            <span className="hidden sm:inline">Low (●)</span>
+            <span className="hidden sm:inline">Low Risk (●)</span>
           </div>
           <div className="flex items-center gap-1 text-yellow-400 font-medium">
             <span className="inline-block h-2 w-2 bg-yellow-400 transform rotate-45 shadow-sm" />
@@ -25,11 +25,11 @@ export const MapLegend: React.FC = () => {
           </div>
           <div className="flex items-center gap-1 text-amber-400 font-medium">
             <span className="inline-block font-bold">▲</span>
-            <span className="hidden sm:inline">Warning (▲)</span>
+            <span className="hidden sm:inline">High Risk (▲)</span>
           </div>
           <div className="flex items-center gap-1 text-rose-400 font-medium">
             <span className="inline-block font-bold">▲</span>
-            <span className="hidden sm:inline">Critical (▲)</span>
+            <span className="hidden sm:inline">Critical Risk (▲)</span>
           </div>
         </div>
 
@@ -47,15 +47,15 @@ export const MapLegend: React.FC = () => {
         <div className="mt-2.5 pt-2.5 border-t border-white/[0.08] space-y-1.5 text-[11px] text-zinc-400 animate-in fade-in duration-150 font-sans">
           <div className="flex items-center gap-2">
             <span className="h-2 w-4 border border-indigo-500/70 border-dashed bg-indigo-500/20 inline-block rounded-sm" />
-            <span>Pilot Catchment Corridor (Uttarakhand)</span>
+            <span>Monitored River Basins (Uttarakhand)</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="h-2 w-4 border border-purple-500/70 border-dashed bg-purple-500/10 inline-block rounded-sm" />
-            <span>Doppler Weather Radar (DWR) 75km Range</span>
+            <span>Weather Radar Coverage (Dehradun 75km Range)</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="h-2 w-4 border border-white/[0.08] bg-[#111217] inline-block rounded-sm" />
-            <span>Forecast Grid Resolution: ~4.4 km (0.04°)</span>
+            <span>Forecast Grid Blocks: ~4.4 km</span>
           </div>
         </div>
       )}

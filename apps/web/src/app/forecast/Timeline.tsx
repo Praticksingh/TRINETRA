@@ -65,15 +65,15 @@ export default function Timeline({
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5 font-mono text-xs font-semibold text-slate-200">
               <Clock className="h-4 w-4 text-cyan-400" />
-              <span>LEAD TIME:</span>
+              <span className="font-sans">FORECAST:</span>
               <span className="rounded bg-cyan-950 px-2 py-0.5 text-cyan-300 border border-cyan-800/60 font-bold">
-                T + {Math.floor(currentHorizonMinutes / 60)}h {currentHorizonMinutes % 60 ? `${currentHorizonMinutes % 60}m` : ""}
+                {currentHorizonMinutes === 0 ? "NOW" : `+${Math.floor(currentHorizonMinutes / 60)}h ${currentHorizonMinutes % 60 ? `${currentHorizonMinutes % 60}m` : ""}`}
               </span>
             </div>
 
             <div className="flex items-center gap-1.5 font-mono text-xs text-slate-400">
               <Calendar className="h-3.5 w-3.5 text-slate-500" />
-              <span>VALID TIME:</span>
+              <span className="font-sans">VALID AT:</span>
               <span className="text-slate-100 font-semibold">{getValidTime(currentHorizonMinutes)}</span>
             </div>
           </div>
@@ -83,7 +83,7 @@ export default function Timeline({
             {isPlaying && (
               <div className="flex items-center gap-1.5 rounded bg-amber-950/80 px-2 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-600/60 animate-pulse">
                 <span className="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
-                <span>TIMELAPSE ACTIVE</span>
+                <span>PLAYING FORECAST</span>
               </div>
             )}
 
@@ -116,7 +116,7 @@ export default function Timeline({
               onClick={handleStepPrev}
               disabled={currentHorizonMinutes === HORIZONS[0]}
               className="rounded border border-slate-700 bg-slate-800/80 p-1.5 text-slate-300 hover:bg-slate-700 disabled:opacity-40 transition"
-              aria-label="Previous forecast horizon step"
+              aria-label="Previous forecast step"
             >
               <SkipBack className="h-3.5 w-3.5" />
             </button>
@@ -128,7 +128,7 @@ export default function Timeline({
                   ? "border-amber-600 bg-amber-950 text-amber-300 shadow-md shadow-amber-900/30"
                   : "border-cyan-600 bg-cyan-950 text-cyan-300 hover:bg-cyan-900"
               }`}
-              aria-label={isPlaying ? "Pause automated playback" : "Play nowcast animation sequence"}
+              aria-label={isPlaying ? "Pause timeline playback" : "Play forecast timeline"}
             >
               {isPlaying ? (
                 <>
@@ -138,7 +138,7 @@ export default function Timeline({
               ) : (
                 <>
                   <Play className="h-3.5 w-3.5" />
-                  <span>PLAY NOWCAST</span>
+                  <span>PLAY TIMELINE</span>
                 </>
               )}
             </button>
@@ -147,7 +147,7 @@ export default function Timeline({
               onClick={handleStepNext}
               disabled={currentHorizonMinutes === HORIZONS[HORIZONS.length - 1]}
               className="rounded border border-slate-700 bg-slate-800/80 p-1.5 text-slate-300 hover:bg-slate-700 disabled:opacity-40 transition"
-              aria-label="Next forecast horizon step"
+              aria-label="Next forecast step"
             >
               <SkipForward className="h-3.5 w-3.5" />
             </button>
@@ -185,10 +185,10 @@ export default function Timeline({
         </div>
 
         {/* Uncertainty notice */}
-        <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 border-t border-slate-800/60 pt-2">
-          <span>Actionable decision window: 2 to 6 hours lead time</span>
-          <span className="text-slate-400">
-            Uncertainty spread: ±{Math.round(15 + (currentHorizonMinutes / 60) * 10)}% at T+{Math.floor(currentHorizonMinutes / 60)}h
+        <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 border-t border-slate-800/60 pt-2 font-sans">
+          <span>Key warning window: 2 to 6 hours ahead</span>
+          <span className="text-slate-400 font-mono text-[10px]">
+            Uncertainty margin: ±{Math.round(15 + (currentHorizonMinutes / 60) * 10)}% at +{Math.floor(currentHorizonMinutes / 60)}h
           </span>
         </div>
       </div>

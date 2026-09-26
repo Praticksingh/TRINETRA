@@ -2,12 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { Search, X, Crosshair } from "lucide-react";
 import LocationResults, { SearchLocation } from "./LocationResults";
 
-// Baseline monitoring stations & river catchments across Uttarakhand Pilot Region
+// Monitored locations and river basins across Uttarakhand
 export const PILOT_LOCATIONS: SearchLocation[] = [
   {
     id: "loc_rishikesh",
-    name: "Rishikesh Convective Corridor",
-    basin: "Lower Ganga Catchment",
+    name: "Rishikesh Ganga Corridor",
+    basin: "Lower Ganga Basin",
     district: "Dehradun / Tehri",
     coordinates: [78.2676, 30.0869],
     currentRisk: "warning",
@@ -16,8 +16,8 @@ export const PILOT_LOCATIONS: SearchLocation[] = [
   },
   {
     id: "loc_dehradun",
-    name: "Dehradun Urban Basin",
-    basin: "Song / Bindal Watershed",
+    name: "Dehradun Valley",
+    basin: "Song / Bindal Basin",
     district: "Dehradun",
     coordinates: [78.0322, 30.3165],
     currentRisk: "watch",
@@ -26,7 +26,7 @@ export const PILOT_LOCATIONS: SearchLocation[] = [
   },
   {
     id: "loc_kedarnath",
-    name: "Kedarnath Valley Catchment",
+    name: "Kedarnath Valley",
     basin: "Upper Mandakini Basin",
     district: "Rudraprayag",
     coordinates: [79.0669, 30.7352],
@@ -36,7 +36,7 @@ export const PILOT_LOCATIONS: SearchLocation[] = [
   },
   {
     id: "loc_uttarkashi",
-    name: "Uttarkashi Gorge Watershed",
+    name: "Uttarkashi Gorge",
     basin: "Bhagirathi River Basin",
     district: "Uttarkashi",
     coordinates: [78.4354, 30.7268],
@@ -46,7 +46,7 @@ export const PILOT_LOCATIONS: SearchLocation[] = [
   },
   {
     id: "loc_chamoli",
-    name: "Chamoli - Joshimath Zone",
+    name: "Chamoli - Joshimath",
     basin: "Alaknanda / Dhauliganga",
     district: "Chamoli",
     coordinates: [79.3504, 30.5583],
@@ -56,8 +56,8 @@ export const PILOT_LOCATIONS: SearchLocation[] = [
   },
   {
     id: "loc_haridwar",
-    name: "Haridwar Floodplain",
-    basin: "Ganga Alluvial Plain",
+    name: "Haridwar Plain",
+    basin: "Ganga Plains",
     district: "Haridwar",
     coordinates: [78.1642, 29.9457],
     currentRisk: "advisory",
@@ -175,7 +175,7 @@ export default function LocationSearch({
             setQuery(e.target.value);
             setIsOpen(true);
           }}
-          placeholder="Search catchments..."
+          placeholder="Search location or river basin..."
           className="w-full h-8 rounded-xl border border-white/[0.08] bg-[#111217] pl-9 pr-12 text-xs text-slate-100 placeholder-zinc-400 shadow-clay-inset backdrop-blur focus:border-indigo-500/60 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 font-sans"
         />
         {query ? (

@@ -26,66 +26,66 @@ interface FeatureItem {
 const ATTRIBUTION_FEATURES: FeatureItem[] = [
   {
     id: "tir1_cooling",
-    name: "TIR1 Cloud-Top Cooling Rate (dT/dt)",
+    name: "Satellite Cloud Cooling Rate",
     category: "Satellite",
     shapWeight: 0.342,
     impact: "Positive",
-    physicalMeaning: "Rapid cooling (< -12 K/hr) signals explosive vertical updraft and cloud-top expansion into the cold upper troposphere.",
-    operationalInterpretation: "Primary trigger for cloudburst initiation within the subsequent 60–90 minutes.",
+    physicalMeaning: "Rapid cooling of cloud tops indicates storm clouds are growing explosively higher into cold upper air.",
+    operationalInterpretation: "Strongest indicator that heavy rain and severe weather may begin within the next 60 to 90 minutes.",
   },
   {
     id: "cape",
-    name: "Convective Available Potential Energy (CAPE)",
+    name: "Atmospheric Storm Energy (CAPE)",
     category: "Atmospheric",
     shapWeight: 0.264,
     impact: "Positive",
-    physicalMeaning: "Integrates positive buoyant energy available to an ascending air parcel. Values > 2500 J/kg represent extreme thermodynamic instability.",
-    operationalInterpretation: "Furnishes kinetic energy required for severe severe updrafts and severe lightning strikes.",
+    physicalMeaning: "Measures the warm, buoyant energy available to fuel thunderstorms. High values indicate severe storm potential.",
+    operationalInterpretation: "Provides the fuel needed for strong updrafts, heavy rain bursts, and lightning.",
   },
   {
     id: "terrain_slope",
-    name: "30m Topographic Slope Angle & Curvature",
+    name: "Mountain Terrain & Slope Steepness",
     category: "Topographic",
     shapWeight: 0.218,
     impact: "Positive",
-    physicalMeaning: "High slope gradients (> 35°) accelerate mechanical orographic lift and surface overland runoff convergence into narrow ravines.",
-    operationalInterpretation: "Decoupled static terrain vulnerability prior that amplifies flash flood runoff surge.",
+    physicalMeaning: "Steep slopes (above 35°) force moisture upward and cause surface water to rush downhill into narrow valleys.",
+    operationalInterpretation: "The main physical factor that turns heavy rainfall into a rapid flash flood runoff surge.",
   },
   {
     id: "tpw",
-    name: "Total Precipitable Water (TPW)",
+    name: "Total Atmospheric Moisture (TPW)",
     category: "Atmospheric",
     shapWeight: 0.185,
     impact: "Positive",
-    physicalMeaning: "Total atmospheric water vapor contained in a vertical column. Values > 50 mm indicate deep tropical moisture availability.",
-    operationalInterpretation: "Provides the moisture reservoir required for sustained torrential rainfall rates.",
+    physicalMeaning: "Total moisture contained in the atmospheric column. High levels indicate moisture-rich air suitable for torrential downpours.",
+    operationalInterpretation: "Ensures the storm has enough water vapor to sustain prolonged heavy downpours.",
   },
   {
     id: "radar_dbz",
-    name: "Doppler Radar Reflectivity Core (dBZ)",
+    name: "Weather Radar Rain Intensity",
     category: "Atmospheric",
     shapWeight: 0.152,
     impact: "Positive",
-    physicalMeaning: "Hydrometeor backscatter power. Cores exceeding 45 dBZ above the freezing level indicate heavy graupel/hail loading.",
-    operationalInterpretation: "Direct evidence of mature multicellular convective storm core.",
+    physicalMeaning: "Radar reflectivity measuring raindrop and hail density inside the active storm cloud.",
+    operationalInterpretation: "Direct real-time evidence of active downpours and hail cores already in progress.",
   },
   {
     id: "cin",
-    name: "Convective Inhibition (CIN)",
+    name: "Atmospheric Cap (CIN)",
     category: "Atmospheric",
     shapWeight: 0.110,
     impact: "Inhibiting",
-    physicalMeaning: "Negative energy barrier preventing parcels from reaching Level of Free Convection (LFC).",
-    operationalInterpretation: "Acts as a cap. Strong CIN suppresses storm initiation despite high CAPE until breached by orographic lift.",
+    physicalMeaning: "A warm atmospheric barrier layer that temporarily prevents storms from breaking out until lifted by mountains.",
+    operationalInterpretation: "Acts as a lid holding back storms. When breached, stored energy releases suddenly.",
   },
   {
     id: "twi",
-    name: "Topographic Wetness Index (TWI)",
+    name: "Ground Drainage & Saturation (TWI)",
     category: "Topographic",
     shapWeight: 0.094,
     impact: "Positive",
-    physicalMeaning: "Ratio of upslope contributing drainage area to local slope gradient: ln(a / tan(beta)).",
-    operationalInterpretation: "Identifies natural drainage choke points and talweg hollows prone to sudden torrent pooling.",
+    physicalMeaning: "Identifies valley convergence zones and low points where rainfall naturally collects.",
+    operationalInterpretation: "Pinpoints river basins and valley communities most at risk when runoff begins.",
   },
 ];
 
@@ -94,16 +94,16 @@ export const FeatureAttributionPanel: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 1. Mandatory Non-Causal Safety Notice */}
+      {/* 1. Non-Causal Safety Notice */}
       <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 font-sans text-xs text-amber-200 backdrop-blur">
         <div className="flex items-start gap-3">
           <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
           <div className="space-y-1">
             <span className="font-semibold uppercase tracking-wider text-amber-300 text-xs">
-              Non-Causal Explanation Guardrail
+              Scientific Explanation Notice
             </span>
             <p className="leading-relaxed text-slate-300">
-              SHAP and feature attribution values displayed below represent <strong>mathematical sensitivity coefficients</strong> of the neural network model within its training manifold. They do <strong>NOT</strong> assert deterministic physical causation, nor do they replace physical streamflow measurements, geotechnical soil stability surveys, or official IMD/CWC hydrologic forecasts.
+              These percentages show which atmospheric, satellite, and terrain measurements influenced the AI model&apos;s forecast most strongly. They provide operational transparency and should always be considered alongside local river gauges and official emergency directives.
             </p>
           </div>
         </div>

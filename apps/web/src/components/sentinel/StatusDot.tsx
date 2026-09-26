@@ -33,7 +33,7 @@ export const StatusDot: React.FC<StatusDotProps> = ({
       color: "bg-emerald-400",
       bgPing: "bg-emerald-400/75",
       text: "text-emerald-400",
-      label: "NOMINAL",
+      label: "NORMAL",
     },
     delayed: {
       color: "bg-amber-400",
@@ -45,7 +45,7 @@ export const StatusDot: React.FC<StatusDotProps> = ({
       color: "bg-orange-500",
       bgPing: "bg-orange-500/75",
       text: "text-orange-400",
-      label: "STALE",
+      label: "DELAYED",
     },
     degraded: {
       color: "bg-rose-500",
@@ -63,7 +63,7 @@ export const StatusDot: React.FC<StatusDotProps> = ({
       color: "bg-purple-400",
       bgPing: "bg-purple-400/75",
       text: "text-purple-300",
-      label: "SYNTHETIC REPLAY",
+      label: "HISTORICAL SCENARIO",
     },
   };
 

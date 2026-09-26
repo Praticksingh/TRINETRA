@@ -27,10 +27,10 @@ export const StaleDataBanner: React.FC<StaleDataBannerProps> = ({
         <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />
         <div>
           <span className="font-bold uppercase text-amber-300">
-            DATA STALE / TELEMETRY DEGRADED:
+            Weather Data Delayed:
           </span>{" "}
           <span>
-            Upstream satellite observations delayed by <strong>{ageMinutes} minutes</strong> (Threshold: {maxThresholdMinutes}m). Prediction uncertainty intervals have been expanded by ±45 min.
+            Satellite observations are currently <strong>{ageMinutes} minutes old</strong> (normal update window is within {maxThresholdMinutes} min). Forecast estimates may have wider margins until fresh data arrives.
           </span>
         </div>
       </div>
@@ -41,7 +41,7 @@ export const StaleDataBanner: React.FC<StaleDataBannerProps> = ({
           className="flex items-center gap-1 rounded bg-amber-900/80 px-2.5 py-1 text-[11px] font-bold text-amber-100 hover:bg-amber-800 transition border border-amber-700 shrink-0 ml-3"
         >
           <RefreshCw className="h-3 w-3" />
-          <span>Re-sync</span>
+          <span>Refresh Data</span>
         </button>
       )}
     </div>

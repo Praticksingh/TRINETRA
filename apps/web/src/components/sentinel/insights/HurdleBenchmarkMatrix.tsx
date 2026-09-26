@@ -121,36 +121,36 @@ export const HurdleBenchmarkMatrix: React.FC = () => {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <Award className="h-4 w-4 text-indigo-400" />
-              <CardTitle className="font-sans text-sm font-semibold">TRINETRA Operational Deployment Hurdle Protocol</CardTitle>
+              <CardTitle className="font-sans text-sm font-semibold">Model Safety & Validation</CardTitle>
             </div>
             <Badge variant="emerald" size="sm">
-              ALL HURDLES SATISFIED (+1560 BPS AVG)
+              ALL ACCURACY TESTS PASSED (+15.6% AVG GAIN)
             </Badge>
           </div>
         </CardHeader>
 
         <CardContent className="space-y-3 text-xs leading-relaxed text-slate-300 font-sans">
           <p>
-            Under TRINETRA Constitution §5, no deep learning model may replace an established operational baseline unless it passes a strict, mathematically verified deployment hurdle on held-out test data:
+            To ensure safety and reliability, this AI forecasting model was evaluated on independent, unseen monsoon weather test data before deployment:
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
             <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
-              <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Hurdle Criterion 1</div>
-              <div className="text-slate-100 font-semibold font-mono mt-0.5">PR-AUC Delta ≥ +1000 bps</div>
-              <div className="text-[11px] text-emerald-400 font-medium mt-1">Achieved: +1813 bps (+18.1%)</div>
+              <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Test 1: Event Detection Gain</div>
+              <div className="text-slate-100 font-semibold font-mono mt-0.5">PR-AUC Target ≥ +10%</div>
+              <div className="text-[11px] text-emerald-400 font-medium mt-1">Achieved: +18.1% improvement</div>
             </div>
 
             <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
-              <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Hurdle Criterion 2</div>
+              <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Test 2: Probability Accuracy</div>
               <div className="text-slate-100 font-semibold font-mono mt-0.5">ECE Score &lt; 0.100</div>
-              <div className="text-[11px] text-emerald-400 font-medium mt-1">Achieved: 0.084 (Calibrated)</div>
+              <div className="text-[11px] text-emerald-400 font-medium mt-1">Achieved: 0.084 (Reliable)</div>
             </div>
 
             <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
-              <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Hurdle Criterion 3</div>
-              <div className="text-slate-100 font-semibold font-mono mt-0.5">Inference Latency &lt; 100 ms</div>
-              <div className="text-[11px] text-emerald-400 font-medium mt-1">Achieved: 3.7 ms on GPU</div>
+              <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Test 3: Forecast Speed</div>
+              <div className="text-slate-100 font-semibold font-mono mt-0.5">Speed Target &lt; 100 ms</div>
+              <div className="text-[11px] text-emerald-400 font-medium mt-1">Achieved: 3.7 ms per run</div>
             </div>
           </div>
         </CardContent>
@@ -162,7 +162,7 @@ export const HurdleBenchmarkMatrix: React.FC = () => {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4 text-indigo-400" />
-              <CardTitle className="font-sans text-sm font-semibold">Held-Out Test Set Verification (Monsoon Jul–Sep 2025)</CardTitle>
+              <CardTitle className="font-sans text-sm font-semibold">Independent Model Testing (Monsoon Jul–Sep 2025 Test Data)</CardTitle>
             </div>
 
             {/* Metric Mode Filter */}
@@ -175,7 +175,7 @@ export const HurdleBenchmarkMatrix: React.FC = () => {
                     : "text-slate-400 hover:text-slate-200"
                 }`}
               >
-                PR-AUC Focus
+                Event Detection (PR-AUC)
               </button>
               <button
                 onClick={() => setSelectedMetric("f1")}
@@ -185,7 +185,7 @@ export const HurdleBenchmarkMatrix: React.FC = () => {
                     : "text-slate-400 hover:text-slate-200"
                 }`}
               >
-                F1 Score Focus
+                Accuracy (F1)
               </button>
               <button
                 onClick={() => setSelectedMetric("reliability")}
@@ -205,13 +205,13 @@ export const HurdleBenchmarkMatrix: React.FC = () => {
           <table className="w-full text-left font-sans text-xs border-collapse">
             <thead>
               <tr className="border-b border-white/[0.08] bg-[#111217] text-[11px] text-slate-400 font-semibold uppercase tracking-wider">
-                <th className="py-3 px-4">Hazard Phenomenon</th>
-                <th className="py-3 px-3">Horizon</th>
-                <th className="py-3 px-3 text-right">Tree Baseline</th>
-                <th className="py-3 px-3 text-right">Conv3D Candidate</th>
-                <th className="py-3 px-3 text-right">Hurdle Gain</th>
-                <th className="py-3 px-3 text-right">Brier Score</th>
-                <th className="py-3 px-3 text-right">ECE</th>
+                <th className="py-3 px-4">Weather Event</th>
+                <th className="py-3 px-3">Warning Time</th>
+                <th className="py-3 px-3 text-right">Standard Baseline</th>
+                <th className="py-3 px-3 text-right">AI Weather Model</th>
+                <th className="py-3 px-3 text-right">Accuracy Gain</th>
+                <th className="py-3 px-3 text-right">Reliability Score</th>
+                <th className="py-3 px-3 text-right">Prob. Accuracy (ECE)</th>
                 <th className="py-3 px-4 text-center">Status</th>
               </tr>
             </thead>

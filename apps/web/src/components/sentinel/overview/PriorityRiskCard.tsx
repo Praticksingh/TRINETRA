@@ -87,22 +87,22 @@ export const PriorityRiskCard: React.FC = () => {
         <div className="flex items-center gap-2.5">
           <span className="flex items-center gap-1.5 rounded-full bg-[#241418] px-3 py-1 text-xs font-semibold text-rose-300 border border-rose-500/30 shadow-clay-badge">
             <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
-            HIGHEST ACTIVE THREAT
+            HIGHEST RISK AREA
           </span>
 
           <span className="flex items-center gap-1 text-xs text-zinc-400">
             <MapPin className="h-3.5 w-3.5 text-zinc-500" />
-            <strong className="text-slate-200">{matchedCell.name}</strong> (Cell #{matchedCell.cellId})
+            <strong className="text-slate-200">{matchedCell.name}</strong>
           </span>
 
           <span className="hidden sm:inline-flex items-center gap-1 text-xs text-amber-300/90 font-mono">
             <Clock className="h-3.5 w-3.5 text-amber-400" />
-            ~2h Lead Window
+            ~2 Hours Warning Time
           </span>
         </div>
 
         <span className="rounded-full bg-[#241F12] px-2.5 py-0.5 text-[10px] font-semibold text-amber-300 border border-amber-500/30 shadow-clay-badge">
-          MODEL ADVISORY (NON-OFFICIAL)
+          AI FORECAST ESTIMATE • NON-OFFICIAL
         </span>
       </div>
 
@@ -111,10 +111,10 @@ export const PriorityRiskCard: React.FC = () => {
         {/* Left 8 Cols: Threat Text & Humanized Summary */}
         <div className="lg:col-span-8 space-y-2">
           <h2 className="text-lg sm:text-xl font-bold text-white font-sans tracking-tight">
-            {priorityAlert.headline}
+            High Risk of Flash Flooding
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            {priorityAlert.description}
+            Heavy rainfall and steep terrain could cause rapid flooding in the next 2–3 hours in {matchedCell.name}. Water may collect and move quickly through valleys.
           </p>
 
           {/* Dual-Factor Human Progress Bars */}
@@ -124,7 +124,7 @@ export const PriorityRiskCard: React.FC = () => {
               <div className="flex items-center justify-between text-xs mb-1.5">
                 <span className="flex items-center gap-1.5 font-medium text-indigo-300">
                   <Droplets className="h-3.5 w-3.5 text-indigo-400" />
-                  Atmospheric Rain Intensity
+                  Heavy Rainfall & Storms
                 </span>
                 <span className="font-mono font-bold text-indigo-300">{Math.round(pMeteo * 100)}%</span>
               </div>
@@ -135,7 +135,7 @@ export const PriorityRiskCard: React.FC = () => {
                 />
               </div>
               <p className="text-[11px] text-zinc-400 mt-1.5">
-                Extreme convective updrafts & cloud top cooling rates (-18.5 K/hr).
+                Very strong storm activity is currently detected in this area.
               </p>
             </div>
 
@@ -144,7 +144,7 @@ export const PriorityRiskCard: React.FC = () => {
               <div className="flex items-center justify-between text-xs mb-1.5">
                 <span className="flex items-center gap-1.5 font-medium text-amber-300">
                   <Mountain className="h-3.5 w-3.5 text-amber-400" />
-                  Catchment Slope Vulnerability
+                  Terrain & Slope Risk
                 </span>
                 <span className="font-mono font-bold text-amber-400">{Math.round(sTerrain * 100)}%</span>
               </div>
@@ -155,7 +155,7 @@ export const PriorityRiskCard: React.FC = () => {
                 />
               </div>
               <p className="text-[11px] text-zinc-400 mt-1.5">
-                Slope {matchedCell.terrain.slopeDeg.toFixed(1)}° accelerates runoff drainage toward valley floor.
+                The steep terrain ({matchedCell.terrain.slopeDeg.toFixed(1)}° slope) can make water move downhill very quickly.
               </p>
             </div>
           </div>
@@ -165,11 +165,11 @@ export const PriorityRiskCard: React.FC = () => {
         <div className="lg:col-span-4 flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#1D202B]/90 p-4 space-y-4 shadow-clay-btn">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-              Flash Flood Probability
+              Chance of Flash Flooding
             </span>
             <span className="flex items-center gap-1 text-[11px] text-rose-400 font-semibold">
               <Flame className="h-3.5 w-3.5 text-rose-500" />
-              Critical
+              Critical Risk
             </span>
           </div>
 
@@ -178,7 +178,7 @@ export const PriorityRiskCard: React.FC = () => {
           </div>
 
           <div className="text-[11px] text-zinc-400">
-            Status: <strong className="text-amber-300 font-mono">{priorityAlert.status || "UNDER_REVIEW"}</strong>
+            Alert Status: <strong className="text-amber-300 font-mono">{priorityAlert.status === "GENERATED" ? "New Alert" : priorityAlert.status === "UNDER_REVIEW" ? "Being Reviewed" : priorityAlert.status === "ACKNOWLEDGED" ? "Reviewed" : "Active"}</strong>
           </div>
 
           <div className="flex flex-col gap-2 pt-2 border-t border-white/[0.08]">
@@ -192,7 +192,7 @@ export const PriorityRiskCard: React.FC = () => {
                 setCurrentView("map");
               }}
             >
-              View on Weather Map
+              View on Map
             </Button>
 
             <div className="flex items-center gap-2">
@@ -211,8 +211,9 @@ export const PriorityRiskCard: React.FC = () => {
                 className="flex-1 justify-center border border-white/[0.08] hover:bg-[#252937]"
                 leftIcon={<Download className="h-3.5 w-3.5" />}
                 onClick={handleExportCap}
+                title="Download Common Alerting Protocol (CAP XML) file"
               >
-                CAP XML
+                Export Alert
               </Button>
             </div>
 
@@ -231,23 +232,26 @@ export const PriorityRiskCard: React.FC = () => {
           onClick={() => setShowPhysicsDetails(!showPhysicsDetails)}
           className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition font-medium"
         >
-          <span>{showPhysicsDetails ? "Hide Physical Formulations" : "Show Physical Formulations & Coordinates"}</span>
+          <span>{showPhysicsDetails ? "Hide Scientific Details" : "Why is this forecast showing high risk? (Scientific Details)"}</span>
           {showPhysicsDetails ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
         </button>
 
         {showPhysicsDetails && (
-          <div className="mt-3 rounded-2xl border border-white/[0.08] bg-[#0A0F1B]/95 p-4 text-xs text-slate-300 space-y-2 shadow-clay-inset animate-in fade-in duration-150">
+          <div className="mt-3 rounded-2xl border border-white/[0.08] bg-[#0A0F1B]/95 p-4 text-xs text-slate-300 space-y-2.5 shadow-clay-inset animate-in fade-in duration-150">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.08] pb-2">
               <span className="font-semibold text-slate-200">
-                Dual-Factor Risk Model Formulation
+                Scientific Details & Risk Formulation
               </span>
               <span className="font-mono text-[11px] text-slate-400">
-                Coords: [{matchedCell.coordinates[0].toFixed(3)}°E, {matchedCell.coordinates[1].toFixed(3)}°N] • Elevation: {matchedCell.terrain.elevationM}m MSL
+                Coords: [{matchedCell.coordinates[0].toFixed(3)}°E, {matchedCell.coordinates[1].toFixed(3)}°N] • Elevation: {matchedCell.terrain.elevationM}m
               </span>
             </div>
-            <p className="text-slate-400 leading-relaxed text-[11px]">
-              Flash flood risk combines dynamic atmospheric rainfall forcing (<code className="text-sky-300">P_meteo</code>) with static catchment terrain vulnerability (<code className="text-amber-300">S_terrain</code>). Steep orographic slopes accelerate runoff drainage into valley basins but do not independently trigger convective rainfall without convective available potential energy (CAPE) and negative vertical velocity (&omega;).
+            <p className="text-slate-300 leading-relaxed text-[11px]">
+              <strong>How this risk is calculated:</strong> The system combines real-time weather conditions (<code className="text-sky-300">P_meteo: {Math.round(pMeteo * 100)}%</code>) with terrain vulnerability (<code className="text-amber-300">S_terrain: {Math.round(sTerrain * 100)}%</code>). In this basin, steep slopes channel falling rain downhill into narrow river channels in under 45 minutes, dramatically magnifying the flood risk.
             </p>
+            <div className="text-[10px] text-zinc-500 font-mono">
+              Raw Alert Headline: {priorityAlert.headline}
+            </div>
           </div>
         )}
       </div>

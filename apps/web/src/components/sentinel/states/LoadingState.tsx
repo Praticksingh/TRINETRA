@@ -10,8 +10,8 @@ export interface LoadingStateProps {
 }
 
 export const LoadingState: React.FC<LoadingStateProps> = ({
-  label = "LOADING TELEMETRY DATA...",
-  description = "Synchronizing high-resolution atmospheric grids with PostGIS",
+  label = "Updating Weather Data...",
+  description = "Loading current atmospheric observations and terrain forecasts...",
   className = "",
 }) => {
   return (

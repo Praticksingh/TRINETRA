@@ -58,13 +58,13 @@ export const ProvenanceWorkspace: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 font-sans text-xs text-indigo-400 font-semibold uppercase tracking-wider">
             <Database className="h-4 w-4" />
-            <span>Data Sources & System Health</span>
+            <span>Weather Data & System Status</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-100 font-sans mt-1">
-            Data Ingestion, System Status & Audit Log
+            Weather Data & System Status
           </h1>
           <p className="text-xs text-slate-400 font-sans mt-0.5">
-            Live status of satellite feeds, weather models, processing speeds, and forecast run logs.
+            See where the forecast data comes from and whether the system is working normally.
           </p>
         </div>
 
@@ -76,7 +76,7 @@ export const ProvenanceWorkspace: React.FC = () => {
             leftIcon={<RefreshCw className={`h-3.5 w-3.5 ${isTriggering ? "animate-spin" : ""}`} />}
             onClick={handleManualTrigger}
           >
-            Run Forecast Cycle
+            Update Forecast
           </Button>
         </div>
       </div>
@@ -95,43 +95,43 @@ export const ProvenanceWorkspace: React.FC = () => {
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3 text-center font-sans">
         <Card variant="base">
           <CardContent className="p-3">
-            <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Satellite Ingest</div>
-            <div className="text-sm font-semibold font-mono text-emerald-400 mt-1">12 min lag</div>
-            <span className="text-[10px] text-slate-400">INSAT-3D Normal</span>
+            <div className="text-[10px] text-slate-400 font-medium">Satellite data</div>
+            <div className="text-sm font-semibold font-mono text-emerald-400 mt-1">12 min old</div>
+            <span className="text-[10px] text-slate-500">INSAT-3D / 3DR</span>
           </CardContent>
         </Card>
 
         <Card variant="base">
           <CardContent className="p-3">
-            <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Weather Model</div>
-            <div className="text-sm font-semibold font-mono text-slate-200 mt-1">45 min lag</div>
-            <span className="text-[10px] text-slate-400">NCMRWF Regional</span>
+            <div className="text-[10px] text-slate-400 font-medium">Weather model data</div>
+            <div className="text-sm font-semibold font-mono text-slate-200 mt-1">45 min old</div>
+            <span className="text-[10px] text-slate-500">Regional NWP</span>
           </CardContent>
         </Card>
 
         <Card variant="base" borderAccent="cyan">
           <CardContent className="p-3">
-            <div className="text-[10px] text-indigo-300 uppercase tracking-wider font-semibold">Processing Speed</div>
+            <div className="text-[10px] text-indigo-300 font-medium">Forecast speed</div>
             <div className="text-sm font-semibold font-mono text-indigo-200 mt-1">
               {isBaselineActive ? "120 ms" : "3.7 ms"}
             </div>
-            <span className="text-[10px] text-emerald-400 font-medium">GPU Accelerated</span>
+            <span className="text-[10px] text-emerald-400 font-medium">Near-instant</span>
           </CardContent>
         </Card>
 
         <Card variant="base">
           <CardContent className="p-3">
-            <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Active Job</div>
+            <div className="text-[10px] text-slate-400 font-medium">Active run ID</div>
             <div className="text-sm font-semibold font-mono text-slate-200 mt-1 truncate">{activeJobId}</div>
-            <span className="text-[10px] text-slate-400">PostGIS Partition</span>
+            <span className="text-[10px] text-slate-500">Validated</span>
           </CardContent>
         </Card>
 
         <Card variant="base">
           <CardContent className="p-3">
-            <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Last Generation</div>
+            <div className="text-[10px] text-slate-400 font-medium">Last cycle</div>
             <div className="text-sm font-semibold font-mono text-slate-200 mt-1 truncate">{lastGenTime}</div>
-            <span className="text-[10px] text-slate-400">UTC Synchronized</span>
+            <span className="text-[10px] text-slate-500">UTC time</span>
           </CardContent>
         </Card>
       </div>

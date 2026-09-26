@@ -13,9 +13,9 @@ export interface ErrorStateProps {
 }
 
 export const ErrorState: React.FC<ErrorStateProps> = ({
-  title = "DATA TRANSMISSION OR INFERENCE ERROR",
-  errorMessage = "Unable to complete nowcasting cycle. Upstream satellite telemetry channel timed out.",
-  errorCode = "ERR_UPSTREAM_TIMEOUT_504",
+  title = "We Couldn't Load This Weather Data",
+  errorMessage = "The weather data service took longer than expected to respond. Please check your connection and try again.",
+  errorCode = "ERR_DATA_TIMEOUT",
   onRetry,
   className = "",
 }) => {
@@ -35,7 +35,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
         {errorMessage}
       </p>
       <span className="mt-2 text-[10px] text-slate-400 font-mono">
-        CODE: <strong className="text-rose-400">{errorCode}</strong>
+        Reference code: <strong className="text-rose-400">{errorCode}</strong>
       </span>
       {onRetry && (
         <div className="mt-4">
@@ -45,7 +45,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
             leftIcon={<RefreshCw className="h-3.5 w-3.5" />}
             onClick={onRetry}
           >
-            Retry Connection
+            Try Again
           </Button>
         </div>
       )}

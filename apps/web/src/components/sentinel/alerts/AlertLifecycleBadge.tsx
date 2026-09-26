@@ -22,28 +22,28 @@ export const AlertLifecycleBadge: React.FC<AlertLifecycleBadgeProps> = ({
     { label: string; bg: string; text: string; border: string; icon: React.ElementType }
   > = {
     GENERATED: {
-      label: "GENERATED",
+      label: "NEW ALERT",
       bg: "bg-[#1C1F30]",
       text: "text-indigo-300",
       border: "border-indigo-500/40",
       icon: Sparkles,
     },
     UNDER_REVIEW: {
-      label: "UNDER REVIEW",
+      label: "BEING REVIEWED",
       bg: "bg-[#241F12]",
       text: "text-amber-300",
       border: "border-amber-500/40",
       icon: Eye,
     },
     DISPATCHED: {
-      label: "DISPATCHED",
+      label: "SENT TO AUTHORITIES",
       bg: "bg-[#251429]",
       text: "text-fuchsia-300",
       border: "border-fuchsia-500/40",
       icon: Send,
     },
     ACKNOWLEDGED: {
-      label: "ACKNOWLEDGED",
+      label: "REVIEWED",
       bg: "bg-[#11221A]",
       text: "text-emerald-300",
       border: "border-emerald-500/40",
@@ -57,10 +57,10 @@ export const AlertLifecycleBadge: React.FC<AlertLifecycleBadgeProps> = ({
       icon: Archive,
     },
     REVOKED: {
-      label: "REVOKED",
+      label: "CANCELLED",
       bg: "bg-[#241418]",
       text: "text-rose-400",
-      border: "border-rose-500/40",
+      border: "border-rose-500/30",
       icon: XCircle,
     },
   };

@@ -23,43 +23,43 @@ export default function RiskLayers({
   const layerOptions = [
     {
       key: "thunderstorm" as keyof ActiveLayers,
-      label: "Thunderstorm Probability",
+      label: "Thunderstorm Risk",
       icon: CloudLightning,
       color: "text-amber-400",
       activeBg: "bg-amber-950/40 border-amber-800/60",
-      description: "Severe convection & lightning risk",
+      description: "Storm activity & lightning risk",
     },
     {
       key: "cloudburst" as keyof ActiveLayers,
-      label: "Cloudburst Potential",
+      label: "Heavy Rain Risk",
       icon: CloudRain,
       color: "text-orange-400",
       activeBg: "bg-orange-950/40 border-orange-800/60",
-      description: "Extreme localized intensity (≥100mm/h)",
+      description: "Extremely heavy downpours (≥100mm/h)",
     },
     {
       key: "flashFlood" as keyof ActiveLayers,
-      label: "Flash Flood Risk Surface",
+      label: "Flash Flood Risk",
       icon: Waves,
       color: "text-rose-400",
       activeBg: "bg-rose-950/40 border-rose-800/60",
-      description: "Atmospheric rain + runoff inundation",
+      description: "Water runoff & flooding in valleys",
     },
     {
       key: "terrainSusceptibility" as keyof ActiveLayers,
-      label: "Terrain Vulnerability (DEM)",
+      label: "Terrain Vulnerability",
       icon: Mountain,
       color: "text-cyan-400",
       activeBg: "bg-cyan-950/40 border-cyan-800/60",
-      description: "Slope steepness & Topographic Wetness Index",
+      description: "Steep slopes and water collection areas",
     },
     {
       key: "radarReflectivity" as keyof ActiveLayers,
-      label: "Doppler Radar Overlay",
+      label: "Weather Radar",
       icon: Radio,
       color: "text-purple-400",
       activeBg: "bg-purple-950/40 border-purple-800/60",
-      description: "Composite DWR Reflectivity (dBZ)",
+      description: "Radar reflectivity showing rain cores",
     },
   ];
 
@@ -67,7 +67,7 @@ export default function RiskLayers({
     <div className={`rounded-lg border border-slate-800 bg-[#0c1220]/90 p-3 shadow-lg backdrop-blur ${className}`}>
       <div className="flex items-center gap-2 border-b border-slate-800/80 pb-2 mb-2.5 text-xs font-mono font-semibold uppercase tracking-wider text-slate-300">
         <Layers className="h-3.5 w-3.5 text-cyan-400" />
-        GIS Hazard Overlays
+        Map Weather Layers
       </div>
 
       <div className="space-y-1.5">

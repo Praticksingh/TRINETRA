@@ -40,7 +40,7 @@ export default function DataFreshness({
             )}
           </span>
           <span className="text-slate-200 font-medium text-xs">
-            {!hasStaleFeeds ? "Systems Normal" : "Data Delayed"}
+            {!hasStaleFeeds ? "All systems working normally" : "Data Delayed"}
           </span>
         </div>
 
@@ -57,13 +57,13 @@ export default function DataFreshness({
         {/* Satellite Freshness */}
         <div className="flex items-center gap-1.5 text-slate-400">
           <Wifi className="h-3.5 w-3.5 text-sky-400" />
-          <span>Satellite (INSAT):</span>
+          <span>Satellite data:</span>
           <span
             className={
               isSatelliteStale ? "text-amber-400 font-medium" : "text-slate-200 font-mono text-[11px]"
             }
           >
-            {satelliteAgeMinutes} min ago
+            {satelliteAgeMinutes} min old
           </span>
         </div>
 
@@ -72,13 +72,13 @@ export default function DataFreshness({
         {/* NWP Reanalysis Freshness */}
         <div className="flex items-center gap-1.5 text-slate-400">
           <Activity className="h-3.5 w-3.5 text-indigo-400" />
-          <span>Weather Model (NWP):</span>
+          <span>Weather forecast data:</span>
           <span
             className={
               isNwpStale ? "text-amber-400 font-medium" : "text-slate-200 font-mono text-[11px]"
             }
           >
-            {nwpAgeMinutes} min ago
+            {nwpAgeMinutes} min old
           </span>
         </div>
 
@@ -87,7 +87,7 @@ export default function DataFreshness({
         {/* Pipeline Latency */}
         <div className="flex items-center gap-1.5 text-slate-400">
           <Clock className="h-3.5 w-3.5 text-emerald-400" />
-          <span>Processing:</span>
+          <span>Forecast speed:</span>
           <span className="text-emerald-300 font-mono text-[11px] font-semibold">{inferenceLatencyMs} ms</span>
         </div>
       </div>
@@ -96,7 +96,7 @@ export default function DataFreshness({
       <div className="hidden xl:flex items-center gap-2.5 text-slate-400 text-[11px] shrink-0">
         <div className="flex items-center gap-1">
           <Cpu className="h-3 w-3 text-sky-400" />
-          <span>Job: <span className="text-slate-300 font-mono font-medium">{jobId.slice(0, 16)}</span></span>
+          <span>Run: <span className="text-slate-300 font-mono font-medium">{jobId.slice(0, 16)}</span></span>
         </div>
         <span className="text-slate-700">|</span>
         <span>
@@ -104,11 +104,11 @@ export default function DataFreshness({
         </span>
         <span className="text-slate-700">|</span>
         <span>
-          Observed: <span className="text-slate-300 font-mono">{lastObservationUtc}</span>
+          Data: <span className="text-slate-300 font-mono">{lastObservationUtc}</span>
         </span>
         <span className="text-slate-700">|</span>
         <span>
-          Generated: <span className="text-slate-200 font-mono">{lastInferenceUtc}</span>
+          Forecast: <span className="text-slate-200 font-mono">{lastInferenceUtc}</span>
         </span>
       </div>
     </div>

@@ -26,28 +26,28 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    // 3D Molded Claymorphism variant styling
+    // Clean, professional weather-platform button variants
     const variantClasses = {
       primary:
-        "bg-[#4F46E5] text-white font-semibold shadow-clay-btn-primary hover:bg-[#4338CA] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-clay-btn-pressed border border-indigo-400/40",
+        "bg-indigo-600 text-white font-medium shadow-sm hover:bg-indigo-500 active:bg-indigo-700 border border-indigo-400/40",
       secondary:
-        "bg-[#1D202B] text-slate-200 hover:text-white hover:bg-[#252937] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-clay-btn-pressed shadow-clay-btn border border-white/[0.08]",
+        "bg-[#181C28] text-slate-200 hover:text-white hover:bg-[#222838] active:bg-[#141822] shadow-sm border border-[#2B3142]",
       ghost:
-        "bg-transparent text-slate-300 hover:text-indigo-300 hover:bg-white/[0.05] border border-transparent active:translate-y-0.5",
+        "bg-transparent text-slate-300 hover:text-white hover:bg-white/[0.06] border border-transparent",
       danger:
-        "bg-[#BE123C] text-white font-semibold hover:bg-[#9F1239] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-clay-btn-pressed shadow-clay-btn-danger border border-rose-400/40",
+        "bg-rose-700 text-white font-medium hover:bg-rose-600 active:bg-rose-800 shadow-sm border border-rose-500/40",
       outline:
-        "bg-transparent text-indigo-400 border border-indigo-500/40 hover:bg-indigo-950/40 hover:border-indigo-400 shadow-sm active:translate-y-0.5",
+        "bg-transparent text-indigo-400 border border-indigo-500/40 hover:bg-indigo-950/30 hover:border-indigo-400/80 shadow-sm",
       active:
-        "bg-[#1C1F30] text-indigo-300 border border-indigo-500/60 shadow-clay-btn-pressed font-semibold",
+        "bg-indigo-950/60 text-indigo-300 border border-indigo-500/50 font-medium shadow-sm",
     };
 
-    // Pillowy Clay Size styling
+    // Accessible touch target sizing
     const sizeClasses = {
-      xs: "h-6 px-2.5 text-[10px] gap-1 rounded-lg font-sans",
-      sm: "h-7.5 px-3 text-xs gap-1.5 rounded-xl font-sans",
-      md: "h-9 px-4 text-xs gap-2 rounded-xl font-sans font-medium",
-      lg: "h-11 px-5 text-sm gap-2.5 rounded-2xl font-sans font-medium",
+      xs: "min-h-[28px] h-7 px-2.5 text-[11px] gap-1 rounded-md font-sans",
+      sm: "min-h-[32px] sm:min-h-[34px] h-8 px-3 text-xs gap-1.5 rounded-lg font-sans",
+      md: "min-h-[38px] sm:min-h-[40px] h-9 sm:h-10 px-3.5 sm:px-4 text-xs sm:text-sm gap-2 rounded-lg font-sans font-medium",
+      lg: "min-h-[44px] h-11 px-5 text-sm gap-2.5 rounded-lg font-sans font-medium",
     };
 
     const isDisabled = disabled || isLoading;

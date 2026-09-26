@@ -43,7 +43,7 @@ export const AuditTrailCard: React.FC = () => {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
-            <CardTitle className="font-sans text-sm font-semibold">Inference Cryptographic Audit Trail</CardTitle>
+            <CardTitle className="font-sans text-sm font-semibold">Forecast Record & History</CardTitle>
           </div>
           <Button
             variant="secondary"
@@ -51,7 +51,7 @@ export const AuditTrailCard: React.FC = () => {
             leftIcon={<Download className="h-3 w-3 text-indigo-400" />}
             onClick={handleExportProvenanceManifest}
           >
-            Export Manifest (JSON)
+            Export Forecast Record (JSON)
           </Button>
         </div>
       </CardHeader>

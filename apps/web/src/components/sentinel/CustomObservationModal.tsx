@@ -103,7 +103,7 @@ export const CustomObservationModal: React.FC = () => {
 
   const handleRunInference = async () => {
     setIsProcessing(true);
-    setStatusMsg("Executing Spatiotemporal Conv3D Ingestion & Inference...");
+    setStatusMsg("Running AI forecast with custom weather data...");
     try {
       const parsed = JSON.parse(jsonText);
       const res = await fetch("/api/py/orchestration/trigger", {
@@ -117,16 +117,16 @@ export const CustomObservationModal: React.FC = () => {
       });
       if (res.ok) {
         await triggerNowcastCycle();
-        setStatusMsg("Inference completed! Live map polygons and threat metrics updated.");
+        setStatusMsg("Forecast completed! Live map and risk metrics have been updated.");
         setTimeout(() => {
           closeCustomObservation();
           setStatusMsg(null);
         }, 1200);
       } else {
-        setStatusMsg("API Error: Verify JSON payload format.");
+        setStatusMsg("Could not update forecast. Please verify the JSON data format.");
       }
     } catch (err: any) {
-      setStatusMsg(`JSON Parse Error: ${err.message}`);
+      setStatusMsg(`Data format error: ${err.message}`);
     } finally {
       setIsProcessing(false);
     }
@@ -143,10 +143,10 @@ export const CustomObservationModal: React.FC = () => {
             </div>
             <div>
               <h2 className="text-sm font-bold text-slate-100">
-                Custom Observation Feeds & Tensor Ingestion
+                Upload Custom Weather Data
               </h2>
               <p className="text-[11px] text-slate-400">
-                Feed multi-spectral satellite radiances & atmospheric vectors into Conv3D model
+                Provide custom satellite, atmospheric, and terrain data to test model predictions
               </p>
             </div>
           </div>
@@ -163,7 +163,7 @@ export const CustomObservationModal: React.FC = () => {
           <div className="flex items-center justify-between text-[11px] font-sans">
             <div className="flex items-center gap-2">
               <Badge variant="cyan" size="sm">
-                10 Channels: TIR1, WV, CTT Drop, CAPE, CIN, IWV, Omega, Elevation, Slope, TWI
+                10 Weather Variables: Satellite IR, Water Vapor, Storm Energy, Terrain Slope
               </Badge>
             </div>
             <button
@@ -171,7 +171,7 @@ export const CustomObservationModal: React.FC = () => {
               className="text-indigo-300 hover:text-indigo-200 transition flex items-center gap-1 text-xs px-2.5 py-1 rounded-xl bg-[#1D202B] border border-white/[0.06] shadow-clay-btn active:translate-y-0.5"
             >
               <RefreshCw className="h-3 w-3" />
-              Reset Default Event
+              Reset Sample Data
             </button>
           </div>
 
@@ -193,7 +193,7 @@ export const CustomObservationModal: React.FC = () => {
         {/* Footer */}
         <div className="flex items-center justify-between border-t border-white/[0.08] px-5 py-3.5 bg-[#111217]">
           <span className="text-[11px] text-slate-400 font-sans">
-            Enforces 0.04° EPSG:4326 Normalization & SHA-256 Provenance Hashing
+            Data is aligned with local terrain coordinates and logged in the forecast record
           </span>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={closeCustomObservation}>
@@ -207,7 +207,7 @@ export const CustomObservationModal: React.FC = () => {
               className="flex items-center gap-1.5"
             >
               <Play className={`h-3.5 w-3.5 ${isProcessing ? "animate-spin" : ""}`} />
-              <span>{isProcessing ? "Predicting..." : "Execute AI Nowcast"}</span>
+              <span>{isProcessing ? "Calculating..." : "Run AI Forecast"}</span>
             </Button>
           </div>
         </div>

@@ -39,29 +39,29 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
     {
       title: "Workspace Navigation",
       items: [
-        { keys: ["1"], description: "Switch to Operational Overview" },
+        { keys: ["1"], description: "Switch to Weather Overview" },
         { keys: ["2"], description: "Switch to Weather Map" },
-        { keys: ["3"], description: "Switch to Forecast Timeline" },
-        { keys: ["4"], description: "Switch to Alerts Center" },
-        { keys: ["5"], description: "Switch to AI Analysis" },
-        { keys: ["6"], description: "Switch to Data Sources" },
-        { keys: ["7"], description: "Switch to Earth View (3D Globe)" },
+        { keys: ["3"], description: "Switch to Weather Forecast" },
+        { keys: ["4"], description: "Switch to Weather Alerts" },
+        { keys: ["5"], description: "Switch to Forecast Insights" },
+        { keys: ["6"], description: "Switch to Weather Data" },
+        { keys: ["7"], description: "Switch to Earth View" },
         { keys: ["["], description: "Expand / Collapse Navigation Sidebar" },
       ],
     },
     {
       title: "Command & Search",
       items: [
-        { keys: ["⌘", "K"], description: "Open Command Palette & Station Search" },
+        { keys: ["⌘", "K"], description: "Open Command Palette & Location Search" },
         { keys: ["Ctrl", "K"], description: "Open Command Palette (Windows / Linux)" },
         { keys: ["?"], description: "Open this Keyboard Shortcuts sheet" },
         { keys: ["Esc"], description: "Close active drawer, modal, or selection" },
       ],
     },
     {
-      title: "Operations & Accessibility",
+      title: "Forecast & Navigation",
       items: [
-        { keys: ["R"], description: "Run Automated Forecast Cycle" },
+        { keys: ["R"], description: "Update Weather Forecast" },
         { keys: ["Tab"], description: "Navigate forward through interactive controls" },
         { keys: ["Shift", "Tab"], description: "Navigate backward through interactive controls" },
         { keys: ["Enter"], description: "Activate selected control or confirmation" },
@@ -149,7 +149,7 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
         <div className="border-t border-[#1E2E48] bg-[#0B1322] px-5 py-2.5 flex items-center justify-between text-[11px] text-slate-400">
           <span className="flex items-center gap-1.5">
             <Sparkles className="h-3 w-3 text-sky-400" />
-            <span>WCAG 2.1 AA Compliant Keyboard Navigation</span>
+            <span>Accessible keyboard navigation supported</span>
           </span>
 
           <button

@@ -22,10 +22,10 @@ export const OfflineState: React.FC<OfflineStateProps> = ({
         <WifiOff className="h-6 w-6" />
       </div>
       <h3 className="text-sm font-bold text-amber-300 uppercase tracking-wider font-sans">
-        NETWORK OFFLINE — LOCAL CACHED TELEMETRY ACTIVE
+        You Are Currently Offline
       </h3>
       <p className="mt-1 text-xs text-slate-300 max-w-md leading-relaxed font-sans">
-        Connection to Supabase PostGIS realtime websockets has been interrupted. Operating in local memory fallback mode.
+        Showing previously saved weather data. New forecasts will update automatically once your internet connection is restored.
       </p>
       {onReconnect && (
         <div className="mt-4">
@@ -35,7 +35,7 @@ export const OfflineState: React.FC<OfflineStateProps> = ({
             leftIcon={<RefreshCw className="h-3.5 w-3.5" />}
             onClick={onReconnect}
           >
-            Attempt Reconnection
+            Try Reconnecting
           </Button>
         </div>
       )}

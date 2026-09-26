@@ -4,45 +4,43 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Leaflet dark claymorphism theme overrides */
+/* Leaflet minimalist dark weather theme overrides */
 .leaflet-container {
-  background: #0b0c10 !important;
+  background: #090B10 !important;
   outline: none;
   font-family: inherit;
 }
 .leaflet-popup-content-wrapper {
-  background: #161820 !important;
+  background: #141722 !important;
   color: #f8fafc !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 18px !important;
-  box-shadow: 0 20px 40px -6px rgba(0, 0, 0, 0.75), inset 2px 2px 4px rgba(255, 255, 255, 0.14), inset -3px -3px 6px rgba(0, 0, 0, 0.65) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
 }
 .leaflet-popup-tip {
-  background: #161820 !important;
+  background: #141722 !important;
 }
 .leaflet-control-zoom a {
-  background: #1d202b !important;
+  background: #161924 !important;
   color: #a1a1aa !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 6px 14px -2px rgba(0, 0, 0, 0.5), inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.18), inset -2px -2px 4px rgba(0, 0, 0, 0.5) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
   margin-bottom: 4px !important;
   transition: all 0.15s ease !important;
 }
 .leaflet-control-zoom a:hover {
-  background: #252937 !important;
-  color: #818cf8 !important;
-  transform: translateY(-1px) !important;
+  background: #202434 !important;
+  color: #e2e8f0 !important;
 }
 .leaflet-control-zoom a:active {
-  transform: translateY(1px) !important;
-  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.7) !important;
+  background: #12141d !important;
 }
 .leaflet-control-attribution {
-  background: rgba(11, 12, 16, 0.88) !important;
+  background: rgba(9, 11, 16, 0.85) !important;
   color: #71717a !important;
   font-size: 9px !important;
-  border-radius: 8px !important;
+  border-radius: 6px !important;
 }
 .leaflet-control-attribution a {
   color: #818cf8 !important;

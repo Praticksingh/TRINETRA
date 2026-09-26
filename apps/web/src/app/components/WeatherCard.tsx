@@ -35,11 +35,11 @@ export default function WeatherCard({
         <div>
           <div className="flex items-center gap-2">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-200">
-              Atmospheric Sounding & Telemetry
+              Atmospheric Soundings & Storm Energy
             </h4>
             {isSynthetic && (
-              <span className="rounded bg-amber-950/60 px-1.5 py-0.2 text-[9px] font-mono text-amber-400 border border-amber-800/40">
-                SYNTHETIC REPLAY
+              <span className="rounded bg-purple-950/60 px-1.5 py-0.2 text-[9px] font-mono text-purple-300 border border-purple-800/40">
+                HISTORICAL SCENARIO
               </span>
             )}
           </div>
@@ -55,9 +55,9 @@ export default function WeatherCard({
         {/* CAPE Metric */}
         <div className="rounded border border-slate-800/80 bg-slate-900/50 p-2.5">
           <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-            <span className="flex items-center gap-1 font-mono">
+            <span className="flex items-center gap-1 font-sans text-slate-300 font-medium">
               <Wind className="h-3 w-3 text-cyan-400" />
-              CAPE
+              Storm Energy
             </span>
             {isSevereCape ? (
               <span className="text-[9px] text-rose-400 font-mono flex items-center">
@@ -71,51 +71,51 @@ export default function WeatherCard({
             {metrics.cape.toLocaleString()}{" "}
             <span className="text-[11px] font-normal text-slate-400">J/kg</span>
           </div>
-          <div className="text-[10px] text-slate-400 mt-1">Convective Available Energy</div>
+          <div className="text-[10px] text-slate-400 mt-1 font-sans">CAPE • Energy available for storms</div>
         </div>
 
         {/* CIN Metric */}
         <div className="rounded border border-slate-800/80 bg-slate-900/50 p-2.5">
           <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-            <span className="flex items-center gap-1 font-mono">
+            <span className="flex items-center gap-1 font-sans text-slate-300 font-medium">
               <Thermometer className="h-3 w-3 text-amber-400" />
-              CIN
+              Storm Cap
             </span>
-            <span className="text-[9px] text-slate-400 font-mono">CAP</span>
+            <span className="text-[9px] text-slate-400 font-mono">CIN</span>
           </div>
           <div className="text-lg font-bold font-mono text-slate-100">
             {metrics.cin}{" "}
             <span className="text-[11px] font-normal text-slate-400">J/kg</span>
           </div>
-          <div className="text-[10px] text-slate-400 mt-1">Convective Inhibition</div>
+          <div className="text-[10px] text-slate-400 mt-1 font-sans">CIN • Atmospheric resistance</div>
         </div>
 
         {/* TPW Metric */}
         <div className="rounded border border-slate-800/80 bg-slate-900/50 p-2.5">
           <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-            <span className="flex items-center gap-1 font-mono">
+            <span className="flex items-center gap-1 font-sans text-slate-300 font-medium">
               <Droplets className="h-3 w-3 text-blue-400" />
-              TPW
+              Air Moisture
             </span>
-            <span className="text-[9px] text-cyan-400 font-mono">MOISTURE</span>
+            <span className="text-[9px] text-cyan-400 font-mono">TPW</span>
           </div>
           <div className="text-lg font-bold font-mono text-slate-100">
             {metrics.tpw.toFixed(1)}{" "}
             <span className="text-[11px] font-normal text-slate-400">mm</span>
           </div>
-          <div className="text-[10px] text-slate-400 mt-1">Total Precipitable Water</div>
+          <div className="text-[10px] text-slate-400 mt-1 font-sans">Total precipitable water</div>
         </div>
 
         {/* Cloud-Top Cooling Rate */}
         <div className="rounded border border-slate-800/80 bg-slate-900/50 p-2.5">
           <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-            <span className="flex items-center gap-1 font-mono">
+            <span className="flex items-center gap-1 font-sans text-slate-300 font-medium">
               <CloudRain className="h-3 w-3 text-purple-400" />
-              TIR1 COOLING
+              Cloud Growth
             </span>
             {isRapidCooling && (
               <span className="text-[9px] text-rose-400 font-mono flex items-center">
-                <ArrowDownRight className="h-2.5 w-2.5" /> DEEP
+                <ArrowDownRight className="h-2.5 w-2.5" /> RAPID
               </span>
             )}
           </div>
@@ -123,37 +123,37 @@ export default function WeatherCard({
             {metrics.tir1_cooling_rate.toFixed(1)}{" "}
             <span className="text-[11px] font-normal text-slate-400">K/hr</span>
           </div>
-          <div className="text-[10px] text-slate-400 mt-1">Cloud-top Convective Growth</div>
+          <div className="text-[10px] text-slate-400 mt-1 font-sans">Satellite cloud-top cooling</div>
         </div>
 
         {/* Radar Reflectivity */}
         <div className="rounded border border-slate-800/80 bg-slate-900/50 p-2.5">
           <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-            <span className="flex items-center gap-1 font-mono">
+            <span className="flex items-center gap-1 font-sans text-slate-300 font-medium">
               <Radio className="h-3 w-3 text-rose-400" />
-              DWR RADAR
+              Radar Rain Core
             </span>
             {isHighReflectivity && (
-              <span className="text-[9px] text-rose-400 font-mono">INTENSE</span>
+              <span className="text-[9px] text-rose-400 font-mono">HEAVY</span>
             )}
           </div>
           <div className="text-lg font-bold font-mono text-slate-100">
             {metrics.radar_reflectivity_dbz}{" "}
             <span className="text-[11px] font-normal text-slate-400">dBZ</span>
           </div>
-          <div className="text-[10px] text-slate-400 mt-1">Composite Core Reflectivity</div>
+          <div className="text-[10px] text-slate-400 mt-1 font-sans">Radar storm reflectivity</div>
         </div>
 
         {/* Surface Conditions */}
         <div className="rounded border border-slate-800/80 bg-slate-900/50 p-2.5">
           <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-            <span className="font-mono text-slate-300">SURFACE MET</span>
+            <span className="font-sans text-slate-300 font-medium">Ground Weather</span>
             <span className="text-[9px] font-mono text-slate-400">RH {metrics.rh_percent}%</span>
           </div>
           <div className="text-lg font-bold font-mono text-slate-100">
             {metrics.surface_temp_c.toFixed(1)}°C
           </div>
-          <div className="text-[10px] text-slate-400 mt-1">Temp / Dewpoint Spread</div>
+          <div className="text-[10px] text-slate-400 mt-1 font-sans">Temperature & humidity</div>
         </div>
       </div>
     </div>

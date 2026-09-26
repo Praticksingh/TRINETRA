@@ -66,9 +66,9 @@ export const GRID_CELLS: SelectedCellData[] = [
     probabilities: { thunderstorm: 0.88, cloudburst: 0.82, flashFlood: 0.94 },
     terrain: { slopeDeg: 46.2, elevationM: 3583, twi: 14.8, catchmentVuln: 0.96 },
     xaiAttribution: [
-      { feature: "cloudburst", label: "Extreme Convective Updraft", contribution: 0.45, observedValue: 120, unit: "mm/h" },
-      { feature: "slope", label: "Severe Cirque Slope", contribution: 0.31, observedValue: 46.2, unit: "°" },
-      { feature: "cooling", label: "Rapid Ice Core Ascent", contribution: 0.24, observedValue: -21.4, unit: "K/hr" },
+      { feature: "cloudburst", label: "Heavy Storm Activity", contribution: 0.45, observedValue: 120, unit: "mm/h" },
+      { feature: "slope", label: "Very Steep Mountain Slope", contribution: 0.31, observedValue: 46.2, unit: "°" },
+      { feature: "cooling", label: "Rapid Cloud Cooling Rate", contribution: 0.24, observedValue: -21.4, unit: "K/hr" },
     ],
   },
   {
@@ -81,8 +81,8 @@ export const GRID_CELLS: SelectedCellData[] = [
     probabilities: { thunderstorm: 0.58, cloudburst: 0.39, flashFlood: 0.62 },
     terrain: { slopeDeg: 34.0, elevationM: 1158, twi: 10.2, catchmentVuln: 0.74 },
     xaiAttribution: [
-      { feature: "cape", label: "Orographic Lift & CAPE", contribution: 0.39, observedValue: 2400, unit: "J/kg" },
-      { feature: "radar", label: "Upstream Reflectivity", contribution: 0.35, observedValue: 44, unit: "dBZ" },
+      { feature: "cape", label: "Mountain Uplift & Storm Energy", contribution: 0.39, observedValue: 2400, unit: "J/kg" },
+      { feature: "radar", label: "Incoming Radar Rain Intensity", contribution: 0.35, observedValue: 44, unit: "dBZ" },
     ],
   },
   {
@@ -95,9 +95,9 @@ export const GRID_CELLS: SelectedCellData[] = [
     probabilities: { thunderstorm: 0.74, cloudburst: 0.68, flashFlood: 0.86 },
     terrain: { slopeDeg: 41.5, elevationM: 1890, twi: 11.7, catchmentVuln: 0.89 },
     xaiAttribution: [
-      { feature: "slope", label: "Gorge Channeling & Slope", contribution: 0.40, observedValue: 41.5, unit: "°" },
-      { feature: "cooling", label: "TIR1 Cloud Deepening", contribution: 0.32, observedValue: -17.8, unit: "K/hr" },
-      { feature: "tpw", label: "Precipitable Water", contribution: 0.28, observedValue: 56.4, unit: "mm" },
+      { feature: "slope", label: "Valley Channeling & Steep Slope", contribution: 0.40, observedValue: 41.5, unit: "°" },
+      { feature: "cooling", label: "Rapid Storm Cloud Growth", contribution: 0.32, observedValue: -17.8, unit: "K/hr" },
+      { feature: "tpw", label: "Atmospheric Moisture Content", contribution: 0.28, observedValue: 56.4, unit: "mm" },
     ],
   },
   {
@@ -110,8 +110,8 @@ export const GRID_CELLS: SelectedCellData[] = [
     probabilities: { thunderstorm: 0.38, cloudburst: 0.12, flashFlood: 0.25 },
     terrain: { slopeDeg: 4.2, elevationM: 250, twi: 6.8, catchmentVuln: 0.38 },
     xaiAttribution: [
-      { feature: "cape", label: "Surface Inflow CAPE", contribution: 0.52, observedValue: 2100, unit: "J/kg" },
-      { feature: "cin", label: "Strong Boundary Inversion", contribution: -0.30, observedValue: -48, unit: "J/kg" },
+      { feature: "cape", label: "Surface Air Storm Energy", contribution: 0.52, observedValue: 2100, unit: "J/kg" },
+      { feature: "cin", label: "Atmospheric Storm Resistance", contribution: -0.30, observedValue: -48, unit: "J/kg" },
     ],
   },
 ];
@@ -386,24 +386,24 @@ export default function ForecastMap({
           <div class="p-1.5 font-sans text-xs min-w-[200px]">
             <div class="flex items-center justify-between gap-3 border-b border-slate-700/80 pb-1.5 mb-1.5 font-semibold">
               <span class="text-slate-100">${cell.name}</span>
-              <span class="uppercase text-[10px] px-1.5 py-0.5 rounded font-bold" style="background:${bgHex}; color:#fff;">${cell.severity} ${shapeSymbol}</span>
+              <span class="uppercase text-[10px] px-1.5 py-0.5 rounded font-bold" style="background:${bgHex}; color:#fff;">${cell.severity === "advisory" ? "WATCH" : cell.severity.toUpperCase() + " RISK"} ${shapeSymbol}</span>
             </div>
             <div class="space-y-1.5 text-slate-300">
               <div class="flex justify-between">
-                <span class="text-slate-400">Surge Risk (R_surge):</span>
+                <span class="text-slate-400">Flash Flood Risk:</span>
                 <span class="font-bold text-rose-400">${Math.round(cell.probabilities.flashFlood * 100)}%</span>
               </div>
               <div class="flex justify-between text-[11px]">
-                <span class="text-sky-400">Atmospheric Severity (P_meteo):</span>
+                <span class="text-sky-400">Rain & Storm Risk:</span>
                 <span class="font-semibold text-slate-200">${Math.round((cell.probabilities.cloudburst * 0.75 + cell.probabilities.thunderstorm * 0.25) * 100)}%</span>
               </div>
               <div class="flex justify-between text-[11px]">
-                <span class="text-amber-400">Terrain Incline & Height:</span>
+                <span class="text-amber-400">Terrain Slope & Elevation:</span>
                 <span class="font-semibold text-slate-200">${cell.terrain.slopeDeg}° / ${cell.terrain.elevationM}m</span>
               </div>
             </div>
             <div class="mt-2 text-[10px] text-sky-400/90 border-t border-slate-800/80 pt-1 flex items-center justify-between">
-              <span>Click to inspect details</span>
+              <span>Click to view details</span>
               <span>●</span>
             </div>
           </div>
@@ -503,7 +503,7 @@ export default function ForecastMap({
                 </div>
                 <div class="text-[11px] text-slate-400 font-mono mt-0.5">${lat.toFixed(4)}°N, ${lng.toFixed(4)}°E</div>
                 <div class="text-[11px] text-slate-300 mt-1">
-                  ${isInside ? "Inside Uttarakhand Convective Domain" : `Outside Pilot Domain (~${minDistance}km from ${nearestCell?.name.split("-")[0]})`}
+                  ${isInside ? "Inside Monitored Uttarakhand Region" : `Outside Monitored Region (~${minDistance}km from ${nearestCell?.name.split("-")[0]})`}
                 </div>
               </div>
             `);
@@ -514,8 +514,8 @@ export default function ForecastMap({
               onSelectCell(nearestCell);
               setGpsToast({
                 type: "inside",
-                title: "GPS Position Locked",
-                message: `You are inside the Uttarakhand Pilot Domain. Synced with ${nearestCell.name} (~${minDistance} km).`,
+                title: "GPS Location Found",
+                message: `You are inside the monitored Uttarakhand region. Nearest station: ${nearestCell.name} (~${minDistance} km).`,
                 nearestCell,
                 distanceKm: minDistance,
                 coords: [lat, lng],
@@ -524,8 +524,8 @@ export default function ForecastMap({
               mapInstanceRef.current.flyTo([lat, lng], 8, { duration: 1.5 });
               setGpsToast({
                 type: "outside",
-                title: "Location Outside Pilot Domain",
-                message: `Detected coordinates ${lat.toFixed(2)}°N, ${lng.toFixed(2)}°E are outside active Himalayan radar coverage (~${minDistance} km from closest monitored basin).`,
+                title: "Location Outside Monitored Region",
+                message: `Detected coordinates ${lat.toFixed(2)}°N, ${lng.toFixed(2)}°E are outside active Himalayan radar coverage (~${minDistance} km from closest monitored river basin).`,
                 nearestCell,
                 distanceKm: minDistance,
                 coords: [lat, lng],
@@ -538,8 +538,8 @@ export default function ForecastMap({
         setIsLocating(false);
         setGpsToast({
           type: "error",
-          title: "GPS Location Notice",
-          message: err.code === 1 ? "Location permission denied. Showing baseline pilot catchment." : err.message,
+          title: "Location Notice",
+          message: err.code === 1 ? "Location permission denied. Showing monitored Himalayan river basins." : err.message,
         });
       },
       { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
@@ -557,11 +557,11 @@ export default function ForecastMap({
         <div className="pointer-events-auto hidden lg:flex items-center gap-1.5 shrink-0 font-sans text-xs">
           <div className="flex items-center gap-1.5 rounded-2xl border border-white/[0.08] bg-[#161820]/95 px-2.5 py-1 text-slate-200 backdrop-blur shadow-clay-card">
             <Compass className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
-            <span className="font-semibold tracking-wide hidden 2xl:inline">UTTARAKHAND CONVECTIVE CORRIDOR</span>
+            <span className="font-semibold tracking-wide hidden 2xl:inline">UTTARAKHAND MONITORED REGION</span>
             <span className="font-semibold tracking-wide 2xl:hidden">UTTARAKHAND</span>
           </div>
           <div className="hidden 2xl:flex rounded-2xl border border-white/[0.08] bg-[#161820]/80 px-2 py-1 text-slate-400 backdrop-blur text-[11px] shadow-clay-card">
-            EPSG:4326 • 0.04°
+            Standard Grid • ~4.4km Blocks
           </div>
         </div>
 
@@ -583,7 +583,7 @@ export default function ForecastMap({
                   ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold shadow-clay-badge"
                   : "text-slate-400 hover:text-slate-200 hover:bg-[#1D202B]"
               }`}
-              title="Dark Matter Tactical GIS Basemap"
+              title="Dark Map View"
             >
               <MapIcon className="h-3.5 w-3.5" />
               <span className="hidden xl:inline">Dark</span>
@@ -595,7 +595,7 @@ export default function ForecastMap({
                   ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold shadow-clay-badge"
                   : "text-slate-400 hover:text-slate-200 hover:bg-[#1D202B]"
               }`}
-              title="Orbital Satellite Basemap"
+              title="Satellite Imagery View"
             >
               <Satellite className="h-3.5 w-3.5" />
               <span className="hidden xl:inline">Satellite</span>
@@ -607,7 +607,7 @@ export default function ForecastMap({
                   ? "bg-[#1C1F30] text-indigo-300 border border-indigo-500/30 font-semibold shadow-clay-badge"
                   : "text-slate-400 hover:text-slate-200 hover:bg-[#1D202B]"
               }`}
-              title="Shaded Relief Topography Basemap"
+              title="Terrain Elevation View"
             >
               <Mountain className="h-3.5 w-3.5" />
               <span className="hidden xl:inline">Terrain</span>
@@ -624,8 +624,8 @@ export default function ForecastMap({
                   ? "bg-indigo-600/50 text-indigo-200 animate-pulse"
                   : "text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300"
               }`}
-              title="Locate My Current GPS Position"
-              aria-label="Locate My Current GPS Position"
+              title="Find My Location"
+              aria-label="Find My Location"
             >
               {isLocating ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -651,7 +651,7 @@ export default function ForecastMap({
             <button
               onClick={handleReset}
               className="flex h-7 w-7 items-center justify-center rounded-xl text-slate-300 hover:bg-[#1D202B] hover:text-indigo-300 transition shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed"
-              title="Reset to Uttarakhand Corridor"
+              title="Reset to Uttarakhand Region"
             >
               <RotateCcw className="h-3.5 w-3.5" />
             </button>

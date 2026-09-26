@@ -246,15 +246,15 @@ export default function AlertPanel({
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.08] bg-[#111217] px-4 py-2.5 text-xs font-sans shadow-clay-inset">
         <div className="flex items-center gap-2 text-slate-400">
           <Filter className="h-3.5 w-3.5 text-slate-400" />
-          <span className="text-[11px] uppercase font-semibold text-slate-400">HAZARD:</span>
+          <span className="text-[11px] uppercase font-semibold text-slate-400">WEATHER EVENT:</span>
           <select
             value={filterHazard}
             onChange={(e) => setFilterHazard(e.target.value)}
             className="rounded-xl border border-white/[0.08] bg-[#1D202B] px-2.5 py-1 text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-400 shadow-clay-inset cursor-pointer text-xs"
           >
-            <option value="all">ALL HAZARDS</option>
+            <option value="all">ALL WEATHER EVENTS</option>
             <option value="flash_flood">FLASH FLOOD</option>
-            <option value="cloudburst">CLOUDBURST</option>
+            <option value="cloudburst">HEAVY RAINFALL</option>
             <option value="thunderstorm">THUNDERSTORM</option>
           </select>
         </div>
@@ -266,23 +266,35 @@ export default function AlertPanel({
             onChange={(e) => setShowAcknowledged(e.target.checked)}
             className="rounded-md border-white/20 bg-[#1D202B] text-indigo-500 focus:ring-0 cursor-pointer"
           />
-          Show Acknowledged / Resolved
+          Show Reviewed & Resolved Alerts
         </label>
       </div>
 
       {/* Alerts List */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3">
         {filteredAlerts.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-8 text-center text-slate-500 font-sans text-xs">
-            <ShieldAlert className="h-8 w-8 text-slate-600 mb-2" />
-            <p>No active alerts matching filter criteria.</p>
-            <p className="text-[11px] text-slate-600 mt-1">
-              Convective parameters are currently below warning thresholds.
+          <div className="flex flex-col items-center justify-center p-8 text-center text-slate-400 font-sans text-xs">
+            <ShieldAlert className="h-8 w-8 text-emerald-500/70 mb-2" />
+            <p className="font-medium text-slate-200">Good news. There are currently no active alerts matching this filter.</p>
+            <p className="text-[11px] text-slate-400 mt-1">
+              Weather conditions in this region are currently below warning levels.
             </p>
           </div>
         ) : (
           filteredAlerts.map((alert) => {
             const currentStatus = getAlertStatus(alert);
+            const statusLabel =
+              currentStatus === "GENERATED"
+                ? "NEW ALERT"
+                : currentStatus === "UNDER_REVIEW"
+                ? "BEING REVIEWED"
+                : currentStatus === "DISPATCHED"
+                ? "SENT TO AUTHORITIES"
+                : currentStatus === "ACKNOWLEDGED"
+                ? "REVIEWED"
+                : currentStatus === "RESOLVED"
+                ? "RESOLVED"
+                : "CANCELLED";
 
             return (
               <div
@@ -302,7 +314,7 @@ export default function AlertPanel({
                   <div className="flex items-center gap-1.5">
                     <RiskBadge severity={alert.severity} size="sm" />
                     <span className="text-[10px] font-sans font-medium text-slate-400 uppercase tracking-wider">
-                      {alert.hazardType.replace("_", " ")}
+                      {alert.hazardType === "cloudburst" ? "Heavy Rain" : alert.hazardType === "flash_flood" ? "Flash Flood" : alert.hazardType}
                     </span>
                     {/* Lifecycle Status Badge */}
                     <span
@@ -318,7 +330,7 @@ export default function AlertPanel({
                           : "bg-[#241F12] text-amber-300 border-amber-500/40"
                       }`}
                     >
-                      {currentStatus.replace("_", " ")}
+                      {statusLabel}
                     </span>
                   </div>
 
@@ -331,7 +343,7 @@ export default function AlertPanel({
                       className="rounded-full bg-[#161820] px-2 py-0.5 text-[9px] font-sans font-medium text-amber-300/90 border border-white/[0.08] shadow-clay-badge"
                       title="Model-generated decision support advisory. Not an official state agency decree."
                     >
-                      MODEL ADVISORY
+                      FORECAST ADVISORY
                     </span>
                   )}
                 </div>
@@ -345,7 +357,7 @@ export default function AlertPanel({
                   <span className="font-medium">{alert.regionName}</span>
                   <span className="text-slate-600">•</span>
                   <span className="text-slate-400 font-mono text-[11px]">
-                    {alert.affectedCells.length} Catchment Cells
+                    {alert.affectedCells.length} Monitored Areas
                   </span>
                 </div>
 
@@ -368,19 +380,19 @@ export default function AlertPanel({
                     <button
                       onClick={() => handleExportCapXml(alert)}
                       className="inline-flex items-center gap-1 rounded-xl bg-[#161820] px-2.5 py-1 text-[11px] text-indigo-400 hover:bg-[#252937] border border-white/[0.08] shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed transition font-sans font-medium"
-                      title="Download ITU-T / OASIS CAP v1.2 XML"
+                      title="Download alert details in standard XML format"
                     >
                       <FileCode className="h-3.5 w-3.5" />
-                      <span>CAP 1.2</span>
+                      <span>Export Alert</span>
                     </button>
 
                     {onFocusRegion && (
                       <button
                         onClick={() => onFocusRegion(alert)}
                         className="inline-flex items-center gap-0.5 rounded-xl bg-[#161820] px-2.5 py-1 text-[11px] text-slate-300 hover:bg-[#252937] border border-white/[0.08] shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed transition font-sans font-medium"
-                        title="Locate Cell on Map"
+                        title="Locate Area on Map"
                       >
-                        <span>Locate</span>
+                        <span>View on Map</span>
                         <ChevronRight className="h-3 w-3" />
                       </button>
                     )}
@@ -398,7 +410,7 @@ export default function AlertPanel({
                         className="flex items-center gap-1.5 rounded-xl border border-indigo-500/30 bg-[#1C1F30] px-2.5 py-1 text-indigo-200 hover:bg-[#252937] shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed transition font-medium"
                       >
                         <Eye className="h-3.5 w-3.5" />
-                        <span>Begin Review</span>
+                        <span>Review Alert</span>
                       </button>
                     )}
 
@@ -408,7 +420,7 @@ export default function AlertPanel({
                         className="flex items-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-950/80 px-3 py-1 text-rose-200 hover:bg-rose-900 shadow-clay-btn-danger active:translate-y-0.5 active:shadow-clay-btn-pressed transition font-semibold"
                       >
                         <Send className="h-3.5 w-3.5" />
-                        <span>Dispatch Advisory</span>
+                        <span>Send Warning</span>
                       </button>
                     )}
 
@@ -418,7 +430,7 @@ export default function AlertPanel({
                         className="flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-[#11221A] px-2.5 py-1 text-emerald-200 hover:bg-emerald-900 shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed transition font-medium"
                       >
                         <Check className="h-3.5 w-3.5" />
-                        <span>Acknowledge Watch</span>
+                        <span>Mark Reviewed</span>
                       </button>
                     )}
 
@@ -428,12 +440,12 @@ export default function AlertPanel({
                         className="flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-[#161820] px-2.5 py-1 text-slate-200 hover:bg-[#252937] shadow-clay-btn active:translate-y-0.5 active:shadow-clay-btn-pressed transition font-medium"
                       >
                         <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-                        <span>Resolve Alert</span>
+                        <span>Mark Resolved</span>
                       </button>
                     )}
 
                     {currentStatus === "RESOLVED" && (
-                      <span className="text-slate-500 italic">Incident Cleared</span>
+                      <span className="text-slate-500 italic">Alert Cleared</span>
                     )}
                   </div>
                 </div>

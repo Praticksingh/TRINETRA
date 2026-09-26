@@ -46,10 +46,10 @@ export default function LocationResults({
               </div>
               <div>
                 <div className="font-semibold text-xs text-indigo-300 group-hover:text-indigo-200">
-                  {isLocating ? "Acquiring GPS Satellite Signal..." : "Use My Current Location"}
+                  {isLocating ? "Acquiring GPS Signal..." : "Use My Current Location"}
                 </div>
                 <div className="text-[10px] text-zinc-400">
-                  Detect coordinates & sync nearest catchment
+                  Find nearest monitored river basin
                 </div>
               </div>
             </div>
@@ -61,8 +61,8 @@ export default function LocationResults({
       )}
 
       {results.length === 0 ? (
-        <div className="p-4 text-center font-mono text-xs text-zinc-400">
-          No catchment or monitoring station found matching query.
+        <div className="p-4 text-center font-sans text-xs text-zinc-400">
+          No locations found matching this search.
         </div>
       ) : (
         results.map((loc) => (
@@ -91,7 +91,7 @@ export default function LocationResults({
                   </span>
                   <span className="flex items-center gap-1">
                     <Mountain className="h-3 w-3 text-zinc-400" />
-                    {loc.elevationM}m MSL
+                    {loc.elevationM}m elevation
                   </span>
                 </div>
               </div>

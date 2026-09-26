@@ -78,7 +78,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: "view-overview",
       category: "views",
       title: "Overview",
-      subtitle: "Operational dashboard & catchment corridor status",
+      subtitle: "Summary of regional weather risks & active alerts",
       icon: Compass,
       shortcut: "1",
       perform: () => {
@@ -90,7 +90,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: "view-map",
       category: "views",
       title: "Weather Map",
-      subtitle: "High-resolution convective hazard GIS grid",
+      subtitle: "Interactive map showing rainfall & flood risk across monitored areas",
       icon: Map,
       shortcut: "2",
       perform: () => {
@@ -102,7 +102,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: "view-timeline",
       category: "views",
       title: "Forecast",
-      subtitle: "6-hour lead time convective surge progression",
+      subtitle: "See how weather and flood risk may change over the next 6 hours",
       icon: Clock,
       shortcut: "3",
       perform: () => {
@@ -114,7 +114,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: "view-alerts",
       category: "views",
       title: "Alerts",
-      subtitle: "Standardized CAP v1.2 warning dispatch queue",
+      subtitle: "Review active severe-weather warnings and advisories",
       icon: Bell,
       shortcut: "4",
       perform: () => {
@@ -126,7 +126,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: "view-insights",
       category: "views",
       title: "AI Analysis",
-      subtitle: "Deep learning model cards, XAI attribution & limits",
+      subtitle: "AI model performance, accuracy tests, and safety limits",
       icon: Activity,
       shortcut: "5",
       perform: () => {
@@ -138,7 +138,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: "view-provenance",
       category: "views",
       title: "Data Sources",
-      subtitle: "Sensor freshness, radar telemetry & pipeline latency",
+      subtitle: "Satellite feeds, radar status, and data update timestamps",
       icon: Database,
       shortcut: "6",
       perform: () => {
@@ -150,7 +150,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: "view-globe",
       category: "views",
       title: "Earth View",
-      subtitle: "Planetary 3D Earth perspective & storm footprints",
+      subtitle: "Interactive 3D globe showing regional storm coverage",
       icon: Globe,
       shortcut: "7",
       perform: () => {
@@ -163,8 +163,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     {
       id: "action-trigger",
       category: "actions",
-      title: "Run Forecast Update",
-      subtitle: "Trigger automated FastAPI inference cycle",
+      title: "Update Forecast",
+      subtitle: "Generate the latest AI weather forecast",
       icon: RefreshCw,
       shortcut: "R",
       perform: () => {
@@ -175,8 +175,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     {
       id: "action-alerts",
       category: "actions",
-      title: "Open Alerts Center Drawer",
-      subtitle: "Slide out CAP v1.2 alert management panel",
+      title: "Open Weather Alerts Panel",
+      subtitle: "Quickly view and review active weather warnings",
       icon: Bell,
       perform: () => {
         toggleAlertDrawer();
@@ -186,8 +186,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     {
       id: "action-systems",
       category: "actions",
-      title: "Open Systems Telemetry Drawer",
-      subtitle: "Inspect pipeline health & sensor synchronization",
+      title: "Open System Status Panel",
+      subtitle: "Check data connections and forecast model status",
       icon: Activity,
       perform: () => {
         toggleSystemDrawer();
@@ -209,8 +209,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     {
       id: "action-shortcuts",
       category: "actions",
-      title: "Keyboard Shortcuts Reference",
-      subtitle: "View full list of keyboard commands & hotkeys",
+      title: "Keyboard Shortcuts",
+      subtitle: "View navigation shortcuts and hotkeys",
       icon: HelpCircle,
       shortcut: "?",
       perform: () => {
@@ -221,8 +221,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     {
       id: "action-scenario-kedarnath",
       category: "actions",
-      title: "Load 2013 Kedarnath Cloudburst Scenario",
-      subtitle: "Benchmark convective extreme with critical flash flood surge",
+      title: "Load 2013 Kedarnath Flood (Historical Scenario)",
+      subtitle: "Historical extreme rainfall and flash flood event",
       icon: RefreshCw,
       perform: () => {
         loadScenario("kedarnath_2013");
@@ -232,8 +232,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     {
       id: "action-scenario-chamoli",
       category: "actions",
-      title: "Load 2021 Chamoli Gorge Surge Scenario",
-      subtitle: "High terrain susceptibility & rapid runoff concentration",
+      title: "Load 2021 Chamoli Flash Flood (Historical Scenario)",
+      subtitle: "Historical mountain gorge surge and rapid runoff event",
       icon: RefreshCw,
       perform: () => {
         loadScenario("chamoli_2021");
@@ -243,8 +243,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     {
       id: "action-scenario-fair",
       category: "actions",
-      title: "Load Nominal Fair Weather Scenario",
-      subtitle: "Stable atmospheric boundary layer with strong inversion cap",
+      title: "Load Fair Weather (Historical Scenario)",
+      subtitle: "Normal, stable weather conditions with low risk",
       icon: RefreshCw,
       perform: () => {
         loadScenario("fair_weather_nominal");
@@ -254,8 +254,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     {
       id: "action-feed-custom",
       category: "actions",
-      title: "Feed Custom Observation Data",
-      subtitle: "Paste or edit multi-spectral satellite & thermodynamic vectors",
+      title: "Upload Custom Weather Data",
+      subtitle: "Test the model with custom weather and atmospheric measurements",
       icon: Database,
       perform: () => {
         onClose();

@@ -31,24 +31,24 @@ export const ModelCard: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-base font-semibold text-slate-100 font-sans">
-                    Conv3D-MultiTask-Nowcast
+                    AI Weather Forecasting Model
                   </h3>
                   <Badge variant="cyan" size="xs">
-                    v1.0.0-PROD-CANDIDATE
+                    v1.0.0
                   </Badge>
                   <Badge variant="emerald" size="xs">
-                    HURDLE PASSED
+                    VALIDATION PASSED
                   </Badge>
                 </div>
                 <p className="text-xs text-slate-400 font-sans mt-0.5">
-                  Spatiotemporal 3D Convolutional Neural Network with Multi-Hazard Decoders
+                  Deep Learning Model for Short-Term Severe Weather (Conv3D Architecture)
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               <span className="font-sans text-xs text-slate-400">
-                Framework: <strong className="text-slate-200 font-mono">PyTorch 2.4 + TensorRT</strong>
+                Engine: <strong className="text-slate-200 font-mono">PyTorch 2.4 + TensorRT</strong>
               </span>
             </div>
           </div>
@@ -56,32 +56,32 @@ export const ModelCard: React.FC = () => {
 
         <CardContent className="space-y-4 pt-2">
           <p className="text-xs leading-relaxed text-slate-300">
-            The <strong>Conv3D Multi-Task Nowcaster</strong> is TRINETRA&apos;s authoritative neural backbone for hyper-local convective weather prediction. It processes a spatio-temporal tensor comprising 4 consecutive frames (2-hour lookback window @ 30-min cadence) of INSAT-3D/3DR Thermal Infrared-1 (TIR1) brightness temperatures, tightly fused with 6 NWP atmospheric variables and 30m ALOS AW3D30 topographic curvature layers.
+            This AI model estimates localized severe weather conditions across Himalayan river basins. It analyzes the last 2 hours of thermal satellite imagery (INSAT-3D/3DR), atmospheric humidity and wind data, and 30-meter terrain slope and elevation models to detect storm intensification and rapid runoff risks.
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
             <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
-              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Input Tensor</span>
-              <div className="text-sm font-semibold font-mono text-slate-200 mt-1">[B, 10, 4, 32, 32]</div>
-              <span className="text-[10px] text-slate-400">10 channels × 4 timesteps</span>
+              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Input Data</span>
+              <div className="text-sm font-semibold font-mono text-slate-200 mt-1">10 Channels</div>
+              <span className="text-[10px] text-slate-400">Satellite, radar & terrain</span>
             </div>
 
             <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
-              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Parameters</span>
-              <div className="text-sm font-semibold font-mono text-indigo-300 mt-1">14.82 Million</div>
-              <span className="text-[10px] text-slate-400">FP16 Quantized Engine</span>
+              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Model Size</span>
+              <div className="text-sm font-semibold font-mono text-indigo-300 mt-1">14.8M Parameters</div>
+              <span className="text-[10px] text-slate-400">Optimized for speed</span>
             </div>
 
             <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
-              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Inference Latency</span>
+              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Forecast Speed</span>
               <div className="text-sm font-semibold font-mono text-emerald-400 mt-1">3.7 ms</div>
-              <span className="text-[10px] text-slate-400">NVIDIA L4 TensorRT</span>
+              <span className="text-[10px] text-slate-400">Near-instant execution</span>
             </div>
 
             <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
-              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Target Horizons</span>
-              <div className="text-sm font-semibold font-mono text-indigo-300 mt-1">T+1h to T+6h</div>
-              <span className="text-[10px] text-slate-400">30-min discrete steps</span>
+              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Forecast Period</span>
+              <div className="text-sm font-semibold font-mono text-indigo-300 mt-1">Now to 6 Hours</div>
+              <span className="text-[10px] text-slate-400">30-minute intervals</span>
             </div>
           </div>
         </CardContent>
@@ -94,7 +94,7 @@ export const ModelCard: React.FC = () => {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Database className="h-4 w-4 text-indigo-400" />
-              <CardTitle className="font-sans text-sm font-semibold">Training Corpus & Temporal Split</CardTitle>
+              <CardTitle className="font-sans text-sm font-semibold">Training Data & Historical Testing</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="space-y-3 font-sans text-xs">
@@ -103,20 +103,20 @@ export const ModelCard: React.FC = () => {
               <span className="text-slate-200 font-medium">2020 – 2024 Monsoons (Jul 1 – Sep 30)</span>
             </div>
             <div className="flex justify-between border-b border-white/[0.08] pb-2">
-              <span className="text-slate-400">Held-Out Test Split:</span>
-              <span className="text-indigo-300 font-medium">2025 Monsoon (Jul 1 – Sep 30, 2025)</span>
+              <span className="text-slate-400">Independent Test Set:</span>
+              <span className="text-indigo-300 font-medium">2025 Monsoon (Independent Test Data)</span>
             </div>
             <div className="flex justify-between border-b border-white/[0.08] pb-2">
-              <span className="text-slate-400">Temporal Leakage Guard:</span>
-              <span className="text-emerald-400 font-medium">Enforced strictly forward (no lookahead)</span>
+              <span className="text-slate-400">Time Testing Integrity:</span>
+              <span className="text-emerald-400 font-medium">Strict forward evaluation (no future leakage)</span>
             </div>
             <div className="flex justify-between border-b border-white/[0.08] pb-2">
-              <span className="text-slate-400">Spatial Domain:</span>
-              <span className="text-slate-200 font-mono text-[11px]">28.5°N–31.5°N, 77.5°E–81.0°E (Uttarakhand)</span>
+              <span className="text-slate-400">Region Covered:</span>
+              <span className="text-slate-200 font-mono text-[11px]">Uttarakhand Himalayas (28.5°–31.5°N)</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-400">Event Sampling:</span>
-              <span className="text-slate-300">Extreme-value rebalancing (Focal Loss &gamma;=2)</span>
+              <span className="text-slate-400">Severe Event Focus:</span>
+              <span className="text-slate-300">Weighted for rare heavy downpours</span>
             </div>
           </CardContent>
         </Card>
@@ -126,29 +126,29 @@ export const ModelCard: React.FC = () => {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Layers className="h-4 w-4 text-indigo-400" />
-              <CardTitle className="font-sans text-sm font-semibold">Multi-Head Decoder Architecture</CardTitle>
+              <CardTitle className="font-sans text-sm font-semibold">Forecast Output Modules</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="space-y-3 font-sans text-xs">
             <div className="flex justify-between border-b border-white/[0.08] pb-2">
-              <span className="text-slate-400">Backbone Encoder:</span>
-              <span className="text-slate-200 font-medium">3D ResNet-18 (Spatiotemporal)</span>
+              <span className="text-slate-400">Core Pattern Extractor:</span>
+              <span className="text-slate-200 font-medium">Spatiotemporal 3D Convolutional Network</span>
             </div>
             <div className="flex justify-between border-b border-white/[0.08] pb-2">
-              <span className="text-slate-400">Decoder 1 (Thunderstorm):</span>
-              <span className="text-slate-200">Binary Cross-Entropy with Logit Calibration</span>
+              <span className="text-slate-400">Module 1 (Thunderstorms):</span>
+              <span className="text-slate-200">Probability of storm activity and lightning</span>
             </div>
             <div className="flex justify-between border-b border-white/[0.08] pb-2">
-              <span className="text-slate-400">Decoder 2 (Cloudburst):</span>
-              <span className="text-slate-200">Focal Loss (&alpha;=0.25, &gamma;=2.0)</span>
+              <span className="text-slate-400">Module 2 (Extremely Heavy Rain):</span>
+              <span className="text-slate-200">Probability of rainfall exceeding 100 mm/h</span>
             </div>
             <div className="flex justify-between border-b border-white/[0.08] pb-2">
-              <span className="text-slate-400">Decoder 3 (Flash Flood):</span>
-              <span className="text-slate-200">Terrain-Gated Composite Decoupler</span>
+              <span className="text-slate-400">Module 3 (Flash Flood Risk):</span>
+              <span className="text-slate-200">Combined rainfall runoff and mountain steepness</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-400">Loss Balancing:</span>
-              <span className="text-indigo-300">Kendall & Gal Uncertainty Weighting</span>
+              <span className="text-slate-400">Multi-Task Calibration:</span>
+              <span className="text-indigo-300">Uncertainty-weighted balanced training</span>
             </div>
           </CardContent>
         </Card>
@@ -159,25 +159,25 @@ export const ModelCard: React.FC = () => {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Server className="h-4 w-4 text-emerald-400" />
-            <CardTitle className="font-sans text-sm font-semibold">Inference Container & Runtime Constraints</CardTitle>
+            <CardTitle className="font-sans text-sm font-semibold">Forecast Run Environment & System Specs</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="space-y-3 text-xs font-sans">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
-              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Inference Service</span>
-              <div className="text-slate-200 font-semibold mt-1">FastAPI + Uvicorn Worker</div>
-              <span className="text-[10px] text-emerald-400 font-medium">Stateless containerized process</span>
+              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Forecast API</span>
+              <div className="text-slate-200 font-semibold mt-1">High-Throughput API Service</div>
+              <span className="text-[10px] text-emerald-400 font-medium">Containerized microservice</span>
             </div>
             <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
-              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Persistence Target</span>
-              <div className="text-indigo-300 font-semibold mt-1">Supabase PostGIS</div>
+              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Database Storage</span>
+              <div className="text-indigo-300 font-semibold mt-1">Spatial PostGIS Database</div>
               <span className="text-[10px] text-slate-400">Partitioned by forecast hour</span>
             </div>
             <div className="rounded-lg border border-white/[0.08] bg-[#1D202B] p-3">
-              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Memory Footprint</span>
-              <div className="text-slate-200 font-semibold font-mono mt-1">1.4 GB VRAM / 2.1 GB RAM</div>
-              <span className="text-[10px] text-slate-400">Zero host memory leakage</span>
+              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Memory Usage</span>
+              <div className="text-slate-200 font-semibold font-mono mt-1">1.4 GB GPU / 2.1 GB RAM</div>
+              <span className="text-[10px] text-slate-400">Lightweight deployment</span>
             </div>
           </div>
         </CardContent>

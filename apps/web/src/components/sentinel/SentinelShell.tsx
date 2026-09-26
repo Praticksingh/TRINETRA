@@ -8,6 +8,7 @@ import { SentinelSystemDrawer } from "@/components/sentinel/SentinelSystemDrawer
 import { CommandPalette } from "@/components/sentinel/CommandPalette";
 import { KeyboardShortcutsModal } from "@/components/sentinel/KeyboardShortcutsModal";
 import { CustomObservationModal } from "@/components/sentinel/CustomObservationModal";
+import { MobileBottomNav } from "@/components/sentinel/MobileBottomNav";
 import AlertPanel from "@/app/alerts/AlertPanel";
 import { GRID_CELLS } from "@/app/forecast/ForecastMap";
 
@@ -145,11 +146,11 @@ export const SentinelShell: React.FC<SentinelShellProps> = ({ children }) => {
   ]);
 
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#0B1220] text-slate-100 font-sans">
+    <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#090B10] text-slate-100 font-sans">
       {/* Accessible Skip to Main Content Link for Keyboard Users */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-1.5 focus:bg-sky-600 focus:text-white focus:text-xs focus:font-sans focus:font-semibold focus:rounded-md focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-sky-300"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-1.5 focus:bg-indigo-600 focus:text-white focus:text-xs focus:font-sans focus:font-semibold focus:rounded-md focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
       >
         Skip to main content
       </a>
@@ -158,18 +159,18 @@ export const SentinelShell: React.FC<SentinelShellProps> = ({ children }) => {
       <SentinelHeader />
 
       {/* Center Layout: Collapsible Sidebar + Contextual Workspace */}
-      <div className="relative flex flex-1 overflow-hidden">
-        {/* Left Sidebar */}
+      <div className="relative flex flex-1 overflow-hidden pb-16 md:pb-0">
+        {/* Left Sidebar (Desktop & Tablet) */}
         <SentinelSidebar />
 
         {/* Dynamic Main Workspace */}
-        <main id="main-content" tabIndex={-1} className="relative flex flex-1 flex-col overflow-hidden bg-[#070D18] focus:outline-none">
+        <main id="main-content" tabIndex={-1} className="relative flex flex-1 flex-col overflow-hidden bg-[#090B10] focus:outline-none">
           {children}
         </main>
 
         {/* Global Slide-Out Alert Center Drawer */}
         {isAlertDrawerOpen && (
-          <div className="fixed top-0 right-0 bottom-0 z-50 w-full sm:w-96 shadow-[0_20px_50px_rgba(0,0,0,0.9)] animate-in slide-in-from-right duration-200">
+          <div className="fixed top-0 right-0 bottom-0 z-50 w-full sm:w-96 shadow-2xl animate-in slide-in-from-right duration-200">
             <AlertPanel
               alerts={alerts}
               onAcknowledgeAlert={acknowledgeAlert}
@@ -198,6 +199,9 @@ export const SentinelShell: React.FC<SentinelShellProps> = ({ children }) => {
         {/* Custom Observation Ingestion Modal */}
         <CustomObservationModal />
       </div>
+
+      {/* Mobile Bottom Navigation Bar (< md screens) */}
+      <MobileBottomNav />
     </div>
   );
 };
