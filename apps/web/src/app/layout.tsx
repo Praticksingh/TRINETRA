@@ -7,6 +7,13 @@ export const metadata: Metadata = {
   title: "TRINETRA | Hyper-Local Severe Weather Nowcasting Console",
   description:
     "AI-powered hyper-local severe convective weather nowcasting platform for thunderstorms, cloudbursts, and flash floods (2–6 hour actionable window).",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
