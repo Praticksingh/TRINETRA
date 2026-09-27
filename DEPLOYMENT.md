@@ -138,8 +138,8 @@ Expected JSON response (HTTP 200):
 3. Import your GitHub repository: `Praticksingh/TRINETRA`.
 4. Configure the Project:
    - **Framework Preset**: `Next.js` (auto-detected).
-   - **Root Directory**: Click **Edit** and select `apps/web` *(or leave root as `./` since `vercel.json` is configured)*.
-   - **Build Command**: `npm run build` (or leave default `next build`).
+   - **Root Directory**: `apps/web`.
+   - **Build Command**: Leave default (`next build` / `npm run build`).
    - **Output Directory**: Leave default (`.next`).
 5. Add **Environment Variables** in Vercel:
    ```env
