@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { getSiteUrl } from "@/lib/env";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: "TRINETRA | Hyper-Local Severe Weather Nowcasting Console",
   description:
     "AI-powered hyper-local severe convective weather nowcasting platform for thunderstorms, cloudbursts, and flash floods (2–6 hour actionable window).",

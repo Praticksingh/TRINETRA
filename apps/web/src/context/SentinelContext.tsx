@@ -265,9 +265,12 @@ export const SentinelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const loadScenario = async (scenarioId: string) => {
     setIsTriggeringCycle(true);
     setActiveScenarioId(scenarioId);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
     try {
       const res = await fetch(`/api/py/ingestion/scenarios/${scenarioId}/trigger`, {
         method: "POST",
+        signal: controller.signal,
       });
       if (res.ok) {
         const data = await res.json();
@@ -296,17 +299,21 @@ export const SentinelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setSelectedCell(har);
       }
     } finally {
+      clearTimeout(timeoutId);
       setIsTriggeringCycle(false);
     }
   };
 
   const triggerNowcastCycle = async () => {
     setIsTriggeringCycle(true);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
     try {
       const res = await fetch("/api/py/orchestration/trigger", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ is_synthetic_replay: true, source: "sentinel_console_trigger" }),
+        signal: controller.signal,
       });
       if (res.ok) {
         const data = await res.json();
@@ -320,13 +327,16 @@ export const SentinelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             if (updated) setSelectedCell(updated);
           }
         }
+      } else {
+        throw new Error(`Nowcast request returned status ${res.status}`);
       }
     } catch {
-      // Graceful offline fallback simulation
-      const fakeId = `job_nowcast_${Math.floor(Date.now() / 1000)}_${Math.random().toString(36).substring(2, 8)}`;
+      // Graceful offline demonstration fallback (clearly designated as simulation fallback)
+      const fakeId = `demo_sim_${Math.floor(Date.now() / 1000)}_${Math.random().toString(36).substring(2, 6)}`;
       setActiveJobId(fakeId);
-      setLastGenTime(new Date().toISOString().replace("T", " ").substring(0, 19) + " UTC");
+      setLastGenTime(new Date().toISOString().replace("T", " ").substring(0, 19) + " UTC (Demo Mode)");
     } finally {
+      clearTimeout(timeoutId);
       setTimeout(() => setIsTriggeringCycle(false), 600);
     }
   };

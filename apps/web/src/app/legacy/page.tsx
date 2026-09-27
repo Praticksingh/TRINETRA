@@ -160,23 +160,29 @@ export default function OperationsConsole() {
 
   const handleTriggerCycle = async () => {
     setIsTriggeringCycle(true);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
     try {
-      const res = await fetch("http://localhost:8000/api/v1/orchestration/trigger", {
+      const res = await fetch("/api/py/orchestration/trigger", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ is_synthetic_replay: true, source: "manual_console_trigger" }),
+        signal: controller.signal,
       });
       if (res.ok) {
         const data = await res.json();
         setActiveJobId(data.job_id || "job_nowcast_active");
         setLastGenTime(new Date().toISOString().replace("T", " ").substring(0, 19) + " UTC");
+      } else {
+        throw new Error(`Inference trigger returned status ${res.status}`);
       }
     } catch (err) {
-      // Graceful offline fallback simulation
-      const fakeId = `job_nowcast_${Math.floor(Date.now() / 1000)}_${Math.random().toString(36).substring(2, 8)}`;
+      // Graceful offline demonstration fallback
+      const fakeId = `demo_sim_${Math.floor(Date.now() / 1000)}_${Math.random().toString(36).substring(2, 6)}`;
       setActiveJobId(fakeId);
-      setLastGenTime(new Date().toISOString().replace("T", " ").substring(0, 19) + " UTC");
+      setLastGenTime(new Date().toISOString().replace("T", " ").substring(0, 19) + " UTC (Demo Mode)");
     } finally {
+      clearTimeout(timeoutId);
       setTimeout(() => setIsTriggeringCycle(false), 600);
     }
   };

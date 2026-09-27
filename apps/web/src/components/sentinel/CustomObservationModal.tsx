@@ -104,6 +104,8 @@ export const CustomObservationModal: React.FC = () => {
   const handleRunInference = async () => {
     setIsProcessing(true);
     setStatusMsg("Running AI forecast with custom weather data...");
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
     try {
       const parsed = JSON.parse(jsonText);
       const res = await fetch("/api/py/orchestration/trigger", {
@@ -114,6 +116,7 @@ export const CustomObservationModal: React.FC = () => {
           source: "custom_observation_modal",
           observation_payload: parsed,
         }),
+        signal: controller.signal,
       });
       if (res.ok) {
         await triggerNowcastCycle();
@@ -126,8 +129,13 @@ export const CustomObservationModal: React.FC = () => {
         setStatusMsg("Could not update forecast. Please verify the JSON data format.");
       }
     } catch (err: any) {
-      setStatusMsg(`Data format error: ${err.message}`);
+      if (err.name === "AbortError") {
+        setStatusMsg("Request timed out. Using current forecast data.");
+      } else {
+        setStatusMsg(`Data format error: ${err.message}`);
+      }
     } finally {
+      clearTimeout(timeoutId);
       setIsProcessing(false);
     }
   };

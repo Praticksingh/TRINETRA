@@ -28,14 +28,17 @@ export const ProvenanceWorkspace: React.FC = () => {
   const handleManualTrigger = async () => {
     setIsTriggering(true);
     setTriggerStatus("Triggering 15-minute inference cycle...");
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
     try {
-      const res = await fetch("http://localhost:8000/api/v1/orchestration/trigger", {
+      const res = await fetch("/api/py/orchestration/trigger", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           is_synthetic_replay: true,
           source: "sentinel_provenance_workspace",
         }),
+        signal: controller.signal,
       });
       if (res.ok) {
         const data = await res.json();
@@ -46,6 +49,7 @@ export const ProvenanceWorkspace: React.FC = () => {
     } catch {
       setTriggerStatus("Simulated local inference cycle executed (API offline fallback)");
     } finally {
+      clearTimeout(timeoutId);
       setIsTriggering(false);
       setTimeout(() => setTriggerStatus(null), 4000);
     }

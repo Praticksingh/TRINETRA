@@ -1,13 +1,13 @@
-"""
-TRINETRA Python ML Inference Microservice
-Authoritative service for scientific data processing, spatiotemporal inference, and explainable risk attribution.
-"""
-
+import os
 from datetime import datetime, timezone
 from typing import List, Optional, Dict, Any
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, Field
+
+from core.resilience import SlidingWindowRateLimiter
+from core.telemetry import telemetry
 
 app = FastAPI(
     title="TRINETRA ML Inference Service",
@@ -15,19 +15,47 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# Enable CORS for local development and console access
+# --- Production & Local CORS Configuration ---
+# Configurable through FRONTEND_URL (e.g. https://trinetra.vercel.app) or ALLOWED_ORIGINS
+frontend_url_env = os.environ.get("FRONTEND_URL", "").strip()
+allowed_origins_env = os.environ.get("ALLOWED_ORIGINS", "").strip()
+
+# Always permit standard local development origins
+default_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+
+allowed_origins: List[str] = list(default_origins)
+
+if frontend_url_env:
+    for url in frontend_url_env.split(","):
+        cleaned = url.strip().rstrip("/")
+        if cleaned and cleaned not in allowed_origins:
+            allowed_origins.append(cleaned)
+
+if allowed_origins_env:
+    for url in allowed_origins_env.split(","):
+        cleaned = url.strip().rstrip("/")
+        if cleaned and cleaned not in allowed_origins:
+            allowed_origins.append(cleaned)
+
+is_production = os.environ.get("INFERENCE_ENV", "development").lower() == "production"
+
+# In production or preview, support *.vercel.app preview branches alongside explicit frontend_url
+origin_regex = r"^https://.*\.vercel\.app$" if (is_production or frontend_url_env) else None
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
+    allow_origin_regex=origin_regex,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
 )
 
-from fastapi import Request
-from fastapi.responses import JSONResponse, Response
-from core.resilience import SlidingWindowRateLimiter
-from core.telemetry import telemetry
 
 rate_limiter = SlidingWindowRateLimiter(max_requests=120, window_seconds=60)
 
@@ -157,10 +185,11 @@ class PredictResponse(BaseModel):
 def health_check():
     """Service readiness and health probe."""
     return {
-        "status": "healthy",
+        "status": "ok",
+        "state": "healthy",
         "service": "trinetra-ml-inference",
         "version": "0.1.0",
-        "model_version": "v0.1.0-baseline-synthetic",
+        "model_version": os.environ.get("MODEL_VERSION", "v1.0.0-conv3d-multitask"),
         "gpu_available": False,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
@@ -870,7 +899,9 @@ def simulate_notification_dispatch(alert_id: str, req: DispatchSimulationRequest
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", os.environ.get("INFERENCE_PORT", 8000)))
+    host = os.environ.get("INFERENCE_HOST", "0.0.0.0")
+    uvicorn.run("main:app", host=host, port=port, reload=False)
 
 
 

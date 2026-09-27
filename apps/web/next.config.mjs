@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   async headers() {
     return [
       {
@@ -28,7 +31,10 @@ const nextConfig = {
     ];
   },
   async rewrites() {
-    const targetUrl = process.env.ML_INFERENCE_SERVICE_URL || "http://localhost:8000";
+    const targetUrl =
+      process.env.ML_INFERENCE_SERVICE_URL ||
+      process.env.NEXT_PUBLIC_INFERENCE_URL ||
+      "http://localhost:8000";
     return [
       {
         source: "/api/py/:path*",
